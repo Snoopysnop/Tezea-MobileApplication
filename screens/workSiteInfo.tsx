@@ -14,10 +14,10 @@ type Props = {
 const Screen2: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Screen 2</Text>
+      <Text>Screen WorkSiteInfo</Text>
       <Button
-        title="Go back"
-        onPress={() => navigation.goBack()}
+        title="Go screen 3"
+        onPress={() => navigation.navigate('WorkSiteInProgress')}
       />
     </View>
   );

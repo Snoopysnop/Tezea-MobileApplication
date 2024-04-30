@@ -7,22 +7,25 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import WorkSiteList from './screens/workSiteList';
 import WorkSiteInfo from './screens/workSiteInfo';
-import Test from './screens/test';
+import WorkSiteInProgress from './screens/workSiteInProgress';
+import ValidationScreen from './screens/validationScreen';
+
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <Provider store={store}>
-      <View style={styles.container}>
         <NavigationContainer>
           <Stack.Navigator >
             <Stack.Screen name="WorkSiteList" component={WorkSiteList} />
-            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} /> 
+            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} />
+            <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} />
+            <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style="auto" />
-      </View>
     </Provider>
   );
 }
