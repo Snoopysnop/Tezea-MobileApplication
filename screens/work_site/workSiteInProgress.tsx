@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, Image, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './types';
+import { RootStackParamList } from '../types';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteInProgress'>;
 

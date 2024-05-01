@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, Pressable, View, Text } from "react-native";
 import { Image } from "expo-image";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, ParamListBase } from "@react-navigation/native";
@@ -9,9 +9,8 @@ import {
   Color,
   FontSize,
   Border,
-} from "../GlobalStyles";
+} from "../../GlobalStyles";
 import { TabView, TabBar } from "react-native-tab-view";
-
 
 const DtailChantier = () => {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
