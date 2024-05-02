@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../screens/types';
-import { categorieIcons, stateIcons } from '../components/IconList';
-import WorkSiteCard from '../components/WorkSiteCard';
+import { RootStackParamList } from '../../screens/types';
+import { categorieIcons, stateIcons } from '../IconList';
+import { WorkSiteCard } from './WorkSiteCard';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
@@ -12,11 +12,11 @@ type Props = {
 };
 
 // Corrected the props definition and parameter
-export default function WorkSiteDay({ navigation }: Props) {
+function WorkSiteDay({ navigation }: Props) {
     return (
-        <View style={{ width: '92%', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 25 }}>
+        <View style={{ minWidth: '96%', maxWidth: '96%', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 25 }}>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom:5 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 5 }}>
                 <View style={styles.horizontalLine} />
                 <Text style={{ fontSize: 16, fontWeight: '800', color: '#008FE3' }}>Mardi 30 Avril</Text>
                 <View style={styles.horizontalLine} />
@@ -46,3 +46,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#008FE3',
     }
 })
+
+export { WorkSiteDay }

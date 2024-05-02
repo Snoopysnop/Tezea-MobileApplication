@@ -1,4 +1,4 @@
-export const categorieIcons = [
+const categorieIcons = [
     {
         category: 'Bicycle',
         image: require('../assets/task_icons/bicycle.png'),
@@ -33,7 +33,7 @@ export const categorieIcons = [
     }
 ]
 
-export const stateIcons = [
+const stateIcons = [
     {
         state: 'Todo',
         color: '#FFFFFF',
@@ -54,3 +54,5 @@ export const stateIcons = [
         image: require('../assets/state_icons/check.png'),
     },
 ]
+
+export { categorieIcons, stateIcons }

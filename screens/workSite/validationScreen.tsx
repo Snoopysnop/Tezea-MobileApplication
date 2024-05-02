@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from "@react-navigation/stack";
 
-const SignatureScreen = () => {
+const ValidationScreen = () => {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [paths, setPaths] = useState<string[]>([]);
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignatureScreen;
+export { ValidationScreen };

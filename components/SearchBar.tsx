@@ -6,7 +6,7 @@ type Props<Type> = {
     setData: Function
 };
 
-export default function SearchBar<Type>({ data, setData }: Props<Type>) {
+function SearchBar<Type>({ data, setData }: Props<Type>) {
     const [search, setSearch] = React.useState('');
 
     const handleSearch = (input: string) => {
@@ -67,3 +67,5 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
 })
+
+export { SearchBar };

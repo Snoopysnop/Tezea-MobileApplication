@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
-import { categorieIcons, stateIcons } from '../components/IconList';
-import WorkSiteCard from '../components/WorkSiteCard';
-import WorkSiteDay from '../components/WorkSiteDay';
+import { WorkSiteDay } from '../components/WorkSiteList/WorkSiteDay';
 import { Button } from '@rneui/themed';
-import SearchBar from '../components/SearchBar';
+import { SearchBar } from '../components/SearchBar';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
@@ -15,19 +13,16 @@ type Props = {
 };
 
 // Corrected the props definition and parameter
-export default function WorkSiteList({ navigation }: Props) {
+function WorkSiteList({ navigation }: Props) {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#76C3F0', width: '100%', paddingVertical: 15 }}>
-        {/* header */}
-
-      <SearchBar data={['aaa', 'bbb']} setData={(data: string) => alert(data)}/>
-
-        {/* filters */}
+      <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#76C3F0', width: '100%', paddingTop: 5, paddingBottom: 15 }}>
+        <SearchBar data={['aaa', 'bbb']} setData={(data: string) => alert(data)} />
+        {/* TODO filters */}
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop:20 }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <WorkSiteDay navigation={navigation} />
           <WorkSiteDay navigation={navigation} />
           <WorkSiteDay navigation={navigation} />
@@ -71,3 +66,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#008FE3',
   }
 })
+
+export { WorkSiteList }
