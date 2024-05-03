@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { BasicModal } from '../Modal';
+import { BasicModal } from '../BasicModal';
 
 function DetailsButtons() {
     const [workSiteInfoModal, setWorkSiteInfoModal] = React.useState(false);

@@ -6,7 +6,8 @@ import { RootStackParamList } from '../types';
 import { TitleHeader } from '../../components/Header';
 import { Button } from '@rneui/themed';
 import { DetailsButtons } from '../../components/WorkSiteInProgress/DetailsButtons';
-import { BasicModal } from '../../components/Modal';
+import { BasicModal } from '../../components/BasicModal';
+import { InvoiceModal } from '../../components/WorkSiteInProgress/InvoiceModal';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteInProgress'>;
 
@@ -65,39 +66,25 @@ function WorkSiteInProgress({ navigation }: Props) {
         </View>
 
       </ScrollView>
-      
-      <BasicModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} component={<InvoiceModal />} />
 
-      <Button
-        title={'Terminer Le Chantier'}
-        onPress={() => alert("click")}
-        buttonStyle={{
-          backgroundColor: '#E15656',
-          borderRadius: 20,
-        }}
-        containerStyle={{
-          minWidth: 200,
-          alignSelf: 'center',
-          position: 'absolute',
-          bottom: 20,
-        }}
-      />
+      <InvoiceModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal}/>
+        <Button
+          title={'Terminer Le Chantier'}
+          onPress={() => alert("click")}
+          buttonStyle={{
+            backgroundColor: '#E15656',
+            borderRadius: 20,
+          }}
+          containerStyle={{
+            minWidth: 200,
+            alignSelf: 'center',
+            position: 'absolute',
+            bottom: 20,
+          }}
+        />
     </View>
   );
 };
-
-function InvoiceModal() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [invoie, setInvoice] = useState("");
-  const [price, setPrice] = useState(0);
-
-  return (
-      <View>
-        
-      </View>
-  )
-}
 
 const styles = StyleSheet.create({
   title: {

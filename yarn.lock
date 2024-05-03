@@ -1560,6 +1560,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@hookform/resolvers@^3.3.4":
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.3.4.tgz#de9b668c2835eb06892290192de6e2a5c906229b"
+  integrity sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==
+
 "@isaacs/ttlcache@^1.4.1":
   version "1.4.1"
   resolved "https://registry.npmjs.org/@isaacs/ttlcache/-/ttlcache-1.4.1.tgz"
@@ -3547,6 +3552,11 @@ expo-asset@~9.0.2:
     expo-file-system "~16.0.0"
     invariant "^2.2.4"
     md5-file "^3.2.3"
+
+expo-blur@^12.9.2:
+  version "12.9.2"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-12.9.2.tgz#16d27c5d446fde0442d4f11d38b69611ca29f26b"
+  integrity sha512-q+EIOkXw7OCE3VBTLRANsUIdMxtFWDTFpaMulJEXMwtxNQaCcAvzHZvwWP9dlI96FM4A6UdX2/slBNfNJzJcCQ==
 
 expo-constants@~15.4.0:
   version "15.4.6"
@@ -5735,7 +5745,7 @@ prompts@^2.3.2, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.5.10, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -5826,6 +5836,13 @@ react-is@^18.0.0:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.3.1.tgz"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
+
+react-native-blur@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-3.2.2.tgz#5bfb50638d148982c9560436554ed01d77d6d07d"
+  integrity sha512-r7zNQISL7kQX5ocQEet5QVOBzoXP+Nr3dO7Wql+fV6rebx/8I7eAUHnfITDx12WoOmRpiJjbt/4xF5gTEll6Uw==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-gesture-handler@2.14.0:
   version "2.14.0"
@@ -7318,3 +7335,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.23.6:
+  version "3.23.6"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.6.tgz#c08a977e2255dab1fdba933651584a05fcbf19e1"
+  integrity sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==

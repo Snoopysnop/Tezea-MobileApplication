@@ -23,7 +23,7 @@ function BasicModal({ isModalVisible, setIsModalVisible, component }: ModalParam
                         {component}
 
                         <Button
-                            title={'Close'}
+                            title={'Fermer'}
                             onPress={() => setIsModalVisible(!isModalVisible)}
                             buttonStyle={{
                                 backgroundColor: '#76C3F0',
