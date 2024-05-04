@@ -13,13 +13,13 @@ import {
 import { TabView, TabBar } from "react-native-tab-view";
 
 
-const DtailChantier = () => {
+const WorkSiteInfo = () => {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: "image", icon: require("../assets/information-545674-1.png") },
-    { key: "text", icon: require("../assets/userlist-9633874-1.png") },
+    { key: "image", icon: require("../../assets/information-545674-1.png") },
+    { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
   ]);
 
 
@@ -30,7 +30,7 @@ const DtailChantier = () => {
           <Image
             style={styles.image}
             contentFit="cover"
-            source={require("../assets/information-545674-1.png")}
+            source={require("../../assets/information-545674-1.png")}
           />
         );
       case "text":
@@ -82,7 +82,7 @@ const DtailChantier = () => {
     > 
         <Image
           contentFit="cover"
-          source={require("../assets/user-icon.png")}
+          source={require("../../assets/user-icon.png")}
         />
     </Pressable>
 
@@ -121,7 +121,7 @@ const DtailChantier = () => {
         <Image
           style={styles.vectorIcon}
           contentFit="cover"
-          source={require("../assets/vector.png")}
+          source={require("../../assets/vector.png")}
         />
       </Pressable>
 
@@ -345,10 +345,10 @@ const styles = StyleSheet.create({
     color: Color.colorBlack,
   },
   tabView: {
-    width: 336, // Remplacez cette valeur par la largeur de votre shadowBox
+    width: 336,
     height:300,
     position: "absolute",
-    bottom: 150, // Place le TabView au bas de l'écran
+    bottom: 150,
   },
   pressableContainer: {
     position: "absolute",
@@ -358,4 +358,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DtailChantier;
+export  {WorkSiteInfo};

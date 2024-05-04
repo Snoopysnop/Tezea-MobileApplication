@@ -194,7 +194,7 @@ function WorkSiteInProgress({ navigation }: Props) {
 
         <Button
           title={'Terminer Le Chantier'}
-          onPress={() => alert("click")}
+          onPress={() => navigation.navigate("ValidationScreen")}
           buttonStyle={{
             backgroundColor: '#E15656',
             borderRadius: 20,
