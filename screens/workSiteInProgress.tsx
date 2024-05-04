@@ -14,8 +14,8 @@ function WorkSiteInProgress ({ navigation }: Props) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Screen WorkInProgress</Text>
       <Button
-        title="Go to Screen 4"
-        onPress={() => navigation.navigate('WorkSiteInfo')}
+        title="Go to Screen Validation"
+        onPress={() => navigation.navigate('ValidationScreen')}
       />
     </View>
   );
