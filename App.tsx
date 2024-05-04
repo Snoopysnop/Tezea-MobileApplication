@@ -12,10 +12,12 @@ import { ValidationScreen } from './screens/workSite/validationScreen';
 import { ProfileButton, TitleHeader } from './components/Header';
 import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
+import MainApi from './api/MainApi';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  MainApi.initInstance();
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       <Provider store={store}>
@@ -28,7 +30,13 @@ const App = () => {
               headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
               headerRight: () => <ProfileButton />
             }} />
-            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} />
+            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} options={{
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#F2F2F2' },
+              headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />,
+              headerRight: () => <ProfileButton />
+            }}
+              />
             <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
               headerTitleAlign: 'center',
               headerStyle: { backgroundColor: '#F2F2F2' },

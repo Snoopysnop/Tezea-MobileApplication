@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
+import MainApi from '../api/MainApi';
+import { User } from '../api/Model';
 
 type TitleHeaderParams = {
     title: string
@@ -17,9 +19,10 @@ function TitleHeader({ title, subtitle, isBlue }: TitleHeaderParams) {
 }
 
 function ProfileButton() {
+    const [users, setUsers] = useState<User[]>([])
     return (
         <View style={{ marginRight: 20 }}>
-            <TouchableOpacity onPress={() => alert("pressed")}>
+            <TouchableOpacity onPress ={ () => alert("Profil")}>
                 <View style={styles.profilePictureContainer}>
                     <Image
                         source={require("../assets/user.png")}
