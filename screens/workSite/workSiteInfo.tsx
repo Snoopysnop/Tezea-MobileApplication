@@ -9,18 +9,36 @@ import {
   Color,
   FontSize,
   Border,
-} from "../GlobalStyles";
+} from "../../GlobalStyles";
 import { TabView, TabBar } from "react-native-tab-view";
+import { useEffect } from "react";
+import { TitleHeader } from "../../components/Header";
+import MainApi from "../../api/MainApi";
 
 
-const DtailChantier = () => {
+const WorkSiteInfo = () => {
+
+
+
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: "image", icon: require("../assets/information-545674-1.png") },
-    { key: "text", icon: require("../assets/userlist-9633874-1.png") },
+    { key: "image", icon: require("../../assets/information-545674-1.png") },
+    { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
   ]);
+
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => <TitleHeader title='Réparation Antenne' subtitle='En Cours' isBlue={false} />,
+    });
+    fetchHeaderInfo();
+  }, [])
+
+
+  const fetchHeaderInfo = async() => {
+    //await MainApi.getInstance().getUsers();
+}
 
 
   const renderScene = ({ route }: { route: { key: string } }) => {
@@ -30,7 +48,7 @@ const DtailChantier = () => {
           <Image
             style={styles.image}
             contentFit="cover"
-            source={require("../assets/information-545674-1.png")}
+            source={require("../../assets/information-545674-1.png")}
           />
         );
       case "text":
@@ -76,33 +94,6 @@ const DtailChantier = () => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' ,top: 20 }}>
 
-    <Pressable
-      onPress={() => navigation.navigate("WorkSiteInProgress")}
-      style={[styles.pressableContainer, { top: 0, left: 10 }]} 
-    > 
-        <Image
-          contentFit="cover"
-          source={require("../assets/user-icon.png")}
-        />
-    </Pressable>
-
-
-      <View style={styles.rparationAntenneEnAttenteWrapper}>
-        <Text
-          style={[
-            styles.rparationAntenneEnAttenteContainer,
-            styles.dmarrerLeChantierFlexBox,
-          ]}
-        >
-          <Text style={styles.rparationAntenne}>
-            <Text style={styles.rparationAntenne1}>Réparation Antenne</Text>
-            <Text style={styles.blankLine}> </Text>
-          </Text>
-          <Text style={styles.blankLine}>
-            <Text style={styles.enAttente1}>En attente</Text>
-          </Text>
-        </Text>
-      </View>
 
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
@@ -111,18 +102,6 @@ const DtailChantier = () => {
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
           Démarrer le chantier
         </Text>
-      </Pressable>
-            
-      <Pressable
-        style={[styles.goBackButton, styles.backLayout]}
-        onPress={() =>  navigation.navigate("WorkSiteList")}
-      >
-        <View style={[styles.goBackButtonChild, styles.backLayout]} />
-        <Image
-          style={styles.vectorIcon}
-          contentFit="cover"
-          source={require("../assets/vector.png")}
-        />
       </Pressable>
 
 
@@ -272,7 +251,7 @@ const styles = StyleSheet.create({
     top: 18,
   },
   dtailChantierInner: {
-    top: 73,
+    top: 0,
     left: 12,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     borderRadius: Border.br_8xs,
@@ -345,10 +324,10 @@ const styles = StyleSheet.create({
     color: Color.colorBlack,
   },
   tabView: {
-    width: 336, // Remplacez cette valeur par la largeur de votre shadowBox
+    width: 336,
     height:300,
     position: "absolute",
-    bottom: 150, // Place le TabView au bas de l'écran
+    bottom: 150,
   },
   pressableContainer: {
     position: "absolute",
@@ -358,4 +337,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DtailChantier;
+export  {WorkSiteInfo};
