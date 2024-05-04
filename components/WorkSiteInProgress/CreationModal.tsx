@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
-import { Button } from '@rneui/themed';
 import { InvoiceForm } from './InvoiceForm';
+import { IncidentForm } from './IncidentForm';
 
-type ModalParams = {
-    isModalVisible: boolean
-    setIsModalVisible: Function
+type CreationModalParams = {
+    isModalVisible: boolean,
+    setIsModalVisible: Function,
+    addElement: Function,
+    isInvoice: boolean,
 };
 
-function InvoiceModal({ isModalVisible, setIsModalVisible }: ModalParams) {
+function CreationModal({ isModalVisible, setIsModalVisible, addElement, isInvoice }: CreationModalParams) {
     return (
         <View style={styles.centeredView}>
             <Modal
@@ -16,13 +18,15 @@ function InvoiceModal({ isModalVisible, setIsModalVisible }: ModalParams) {
                 transparent={true}
                 visible={isModalVisible}
                 onRequestClose={() => {
-                    setIsModalVisible(!isModalVisible);
+                    setIsModalVisible(false);
                 }}>
                 <View style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', ...styles.centeredView }}>
                     <View style={styles.modalView}>
-
-                        <InvoiceForm />
-
+                        {isInvoice ?
+                            <InvoiceForm addInvoice={addElement} setIsModalVisible={setIsModalVisible} />
+                            :
+                            <IncidentForm addIncident={addElement} setIsModalVisible={setIsModalVisible} />
+                        }
                     </View>
                 </View>
             </Modal>
@@ -107,4 +111,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export { InvoiceModal };
+export { CreationModal };

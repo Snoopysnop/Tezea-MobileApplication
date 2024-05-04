@@ -10,32 +10,36 @@ import { WorkSiteInfo } from './screens/workSite/workSiteInfo';
 import { WorkSiteInProgress } from './screens/workSite/workSiteInProgress';
 import { ValidationScreen } from './screens/workSite/validationScreen';
 import { ProfileButton, TitleHeader } from './components/Header';
+import { ApplicationProvider } from '@ui-kitten/components';
+import * as eva from '@eva-design/eva';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName='WorkSiteList'>
-          <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: '#76C3F0' },
-            headerTitleAlign: 'center',
-            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
-            headerRight: () => <ProfileButton />
-          }} />
-          <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} />
-          <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
-          }} />
-          <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <StatusBar style="auto" />
-    </Provider>
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName='WorkSiteList'>
+            <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
+              headerTintColor: 'white',
+              headerStyle: { backgroundColor: '#76C3F0' },
+              headerTitleAlign: 'center',
+              headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
+              headerRight: () => <ProfileButton />
+            }} />
+            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} />
+            <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#F2F2F2' },
+              headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
+            }} />
+            <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <StatusBar style="auto" />
+      </Provider>
+    </ApplicationProvider>
   );
 }
 

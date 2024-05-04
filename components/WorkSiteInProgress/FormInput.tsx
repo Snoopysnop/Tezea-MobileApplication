@@ -8,10 +8,11 @@ interface FormInputParams {
     name: string,
     placeholder?: string,
     multiline?: boolean,
-    numeric?: boolean
+    numeric?: boolean,
+    optional?: boolean
 }
 
-const FormInput = ({ control, name, placeholder, multiline, numeric }: FormInputParams) => {
+const FormInput = ({ control, name, placeholder, multiline, numeric, optional }: FormInputParams) => {
     return (
         <Controller
             control={control}
@@ -19,18 +20,18 @@ const FormInput = ({ control, name, placeholder, multiline, numeric }: FormInput
             render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
                 <View>
                     <Text style={styles.name}>
-                        {name}
+                        {name} {optional && "(facultatif)"}
                     </Text>
                     <TextInput
-                        style={{borderColor: error?'#E15656':'#ccc', ...styles.input}}
+                        style={{ borderColor: error ? '#E15656' : '#ccc', ...styles.input }}
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={placeholder}
                         multiline={multiline}
-                        numberOfLines={multiline?5:1}
-                        textAlignVertical={multiline?'top':'center'}
-                        keyboardType={numeric?'numeric':'default'}
+                        numberOfLines={multiline ? 5 : 1}
+                        textAlignVertical={multiline ? 'top' : 'center'}
+                        keyboardType={numeric ? 'numeric' : 'default'}
                     />
                     {error && <Text style={styles.errorMessage}>
                         {error.message}
@@ -51,8 +52,6 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 5,
         borderWidth: 1,
-        // flexDirection: "row",
-        // justifyContent: "space-between",
         backgroundColor: '#fff',
         paddingHorizontal: 15,
         paddingVertical: 5,
