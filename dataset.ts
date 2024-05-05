@@ -1,6 +1,6 @@
-import { Category, Civility, Customer, CustomerStatus, Emergency, Incident, IncidentLevel, Role, Service, ToolName, Tool, User, WorkSiteAndRequestAPI, WorkSiteRequestAPI, WorkSiteRequestStatus, WorkSiteStatus, SatisfactionLevel } from "./api/Model"
+import { Category, Civility, Customer, CustomerStatus, Emergency, Incident, IncidentLevel, Role, Service, ToolName, User, WorkSiteAndRequestAPI, WorkSiteRequestAPI, WorkSiteRequestStatus, WorkSiteStatus } from "./api/Model"
 
-const workSiteRequestAPI: WorkSiteRequestAPI[] = [
+export const workSiteRequestAPI: WorkSiteRequestAPI[] = [
     {
         id: 1,
         concierge: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -49,12 +49,12 @@ const workSiteRequestAPI: WorkSiteRequestAPI[] = [
     }
 ]
 
-export const workSites: WorkSiteAndRequestAPI[] = [
+export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
     {
         workSiteChief: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         workSiteRequest: workSiteRequestAPI[0],
-        begin: "2024-05-04T21:36:12.089Z",
-        end: "2024-05-04T21:36:12.089Z",
+        begin: "2024-05-04T09:00:12.089Z",
+        end: "2024-05-04T11:00:12.089Z",
         staff: [
             "3fa85f64-5717-4562-b3fc-2c963f66afa6"
         ],
@@ -74,6 +74,7 @@ export const workSites: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatus.Standby,
+        incident: false,
 
         satisfaction: null,
         signature: null,
@@ -102,13 +103,62 @@ export const workSites: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatus.InProgress,
+        incident: false,
+
+        satisfaction: null,
+        signature: null,
+    },
+    {
+        workSiteChief: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        workSiteRequest: workSiteRequestAPI[1],
+        begin: "2024-05-11T18:00:00.000Z",
+        end: "2024-05-11T19:00:00.000Z",
+        staff: [
+            "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ],
+        equipments: [
+            {
+                name: ToolName.CementMixer,
+                quantity: 2,
+            },
+            {
+                name: ToolName.Ladder,
+                quantity: 1,
+            }
+        ],
+        id: "3fb85f64-5717-4562-b3fc-2c963f66afa6",
+        status: WorkSiteStatus.Done,
+        incident: true,
+
+        satisfaction: null,
+        signature: null,
+    },
+    {
+        workSiteChief: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        workSiteRequest: workSiteRequestAPI[0],
+        begin: "2024-05-12T10:00:00.000Z",
+        end: "2024-05-12T12:30:00.000Z",
+        staff: [
+            "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ],
+        equipments: [
+            {
+                name: ToolName.Palette,
+                quantity: 2,
+            },
+        ],
+        id: "3fb85f64-5717-4563-b3fc-2c963f66afa6",
+        status: WorkSiteStatus.InProgress,
+        incident: true,
 
         satisfaction: null,
         signature: null,
     }
 ]
 
-const users: User[] = [
+export const users: User[] = [
     {
         firstName: "Bruno",
         lastName: "Savon",
@@ -135,7 +185,7 @@ const users: User[] = [
     }
 ]
 
-const customer: Customer = {
+export const customer: Customer = {
     firstName: "Jacques",
     lastName: "Dupont",
     civility: Civility.M,
@@ -149,7 +199,7 @@ const customer: Customer = {
     id: "fa3735eb-81ff-4fb5-ac37-fc2c53b265d9"
 }
 
-const incidents: Incident[] = [
+export const incidents: Incident[] = [
     {
         level: IncidentLevel.Minor,
         title: "Accident Travail",

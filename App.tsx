@@ -20,7 +20,7 @@ const App = () => {
   MainApi.initInstance();
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <Provider store={store}>
+      {/* <Provider store={store}> */}
         <NavigationContainer>
           <Stack.Navigator initialRouteName='WorkSiteList'>
             <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
@@ -46,7 +46,7 @@ const App = () => {
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style="auto" />
-      </Provider>
+      {/* </Provider> */}
     </ApplicationProvider>
   );
 }

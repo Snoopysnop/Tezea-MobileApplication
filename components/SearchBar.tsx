@@ -1,24 +1,27 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Image, TextInput } from 'react-native';
+import { WorkSiteAndRequestAPI } from '../api/Model';
 
-type Props<Type> = {
-    data: Type
+type SearchBarParams = {
+    data: WorkSiteAndRequestAPI[]
     setData: Function
 };
 
-function SearchBar<Type>({ data, setData }: Props<Type>) {
+function SearchBar({ data, setData }: SearchBarParams) {
     const [search, setSearch] = React.useState('');
 
     const handleSearch = (input: string) => {
         setSearch(input);
-        // setData(input);
-        // setData(input == '' ? data : data.filter(element => element.title.toUpperCase().includes(input.toUpperCase())));
+        setData(input == '' ? data : data.filter(element => (
+            element.workSiteRequest.title.toUpperCase().includes(input.toUpperCase())
+            || element.workSiteRequest.city.toUpperCase().includes(input.toUpperCase())
+        )));
     }
 
     return (
         <View style={styles.searchBarContainer}>
             <TextInput
-                placeholder="Search..."
+                placeholder="Rechercher..."
                 placeholderTextColor='#ccc'
                 onChangeText={handleSearch}
                 value={search}

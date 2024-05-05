@@ -162,7 +162,7 @@ interface WorkSiteRequestBase {
     volumeEstimate: number,
     provider: string,
     tezeaAffectation: string,
-    status: WorkSiteRequestStatus
+    status: WorkSiteRequestStatus,
 }
 
 export interface WorkSiteRequestAPI extends WorkSiteRequestBase {
@@ -187,7 +187,8 @@ interface WorkSiteBase {
     id: string,
     satisfaction: SatisfactionLevel | null,
     status: WorkSiteStatus,
-    signature: string | null 
+    signature: string | null,
+    incident: boolean,
 }
 
 export interface WorkSiteAPI extends WorkSiteBase {
@@ -205,16 +206,16 @@ export interface WorkSite extends WorkSiteBase {
 }
 
 interface WorkSiteAndRequestBase {
-    workSiteRequest: WorkSiteRequestAPI,
-
     equipments: Tool[],
     id: string,
     satisfaction: SatisfactionLevel | null,
     status: WorkSiteStatus,
     signature: string | null
+    incident: boolean,
 }
 
 export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {
+    workSiteRequest: WorkSiteRequestAPI,
     workSiteChief: string,
     staff: string[],
     begin: string,
@@ -222,6 +223,7 @@ export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {
 }
 
 export interface WorkSiteAndRequest extends WorkSiteAndRequestBase {
+    workSiteRequest: WorkSiteAndRequestBase,
     workSiteChief: User,
     staff: User[],
     begin: Date,
