@@ -8,7 +8,7 @@ import store from './redux/store';
 import { WorkSiteList } from './screens/workSiteList';
 import { WorkSiteInfo } from './screens/workSite/workSiteInfo';
 import { WorkSiteInProgress } from './screens/workSite/workSiteInProgress';
-import { ValidationScreen } from './screens/workSite/validationScreen';
+import { SignatureScreen } from './screens/workSite/validationScreen';
 import { ProfileButton, TitleHeader } from './components/Header';
 import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
@@ -50,7 +50,7 @@ const App = () => {
             headerStyle: { backgroundColor: '#F2F2F2' },
             headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
           }} />
-          <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
+          <Stack.Screen name="ValidationScreen" component={SignatureScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style="auto" />
