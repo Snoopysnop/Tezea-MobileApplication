@@ -23,9 +23,9 @@ type WorkSiteInfoParams = {
   workSiteAndRequest: WorkSiteAndRequest;
 }
 //Gestion données dataset
-const premierWorkSite = workSitesAndRequests[0];
+
 const premierConcierge = users[0];
-function WorkSiteInfo ()  {
+function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
 
   const [invoices, setInvoices] = useState<InvoiceInfo[]>([])
   const [selectedElement, setSelectedElement] = useState<InvoiceInfo | IncidentInfo>()
@@ -34,8 +34,6 @@ function WorkSiteInfo ()  {
   const [employeesModal, setEmployeeModal] = React.useState(false);
   const [stuffModal, setStuffModal] = React.useState(false);
 
-function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
-  // const workSiteAndRequestAPI = route.params.workSiteAndRequestAPI as WorkSiteAndRequestAPI;
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [index, setIndex] = useState(0);
@@ -73,7 +71,7 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
     
     navigation.setOptions({
       
-      headerTitle: () => <TitleHeader title={premierWorkSite.workSiteRequest.title} subtitle={premierWorkSite.status} isBlue={false} />,
+      headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
     });
   }, [])
 
@@ -89,23 +87,23 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
         return (
           <View style={styles.listeInfoTabView}>
             
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.siteChief.firstName}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.customer.firstName}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.serviceType}</Text></Text>           
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.category}</Text></Text>            
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.creationDate.toDateString()}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Affectation TEZEA : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.tezeaAffectation}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.siteChief.firstName}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.customer.firstName}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.serviceType}</Text></Text>           
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.category}</Text></Text>            
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.creationDate.toDateString()}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Affectation TEZEA : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.tezeaAffectation}</Text></Text>
         </View>
         );
       case "text":
         return (
           <View style={styles.listeInfoTabView}>
 
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Descritption du chantier : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.description}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Descritption du chantier : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.description}</Text></Text>
             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Données estimées :</Text>
-            <Text style={styles.tabed}>Date: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.estimatedDate.toDateString()}</Text></Text>
-            <Text style={styles.tabed}>Volume: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.volumeEstimate}</Text></Text>  
-            <Text style={styles.tabed}>Poids: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.weightEstimate}</Text></Text>
+            <Text style={styles.tabed}>Date: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.estimatedDate.toDateString()}</Text></Text>
+            <Text style={styles.tabed}>Volume: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.volumeEstimate}</Text></Text>  
+            <Text style={styles.tabed}>Poids: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.weightEstimate}</Text></Text>
 
             <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => setEmployeeModal(true)}>
@@ -267,24 +265,24 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
     <View style={styles.ellipseContainer}>
-    <View style={[styles.ellipse, { borderColor: premierWorkSite.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: premierWorkSite.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
+    <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
         </View>
       </View>
 
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: premierWorkSite.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: premierWorkSite.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
         </View>
       </View>
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: premierWorkSite.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: premierWorkSite.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
       </View>
       </View>
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: premierWorkSite.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: premierWorkSite.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
         </View>
       </View>
 
@@ -293,11 +291,11 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
 </View>
 
     <View style={styles.listeInfoBase}>
-    <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.begin.toDateString()}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.end.toDateString()}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.city}</Text></Text>
+    <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.end.toDateString()}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
       <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierConcierge.firstName} {premierConcierge.lastName}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierWorkSite.workSiteRequest.emergency}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
     </View>
 
   </View>
@@ -312,7 +310,6 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
 
   );
 };
-}
 const styles = StyleSheet.create({
   backgroundLayout: {
     height: StyleVariable.phoneHeight,

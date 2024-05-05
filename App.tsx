@@ -38,6 +38,7 @@ const App = () => {
             headerRight: () => <ProfileButton />
           }}
           />
+          
           <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} options={{
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: '#F2F2F2' },
