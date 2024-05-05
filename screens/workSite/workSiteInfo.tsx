@@ -1,55 +1,218 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleVariable, Color, FontSize, Border } from "../../GlobalStyles";
+import * as React from "react";
+import { StyleSheet, View, Text, Pressable, TouchableOpacity, ScrollView } from "react-native";
 import { Image } from "expo-image";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, ParamListBase } from "@react-navigation/native";
-import { StyleVariable, Color, FontSize, Border } from "../../GlobalStyles";
 import { TabView, TabBar } from "react-native-tab-view";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { TitleHeader } from "../../components/Header";
 import { WorkSiteAndRequest } from '../../api/Model';
+import MainApi from "../../api/MainApi";
+import { workSitesAndRequests, users, customer, incidents } from '../../dataset';
+import { DetailsButtons } from "../../components/WorkSiteInProgress/DetailsButtons";
+import { Ionicons } from '@expo/vector-icons';
+import { IncidentInfo, InvoiceInfo } from "./workSiteInProgress";
+import EmployeesModal from '../../components/WorkSiteInProgress/EmployeesModal';
+import StuffModal from '../../components/WorkSiteInProgress/StuffModal';
+import { BasicModal } from "../../components/BasicModal";
+
 
 type WorkSiteInfoParams = {
   workSiteAndRequest: WorkSiteAndRequest;
 }
+//Gestion données dataset
 
+const premierConcierge = users[0];
 function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
-  // const workSiteAndRequestAPI = route.params.workSiteAndRequestAPI as WorkSiteAndRequestAPI;
+
+  const [invoices, setInvoices] = useState<InvoiceInfo[]>([])
+  const [selectedElement, setSelectedElement] = useState<InvoiceInfo | IncidentInfo>()
+  const [invoiceModal, setInvoiceModal] = React.useState(false);
+  const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
+  const [employeesModal, setEmployeeModal] = React.useState(false);
+  const [stuffModal, setStuffModal] = React.useState(false);
+
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "image", icon: require("../../assets/information-545674-1.png") },
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
+    { key: "history", icon: require("../../assets/history.png") },
   ]);
 
+  const addInvoice = (invoice: InvoiceInfo) => {
+    let tmpInvoices = invoices
+    tmpInvoices.push(invoice)
+    setInvoices(tmpInvoices)
+  }
+
+  const createInvoiceManually = () => {
+    const newInvoice: InvoiceInfo = {
+      title: 'Facture 001CACA',
+      description: 'Réparation antenne',
+      price: '100',
+      invoice: {
+        uri: '', // Spécifiez l'URI de votre fichier ou image
+        name: 'facture001.pdf', // Nom de la facture
+        type: 'file', // Spécifiez le type de la facture (fichier ou image)
+      }
+    };
+    addInvoice(newInvoice); // Ajoutez la nouvelle facture à la liste des factures
+  };
   useEffect(() => {
+    createInvoiceManually(); 
+  }, []); 
+
+  
+  useEffect(() => {
+    
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title='Réparation Antenne' subtitle='En Cours' isBlue={false} />,
+      
+      headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
     });
   }, [])
 
+
+  const fetchHeaderInfo = async() => {
+    //await MainApi.getInstance().getUsers();
+}
+
+const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "image":
         return (
-          <Image
-            style={styles.image}
-            contentFit="cover"
-            source={require("../../assets/information-545674-1.png")}
-          />
+          <View style={styles.listeInfoTabView}>
+            
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.siteChief.firstName}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.customer.firstName}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.serviceType}</Text></Text>           
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.category}</Text></Text>            
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.creationDate.toDateString()}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Affectation TEZEA : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.tezeaAffectation}</Text></Text>
+        </View>
         );
       case "text":
         return (
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              a dolor in sapien molestie porttitor. Pellentesque viverra rhoncus
-              dolor, non pharetra nunc rutrum ullamcorper. Nam maximus est egestas
-              odio ultricies, quis maximus sapien feugiat. Maecenas bibendum
-              fringilla lorem, vitae pulvinar libero dignissim sit amet.
-            </Text>
+          <View style={styles.listeInfoTabView}>
+
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Descritption du chantier : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.description}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Données estimées :</Text>
+            <Text style={styles.tabed}>Date: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.estimatedDate.toDateString()}</Text></Text>
+            <Text style={styles.tabed}>Volume: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.volumeEstimate}</Text></Text>  
+            <Text style={styles.tabed}>Poids: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.weightEstimate}</Text></Text>
+
+            <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={() => setEmployeeModal(true)}>
+        <Text style={styles.buttonText}>Voir Personnel</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={() => setStuffModal(true)}>
+        <Text style={styles.buttonText}>Voir Matériel</Text>
+      </TouchableOpacity>
+            </View>
+            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal isVisible={false} onClose={function (): void {
+              throw new Error("Function not implemented.");
+            } } />} />
+            <BasicModal isModalVisible={stuffModal} setIsModalVisible={setStuffModal} component={<StuffModal isVisible={false} onClose={function (): void {
+              throw new Error("Function not implemented.");
+            } } />} />
+        </View>
+        
+        );
+        case "history":
+        return (
+          //Facture
+          <View>
+            <ScrollView >
+
+
+          <View style ={{paddingTop: 20}}>
+            <View style={{ justifyContent: 'center', height: 30 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: '#76C3F0', ...styles.title }}>Facture</Text>
+              </View>
+            </View>
+
+            {invoices?.map((invoice, index) => {
+              return (
+                <View key={index} style={{ paddingBottom:5}}  >
+                  <TouchableOpacity onPress={() => {
+                    setSelectedElement(invoice);
+                    setReviewInvoiceModal(true);
+                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
+                    {invoice.invoice.type == 'file' ?
+                      <Image
+                        source={require('../../assets/file.png')}
+                        style={{ width: 40, height: 40, backgroundColor: 'white', margin: 10 }}
+                      />
+                      :
+                      <Image
+                        source={{ uri: invoice.invoice.uri }}
+                        style={{ width: 60, height: 60, backgroundColor: 'white' }}
+                      />
+                    }
+
+                    <View style={{ flex: 2 }}>
+                      <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{invoice.title}</Text>
+                      <Text numberOfLines={1} style={{ ...styles.subtitle }}>{invoice.description}</Text>
+                    </View>
+
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.price}€</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
+
+          <View style ={{paddingTop: 20}}>
+            <View style={{ justifyContent: 'center', height: 30 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: '#76C3F0', ...styles.title }}>Incidents</Text>
+              </View>
+            </View>
+
+            {incidents?.map((incident, index) => {
+              return (
+                <View key={index} style={{ paddingBottom:5}}>
+                  <TouchableOpacity onPress={() => {
+                    //setSelectedElement(incident);
+                    setReviewInvoiceModal(true);
+                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
+                    <Image
+                      source={{ uri: incident.evidences[0] }}
+                      style={{ width: 60, height: 60, backgroundColor: 'white' }}
+                    />
+
+                    <View style={{ flex: 2 }}>
+                      <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{incident.title}</Text>
+                      <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
+                    </View>
+
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+          <View style ={{paddingTop: 20}}>
+            <View style={{ justifyContent: 'center', height: 30 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
+              </View>
+          </View>
+
+          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}>MIAM LE CACA DANS MA BOUCHE JAIME TROP CA CEST TROP BON PTN AVEC UN PETIT COULIS DE PIPI SUCREE AVEC DES FESSE DE PROUT CEST TROP BON </Text>
+          </View>
+
+          <View style={styles.container}>
+      <Text style={styles.ratingText}>Satisfaction client : {3}/5</Text>
+    </View>
+          </ScrollView>
+            </View>
         );
       default:
         return null;
@@ -89,24 +252,53 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
         </Text>
       </Pressable>
 
-      <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
-        <View style={styles.desInfosSurContainer}>
-          <Text style={[styles.desInfosSur, styles.desInfosSurTypo]}>
-            {`Des infos sur le chantier`}
-          </Text>
-          <Text style={styles.blahBlahBlah}>
-            {`blah blah blah`}
-          </Text>
+
+    <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
+
+    <View style={styles.desInfosSurContainer}>
+      <Text style={{ color: 'black', fontSize: 18, fontWeight: '500' }}>
+        {`Informations sur le chantier`}
+      </Text>
+    </View>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+    <View style={styles.ellipseContainer}>
+    <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
         </View>
-        <Text style={styles.loremIpsumDolor1}>
-          ZIZI ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a
-          dolor in sapien molestie porttitor. Pellentesque viverra rhoncus
-          dolor, non pharetra nunc rutrum ullamcorper. Nam maximus est egestas
-          odio ultricies, quis maximus sapien feugiat. Maecenas bibendum
-          fringilla lorem, vitae pulvinar libero dignissim sit amet.
-        </Text>
       </View>
 
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
+        </View>
+      </View>
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
+      </View>
+      </View>
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
+        </View>
+      </View>
+
+</View>
+
+</View>
+
+    <View style={styles.listeInfoBase}>
+    <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.end.toDateString()}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierConcierge.firstName} {premierConcierge.lastName}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
+    </View>
+
+  </View>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -114,12 +306,10 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
         renderTabBar={renderTabBar}
         style={styles.tabView}
       />
-
     </View>
 
   );
 };
-
 const styles = StyleSheet.create({
   backgroundLayout: {
     height: StyleVariable.phoneHeight,
@@ -237,7 +427,7 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_8xs,
     backgroundColor: Color.systemBackgroundsSBLPrimary,
     width: 336,
-    height: 220,
+    height: 200,
     paddingVertical: 10,
     paddingLeft: 10
 
@@ -262,8 +452,7 @@ const styles = StyleSheet.create({
   },
   loremIpsumDolor1: {
     color: Color.colorBlack,
-    fontSize: FontSize.size_xs,
-    flex: 2,
+    marginTop: 3
   },
   desInfosSurContainer: {
     marginBottom: 10,
@@ -290,7 +479,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   textContainer: {
-    flex: 1,
+    marginTop:30,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -302,15 +491,84 @@ const styles = StyleSheet.create({
   },
   tabView: {
     width: 336,
-    height: 300,
+    height:370,
     position: "absolute",
-    bottom: 150,
+    bottom: 80,
   },
   pressableContainer: {
     position: "absolute",
   },
   imageContainer: {
     position: "absolute",
+  },
+
+  listeInfoBase: {
+    top:20,
+  },
+  listeInfoTabView: {
+    top:25,
+  },
+  tabed: {
+    color: 'black', fontSize: 16, fontWeight: '500' ,
+    marginLeft:20,
+    marginTop: 3
+  },
+
+  ellipseContainer: {
+    marginTop: 0,
+    alignItems: 'center',
+    marginRight:10,
+  },
+  ellipse: {
+    width: 65,
+    height: 25,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ellipseText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  subtitle: {
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    padding: 10,
+  },
+  ratingText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  }, 
+    buttonContainer: {
+    flexDirection: 'row',
+    gap:10,
+    marginTop: 20,
+
+  },
+  button: {
+    flex:1,
+    borderWidth: 2,
+    borderColor: '#3FDCE0',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#3FDCE0',
+    textAlign: 'center',
   },
 });
 

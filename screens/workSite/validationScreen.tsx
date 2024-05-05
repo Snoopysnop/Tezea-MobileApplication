@@ -6,8 +6,14 @@ import { captureRef } from 'react-native-view-shot';
 import * as FileSystem from 'expo-file-system';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from "@react-navigation/stack";
+import { AirbnbRating } from 'react-native-ratings';
 
-const ValidationScreen = () => {
+const SignatureScreen = () => {
+
+
+const handleRating = (rating: number) => {
+alert(rating);
+};
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [paths, setPaths] = useState<string[]>([]);
@@ -68,6 +74,7 @@ const ValidationScreen = () => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       {capturedImageUri ? (
@@ -76,11 +83,23 @@ const ValidationScreen = () => {
             <View style={styles.blueRectangle}>
               <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
             </View>
+            <View style={[styles.ratingContainer]}>
+            <AirbnbRating
+              count={5}
+              reviews={["Terrible", "Mauvais", "Moyen", "Bon", "Excellent"]}
+              defaultRating={0}
+              size={30}
+              showRating={true}
+              onFinishRating={handleRating}
+            />
+            </View>
             <View style={styles.modalButtonContainer}>
               <Button title="Valider" onPress={handleValidate} />
               <Button title="Close" onPress={handleModalClose} />
             </View>
+            
           </View>
+          
         </Modal>
       ) : (
 
@@ -93,6 +112,7 @@ const ValidationScreen = () => {
         </Svg>
       )}
       {!capturedImageUri && (
+        
         <View style={styles.buttonContainer}>
           <Button title="Capture" onPress={handleCapture} />
           <Button title="Clear" onPress={handleClear} />
@@ -112,17 +132,17 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   blueRectangle: {
-    backgroundColor: 'blue',
-    padding: 20,
+    backgroundColor: '#f2f2f2',
+    padding: 10,
     borderRadius: 10,
+    marginTop: 100,
   },
   modalImage: {
-    width: Dimensions.get('window').width - 80,
-    height: Dimensions.get('window').height - 160,
+    width: Dimensions.get('window').width - 60, // Réduit la largeur de l'image
+    height: Dimensions.get('window').height - 400, // Réduit la hauteur de l'image
   },
   modalButtonContainer: {
     flexDirection: 'row',
@@ -136,6 +156,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
   },
+  ratingContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  
 });
 
-export { ValidationScreen };
+export {SignatureScreen};
