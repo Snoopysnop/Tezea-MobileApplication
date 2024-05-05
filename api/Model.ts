@@ -223,7 +223,7 @@ export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {
 }
 
 export interface WorkSiteAndRequest extends WorkSiteAndRequestBase {
-    workSiteRequest: WorkSiteAndRequestBase,
+    workSiteRequest: WorkSiteRequest,
     workSiteChief: User,
     staff: User[],
     begin: Date,

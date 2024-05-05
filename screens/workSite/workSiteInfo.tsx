@@ -1,48 +1,33 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, ParamListBase } from "@react-navigation/native";
-import {
-  StyleVariable,
-  Color,
-  FontSize,
-  Border,
-} from "../../GlobalStyles";
+import { StyleVariable, Color, FontSize, Border } from "../../GlobalStyles";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useEffect } from "react";
 import { TitleHeader } from "../../components/Header";
-import MainApi from "../../api/MainApi";
-import { WorkSiteAndRequestAPI } from "../../api/Model";
-import { RootStackParamList } from '../types';
+import { WorkSiteAndRequest } from '../../api/Model';
 
 type WorkSiteInfoParams = {
-  workSiteAndRequest: WorkSiteAndRequestAPI;
+  workSiteAndRequest: WorkSiteAndRequest;
 }
 
 function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
+  // const workSiteAndRequestAPI = route.params.workSiteAndRequestAPI as WorkSiteAndRequestAPI;
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "image", icon: require("../../assets/information-545674-1.png") },
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
   ]);
-
 
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => <TitleHeader title='Réparation Antenne' subtitle='En Cours' isBlue={false} />,
     });
-    fetchHeaderInfo();
-
-    console.log(workSiteAndRequest)
   }, [])
-
-
-  const fetchHeaderInfo = async () => {
-    //await MainApi.getInstance().getUsers();
-  }
-
 
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
@@ -89,14 +74,11 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
           }}
         />
       )}
-
-
     />
   );
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top: 20 }}>
-
 
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
@@ -106,7 +88,6 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
           Démarrer le chantier
         </Text>
       </Pressable>
-
 
       <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
         <View style={styles.desInfosSurContainer}>
@@ -125,7 +106,6 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
           fringilla lorem, vitae pulvinar libero dignissim sit amet.
         </Text>
       </View>
-
 
       <TabView
         navigationState={{ index, routes }}

@@ -35,8 +35,8 @@ function WorkSiteCard({ workSiteAndRequest }: WorkSiteCardParams) {
   return (
     <TouchableOpacity
       style={{ flexDirection: 'row', backgroundColor: '#fff', minWidth: '100%', marginBottom: 2, height: 80, borderRadius: 5 }}
-      onPress={() => navigation.navigate('WorkSiteInfo', {
-        workSiteAndRequest: workSiteAndRequest
+      onPress={() => navigation.navigate('WorkSiteManager', {
+        workSiteAndRequestAPI: workSiteAndRequest
       })}
     >
       <View style={[styles.centerElement, { width: 55 }]}>

@@ -13,6 +13,7 @@ import { ProfileButton, TitleHeader } from './components/Header';
 import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import MainApi from './api/MainApi';
+import { WorkSiteManager } from './screens/workSite/workSiteManager';
 
 const Stack = createStackNavigator();
 
@@ -21,31 +22,38 @@ const App = () => {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName='WorkSiteList'>
-            <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
-              headerTintColor: 'white',
-              headerStyle: { backgroundColor: '#76C3F0' },
-              headerTitleAlign: 'center',
-              headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
-              headerRight: () => <ProfileButton />
-            }} />
-            <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} options={{
-              headerTitleAlign: 'center',
-              headerStyle: { backgroundColor: '#F2F2F2' },
-              headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />,
-              headerRight: () => <ProfileButton />
-            }}
-              />
-            <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
-              headerTitleAlign: 'center',
-              headerStyle: { backgroundColor: '#F2F2F2' },
-              headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
-            }} />
-            <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <StatusBar style="auto" />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='WorkSiteList'>
+          <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: '#76C3F0' },
+            headerTitleAlign: 'center',
+            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
+            headerRight: () => <ProfileButton />
+          }} />
+          <Stack.Screen name="WorkSiteManager" component={WorkSiteManager} options={{
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#F2F2F2' },
+            headerTitle: () => <TitleHeader title='Titre de la Missssssion' subtitle='Statut' isBlue={false} />,
+            headerRight: () => <ProfileButton />
+          }}
+          />
+          <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} options={{
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#F2F2F2' },
+            headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />,
+            headerRight: () => <ProfileButton />
+          }}
+          />
+          <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#F2F2F2' },
+            headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
+          }} />
+          <Stack.Screen name="ValidationScreen" component={ValidationScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <StatusBar style="auto" />
       {/* </Provider> */}
     </ApplicationProvider>
   );

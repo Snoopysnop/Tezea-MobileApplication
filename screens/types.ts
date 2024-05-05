@@ -3,7 +3,7 @@ import { WorkSiteAndRequestAPI } from '../api/Model';
 
 export type RootStackParamList = {
   WorkSiteList: undefined;
-  WorkSiteInfo: undefined;
+  WorkSiteInfo: { workSiteRequestAPI: WorkSiteAndRequestAPI };
   WorkSiteInProgress: undefined
   ValidationScreen: undefined
 };
