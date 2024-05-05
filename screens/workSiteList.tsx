@@ -1,5 +1,5 @@
-import React, { useEffect, useState} from 'react';
-import { View, StyleSheet, ScrollView,Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { WorkSiteDay } from '../components/WorkSiteList/WorkSiteDay';
@@ -17,13 +17,15 @@ type Props = {
 // Corrected the props definition and parameter
 function WorkSiteList({ navigation }: Props) {
   const [workSites, setWorkSites] = useState<User[]>([])
-  useEffect(() => { 
+
+  useEffect(() => {
     fetchWorkSites()
-  },[])
-  const fetchWorkSites = async () => { 
-    const usersArray = await MainApi.getInstance().getUsers()
-    setWorkSites(usersArray)
-    }
+  }, [])
+
+  const fetchWorkSites = async () => {
+    let response = await MainApi.getInstance().getUsers()
+    setWorkSites(response)
+  }
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -34,7 +36,7 @@ function WorkSiteList({ navigation }: Props) {
       </View>
       <Text>
         {JSON.stringify(workSites)}
-        </Text>
+      </Text>
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
