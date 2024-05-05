@@ -15,7 +15,7 @@ export enum Category {
     LocationVelosElectriques = "Location Velos Electriques"
 }
 
-export enum ToolName{
+export enum ToolName {
     Stapler = "Agrafeuse",
     CementMixer = "Bétonnière",
     Shear = "Cisaille",
@@ -61,7 +61,7 @@ export enum SatisfactionLevel {
     High = "Très Satisfait",
     Medium = "Satisfait",
     Low = "Peu Satisfait",
-    Dissatisfied = "Pas Du Tout"
+    Dissatisfied = "Pas Du Tout Satisfait"
 }
 
 export enum Service {
@@ -84,7 +84,7 @@ export enum WorkSiteRequestStatus {
 }
 
 export enum WorkSiteRequestStatusListPage {
-    ToComplete ="A compléter",
+    ToComplete = "A compléter",
     Standby = "En attente",
     Done = "Terminé",
     Archive = "Archivé"
@@ -146,44 +146,88 @@ export interface Customer {
     company: string;
 }
 
-export interface WorkSiteRequest {
-    id: string;
-    concierge: User;
-    siteChief: User | undefined;
-    customer: Customer;
-    city: string;
-    workSites: WorkSite[] | undefined;
-    serviceType: Service;
-    description: string;
-    emergency: Emergency;
-    title: string;
-    category: Category;
-    removal: boolean;
-    delivery: boolean;
-    removalRecycling: boolean;
-    chronoQuote: boolean;
-    date: Date;
-    requestStatus: WorkSiteRequestStatus;
-    hourReturnDeposit: string;
-    hourArrival: string;
-    hourDeparture: string;
-    weightEstimate: number;
-    volumeEstimation: number;
-    provider: string;
-    tezeaAffectation: string;
+interface WorkSiteRequestBase {
+    id: number,
+    city: string,
+    serviceType: Service,
+    description: string,
+    emergency: Emergency,
+    title: string,
+    category: Category,
+    removal: boolean,
+    delivery: boolean,
+    removalRecycling: boolean,
+    chronoQuote: boolean,
+    weightEstimate: number,
+    volumeEstimate: number,
+    provider: string,
+    tezeaAffectation: string,
+    status: WorkSiteRequestStatus,
 }
 
-export interface WorkSite {
-    id: string;
-    workSiteChief: User | undefined;
-    staff: User[];
-    equipment: Tool[];
-    begin: Date;
-    end: Date;
-    status: WorkSiteStatus;
-    request: WorkSiteRequest | undefined; //todo a voir si on laisse undefined
-    satisfaction: SatisfactionLevel;
-    signature?: String;
+export interface WorkSiteRequestAPI extends WorkSiteRequestBase {
+    concierge: string,
+    siteChief: string,
+    customer: string,
+    estimatedDate: string,
+    creationDate: string
+}
+
+export interface WorkSiteRequest extends WorkSiteRequestBase {
+    concierge: User,
+    siteChief: User,
+    customer: Customer,
+    estimatedDate: Date,
+    creationDate: Date
+}
+
+interface WorkSiteBase {
+    workSiteRequest: number,
+    equipments: Tool[],
+    id: string,
+    satisfaction: SatisfactionLevel | null,
+    status: WorkSiteStatus,
+    signature: string | null,
+    incident: boolean,
+}
+
+export interface WorkSiteAPI extends WorkSiteBase {
+    workSiteChief: string,
+    staff: string[],
+    begin: string,
+    end: string
+}
+
+export interface WorkSite extends WorkSiteBase {
+    workSiteChief: User,
+    staff: User[],
+    begin: Date,
+    end: Date
+}
+
+interface WorkSiteAndRequestBase {
+    equipments: Tool[],
+    id: string,
+    satisfaction: SatisfactionLevel | null,
+    status: WorkSiteStatus,
+    signature: string | null
+    incident: boolean,
+}
+
+export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {
+    workSiteRequest: WorkSiteRequestAPI,
+    workSiteChief: string,
+    staff: string[],
+    begin: string,
+    end: string,
+}
+
+export interface WorkSiteAndRequest extends WorkSiteAndRequestBase {
+    workSiteRequest: WorkSiteRequest,
+    workSiteChief: User,
+    staff: User[],
+    begin: Date,
+    end: Date,
 }
 
 export interface User {
@@ -200,4 +244,25 @@ export interface Tool {
     quantity: number;
 }
 
+export enum IncidentLevel {
+    Minor = "Mineur",
+    Medium = "Moyen",
+    Severe = "Grave",
+    Blocking = "Bloquant"
+}
 
+export interface Incident {
+    level: IncidentLevel,
+    title: string,
+    description: string,
+    id: string,
+    evidences: string[]
+}
+
+export interface Invoice {
+    title: string,
+    description: string,
+    id: string,
+    amount: number,
+    invoice: string
+}

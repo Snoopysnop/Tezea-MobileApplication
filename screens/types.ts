@@ -1,10 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
+import { WorkSiteAndRequestAPI } from '../api/Model';
 
 export type RootStackParamList = {
   WorkSiteList: undefined;
-  WorkSiteInfo: undefined;
-  WorkSiteInProgress:undefined
-  ValidationScreen:undefined
+  WorkSiteInfo: { workSiteRequestAPI: WorkSiteAndRequestAPI };
+  WorkSiteInProgress: undefined
+  ValidationScreen: undefined
 };
 
 export type WorkSiteListNavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;

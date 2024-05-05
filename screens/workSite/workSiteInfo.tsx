@@ -1,45 +1,33 @@
-import * as React from "react";
+import { useState } from 'react';
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, ParamListBase } from "@react-navigation/native";
-import {
-  StyleVariable,
-  FontFamily,
-  Color,
-  FontSize,
-  Border,
-} from "../../GlobalStyles";
+import { StyleVariable, Color, FontSize, Border } from "../../GlobalStyles";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useEffect } from "react";
 import { TitleHeader } from "../../components/Header";
-import MainApi from "../../api/MainApi";
+import { WorkSiteAndRequest } from '../../api/Model';
 
+type WorkSiteInfoParams = {
+  workSiteAndRequest: WorkSiteAndRequest;
+}
 
-const WorkSiteInfo = () => {
-
-
-
+function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
+  // const workSiteAndRequestAPI = route.params.workSiteAndRequestAPI as WorkSiteAndRequestAPI;
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "image", icon: require("../../assets/information-545674-1.png") },
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
   ]);
-
 
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => <TitleHeader title='Réparation Antenne' subtitle='En Cours' isBlue={false} />,
     });
-    fetchHeaderInfo();
   }, [])
-
-
-  const fetchHeaderInfo = async() => {
-    //await MainApi.getInstance().getUsers();
-}
-
 
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
@@ -86,43 +74,38 @@ const WorkSiteInfo = () => {
           }}
         />
       )}
-
-
     />
   );
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' ,top: 20 }}>
-
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top: 20 }}>
 
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
-        onPress={() =>  navigation.navigate("WorkSiteInProgress")}
+        onPress={() => navigation.navigate("WorkSiteInProgress")}
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
           Démarrer le chantier
         </Text>
       </Pressable>
 
-
       <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
-    <View style={styles.desInfosSurContainer}>
-      <Text style={[styles.desInfosSur, styles.desInfosSurTypo]}>
-        {`Des infos sur le chantier`}
-      </Text>
-      <Text style={styles.blahBlahBlah}>
-        {`blah blah blah`}
-      </Text>
-    </View>
-    <Text style={styles.loremIpsumDolor1}>
-      ZIZI ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a
-      dolor in sapien molestie porttitor. Pellentesque viverra rhoncus
-      dolor, non pharetra nunc rutrum ullamcorper. Nam maximus est egestas
-      odio ultricies, quis maximus sapien feugiat. Maecenas bibendum
-      fringilla lorem, vitae pulvinar libero dignissim sit amet.
-    </Text>
-  </View>
-
+        <View style={styles.desInfosSurContainer}>
+          <Text style={[styles.desInfosSur, styles.desInfosSurTypo]}>
+            {`Des infos sur le chantier`}
+          </Text>
+          <Text style={styles.blahBlahBlah}>
+            {`blah blah blah`}
+          </Text>
+        </View>
+        <Text style={styles.loremIpsumDolor1}>
+          ZIZI ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a
+          dolor in sapien molestie porttitor. Pellentesque viverra rhoncus
+          dolor, non pharetra nunc rutrum ullamcorper. Nam maximus est egestas
+          odio ultricies, quis maximus sapien feugiat. Maecenas bibendum
+          fringilla lorem, vitae pulvinar libero dignissim sit amet.
+        </Text>
+      </View>
 
       <TabView
         navigationState={{ index, routes }}
@@ -133,7 +116,7 @@ const WorkSiteInfo = () => {
       />
 
     </View>
-    
+
   );
 };
 
@@ -166,7 +149,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   desInfosSurTypo: {
-    fontFamily: FontFamily.interMedium,
     fontWeight: "500",
   },
   background: {
@@ -203,7 +185,6 @@ const styles = StyleSheet.create({
   },
   rparationAntenneEnAttenteContainer: {
     fontWeight: "600",
-    fontFamily: FontFamily.interSemiBold,
     left: 0,
     top: 0,
   },
@@ -228,7 +209,6 @@ const styles = StyleSheet.create({
     left: 20,
     letterSpacing: 0.8,
     fontWeight: "800",
-    fontFamily: FontFamily.interExtraBold,
     color: Color.systemBackgroundsSBLPrimary,
     width: 178,
     fontSize: FontSize.size_mini,
@@ -259,8 +239,8 @@ const styles = StyleSheet.create({
     width: 336,
     height: 220,
     paddingVertical: 10,
-    paddingLeft:10
-    
+    paddingLeft: 10
+
   },
   loremIpsumDolor: {
     top: 358,
@@ -278,14 +258,12 @@ const styles = StyleSheet.create({
   blahBlahBlah: {
     fontSize: FontSize.size_2xs,
     fontStyle: "italic",
-    fontFamily: FontFamily.interLight,
     color: Color.colorGray_200,
   },
   loremIpsumDolor1: {
-    fontFamily: FontFamily.interRegular,
     color: Color.colorBlack,
     fontSize: FontSize.size_xs,
-    flex:2,
+    flex: 2,
   },
   desInfosSurContainer: {
     marginBottom: 10,
@@ -319,13 +297,12 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     marginHorizontal: 20,
-    fontFamily: FontFamily.interRegular,
     fontSize: FontSize.size_xs,
     color: Color.colorBlack,
   },
   tabView: {
     width: 336,
-    height:300,
+    height: 300,
     position: "absolute",
     bottom: 150,
   },
@@ -337,4 +314,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export  {WorkSiteInfo};
+export { WorkSiteInfo };

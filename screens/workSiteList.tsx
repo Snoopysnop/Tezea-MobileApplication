@@ -1,50 +1,78 @@
-import React, { useEffect, useState} from 'react';
-import { View, StyleSheet, ScrollView,Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { WorkSiteDay } from '../components/WorkSiteList/WorkSiteDay';
 import { Button } from '@rneui/themed';
 import { SearchBar } from '../components/SearchBar';
-import { User, WorkSite } from '../api/Model';
+import { User, WorkSite, WorkSiteAndRequestAPI } from '../api/Model';
+import { workSitesAndRequestsAPI } from '../dataset';
 import MainApi from '../api/MainApi';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
-type Props = {
+type WorkSiteListParams = {
   navigation: Screen1NavigationProp;
 };
 
 // Corrected the props definition and parameter
-function WorkSiteList({ navigation }: Props) {
-  const [workSites, setWorkSites] = useState<User[]>([])
-  useEffect(() => { 
-    fetchWorkSites()
-  },[])
-  const fetchWorkSites = async () => { 
-    const usersArray = await MainApi.getInstance().getUsers()
-    setWorkSites(usersArray)
-    }
+function WorkSiteList({ navigation }: WorkSiteListParams) {
+  const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
+  const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
+  const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
+
+  useEffect(() => {
+    // fetchWorkSitesAndRequests()
+    setWorkSitesAndRequests(workSitesAndRequestsAPI)
+    setFilteredWorkSitesAndRequests(workSitesAndRequestsAPI)
+    setGroupedWorkSitesAndRequests(groupByDay(workSitesAndRequestsAPI))
+  }, [])
+
+  useEffect(() => {
+    setGroupedWorkSitesAndRequests(groupByDay(filteredWorkSitesAndRequests))
+  }, [filteredWorkSitesAndRequests])
+
+  const fetchWorkSitesAndRequests = async () => {
+    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("TODO ADD USER ID")
+    setWorkSitesAndRequests(response)
+    setGroupedWorkSitesAndRequests(groupByDay(response))
+  }
+
+  const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
+    const groupedWorkSites: Map<string, WorkSiteAndRequestAPI[]> = new Map();
+    let dayKey: string
+
+    workSiteAndRequestAPI.forEach(workSiteAndRequest => {
+      dayKey = new Date(workSiteAndRequest.begin).toISOString().split('T')[0]
+
+      if (groupedWorkSites.has(dayKey)) {
+              groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
+            } else {
+              groupedWorkSites.set(dayKey, [workSiteAndRequest]);
+            }
+    })
+
+    return groupedWorkSites
+  }
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#76C3F0', width: '100%', paddingTop: 5, paddingBottom: 15 }}>
-        <SearchBar data={['aaa', 'bbb']} setData={(data: string) => alert(data)} />
-        {/* TODO filters */}
+        <SearchBar data={workSitesAndRequests} setData={setFilteredWorkSitesAndRequests} />
+        {/* // TODO filters // */}
 
       </View>
-      <Text>
-        {JSON.stringify(workSites)}
-        </Text>
       <ScrollView showsVerticalScrollIndicator={false}>
-
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-          <WorkSiteDay navigation={navigation} />
-          <WorkSiteDay navigation={navigation} />
-          <WorkSiteDay navigation={navigation} />
-          <WorkSiteDay navigation={navigation} />
+          {Array.from(groupedWorkSitesAndRequests.values()).map((workSitesAndRequests, index) => {
+            return (
+              <WorkSiteDay key={index} navigation={navigation} workSitesAndRequests={workSitesAndRequests} />
+            );
+          })}
         </View>
 
-        <Button
+        {/* As long as API doesn't have pagination, this button is not needed
+          <Button
           title={'Voir Plus'}
           onPress={() => alert("click")}
           buttonStyle={{
@@ -56,7 +84,7 @@ function WorkSiteList({ navigation }: Props) {
             marginBottom: 80,
             alignSelf: 'center'
           }}
-        />
+        /> */}
       </ScrollView>
 
     </View>

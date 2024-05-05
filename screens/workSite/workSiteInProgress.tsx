@@ -9,12 +9,8 @@ import { DetailsButtons } from '../../components/WorkSiteInProgress/DetailsButto
 import { CreationModal } from '../../components/WorkSiteInProgress/CreationModal';
 import { BasicModal } from '../../components/BasicModal';
 import { InvoiceReviewModal } from '../../components/WorkSiteInProgress/InvoiceReviewModal';
-
-type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteInProgress'>;
-
-type Props = {
-  navigation: Screen1NavigationProp;
-};
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { WorkSiteAndRequest } from '../../api/Model';
 
 type InvoiceInfo = {
   title: string,
@@ -36,7 +32,13 @@ type IncidentInfo = {
   evidences: string[],
 }
 
-function WorkSiteInProgress({ navigation }: Props) {
+type WorkSiteInProgressParams = {
+  workSiteAndRequest: WorkSiteAndRequest;
+}
+
+function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+
   const [invoices, setInvoices] = useState<InvoiceInfo[]>([])
   const [invoiceModal, setInvoiceModal] = React.useState(false);
   const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
@@ -77,7 +79,7 @@ function WorkSiteInProgress({ navigation }: Props) {
   return (
     <View style={{ width: '92%', height: '100%', alignSelf: 'center', }}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
-        <View style={{ gap: 15}}>
+        <View style={{ gap: 15 }}>
 
           <DetailsButtons />
 
@@ -168,7 +170,7 @@ function WorkSiteInProgress({ navigation }: Props) {
             })}
           </View>
 
-          {/* COMMENT MANAGEMENT */}
+          {/* -------------------- COMMENT MANAGEMENT -------------------- */}
           <View>
             <View style={{ justifyContent: 'center', backgroundColor: '#76C3F0', height: 60, paddingHorizontal: 20, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
               <Text style={{ color: 'white', ...styles.title }}>Commentaire</Text>
@@ -208,7 +210,7 @@ function WorkSiteInProgress({ navigation }: Props) {
         />
       </ScrollView>
 
-      <CreationModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} addElement={addInvoice} isInvoice={true}/>
+      <CreationModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} addElement={addInvoice} isInvoice={true} />
       <CreationModal isModalVisible={incidentModal} setIsModalVisible={setIncidentModal} addElement={addIncident} isInvoice={false} />
       <InvoiceReviewModal isModalVisible={reviewInvoiceModal} removeInvoice={removeInvoice} setIsModalVisible={setReviewInvoiceModal} invoice={selectedElement} />
 

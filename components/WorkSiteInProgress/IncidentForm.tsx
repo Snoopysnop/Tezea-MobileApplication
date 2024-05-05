@@ -60,23 +60,6 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
         }
     };
 
-    // const renderItem = ({ item }) => (
-    //     <View style={styles.carouselItem}>
-    //         <Image
-    //             source={{ uri: item }}
-    //             style={styles.image} />
-    //     </View>
-    // );
-
-    // const addPhotos = (
-    //     <TouchableOpacity style={styles.addPhotos} onPress={pickImage}>
-    //         <Image
-    //             source={require('../../assets/icons/more.png')}
-    //             style={styles.addPhotosIcon}
-    //         />
-    //     </TouchableOpacity>
-    // )
-
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Facture</Text>
@@ -124,28 +107,28 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
             <View>
                 <Text style={styles.name}>Photos</Text>
                 <View style={{
-                    alignSelf: 'flex-start',
-                    ...styles.container
+                    flexDirection: 'row',
+                    gap: 7,
+                    flexWrap: 'wrap'
                 }}>
-                    {/* <FlatList
-                        data={evidences}
-                        // renderItem={(item) => renderItem(item)}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        // ListFooterComponent={addPhotos}
-                    /> */}
+                    {evidences?.map((evidence, index) => {
+                        return (
+                            <View>
+                                <View style={{ borderRadius: 5 }}>
+                                    <Image
+                                        source={{ uri: evidence }}
+                                        style={styles.image} />
+                                </View>
+                            </View>
+                        )
+                    })}
+                    <TouchableOpacity style={{ width: 60, height: 60, borderRadius: 5, alignItems: 'center', justifyContent: 'center', }} onPress={pickImage}>
+                        <Image
+                            source={require('../../assets/more.png')}
+                            style={{ width: 35, height: 35 }}
+                        />
+                    </TouchableOpacity>
                 </View>
-
-
-                        {/* // <View key={index}>
-                        //     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', padding: 5 }}>
-                        //         <Image
-                        //             source={{ uri: evidence }}
-                        //             style={{ width: 40, height: 40, backgroundColor: 'white' }}
-                        //         />
-                        //     </View>
-                        //     <Text style={{ color: '#76C3F0' }}>Ajouter une facture.</Text>
-                        // </View> */}
 
             </View>
 
@@ -175,12 +158,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: '600'
     },
-    container: {
-        width: '100%',
-        backgroundColor: '#fff',
-        padding: 20,
-        gap: 20,
-    },
     secondModalView: {
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
@@ -189,6 +166,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         height: '20%'
+    },
+    image: {
+        width: 60,
+        height: 60,
+    },
+    container: {
+        width: '100%',
+        backgroundColor: '#fff',
+        padding: 20,
+        gap: 20,
     },
 });
 
