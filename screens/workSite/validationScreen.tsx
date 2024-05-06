@@ -8,12 +8,12 @@ import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AirbnbRating } from 'react-native-ratings';
 
-const SignatureScreen = () => {
+const SignatureScreen = ({ route }: any) => {
+  const { workSiteId } = route.params;
 
-
-const handleRating = (rating: number) => {
-alert(rating);
-};
+  const handleRating = (rating: number) => {
+    alert(rating);
+  };
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [paths, setPaths] = useState<string[]>([]);
@@ -23,12 +23,12 @@ alert(rating);
 
   const handleTouchStart = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    setCurrentPath(`M${pageX},${pageY-150}`);
+    setCurrentPath(`M${pageX},${pageY - 150}`);
   };
 
   const handleTouchMove = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    const newPosition = `L${pageX},${pageY -150}`;
+    const newPosition = `L${pageX},${pageY - 150}`;
     setCurrentPath((prevPath) => prevPath + newPosition);
   };
 
@@ -84,22 +84,22 @@ alert(rating);
               <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
             </View>
             <View style={[styles.ratingContainer]}>
-            <AirbnbRating
-              count={5}
-              reviews={["Terrible", "Mauvais", "Moyen", "Bon", "Excellent"]}
-              defaultRating={0}
-              size={30}
-              showRating={true}
-              onFinishRating={handleRating}
-            />
+              <AirbnbRating
+                count={5}
+                reviews={["Terrible", "Mauvais", "Moyen", "Bon", "Excellent"]}
+                defaultRating={0}
+                size={30}
+                showRating={true}
+                onFinishRating={handleRating}
+              />
             </View>
             <View style={styles.modalButtonContainer}>
               <Button title="Valider" onPress={handleValidate} />
               <Button title="Close" onPress={handleModalClose} />
             </View>
-            
+
           </View>
-          
+
         </Modal>
       ) : (
 
@@ -112,7 +112,7 @@ alert(rating);
         </Svg>
       )}
       {!capturedImageUri && (
-        
+
         <View style={styles.buttonContainer}>
           <Button title="Capture" onPress={handleCapture} />
           <Button title="Clear" onPress={handleClear} />
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: 'center',
   },
-  
+
 });
 
-export {SignatureScreen};
+export { SignatureScreen };

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { WorkSiteAndRequest, WorkSiteAndRequestAPI, WorkSiteRequest, WorkSiteStatus } from '../../api/Model';
+import { Incident, Invoice, WorkSiteAndRequest, WorkSiteAndRequestAPI, WorkSiteRequest, WorkSiteStatus } from '../../api/Model';
 import MainApi from '../../api/MainApi';
 import { WorkSiteInfo } from './workSiteInfo';
 import { WorkSiteInProgress } from './workSiteInProgress';
-import { workSitesAndRequests } from '../../dataset';
+import { incidentsExample, workSitesAndRequests } from '../../dataset';
 
 
 function WorkSiteManager({ route }: any) {
   const workSiteAndRequestAPI = route.params.workSiteAndRequestAPI as WorkSiteAndRequestAPI;
 
   const [workSiteAndRequest, setWorkSiteAndRequest] = useState<WorkSiteAndRequest>();
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // fetchComplementaryData();
 
     setWorkSiteAndRequest(workSitesAndRequests[0]);
+    setIncidents(incidentsExample);
+    setInvoices([]);
     setIsLoading(false);
   }, [])
 
@@ -27,6 +31,9 @@ function WorkSiteManager({ route }: any) {
     let siteChief = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.siteChief)
     let customer = await MainApi.getInstance().getCustomerById(workSiteAndRequestAPI.workSiteRequest.customer)
     let staff = await MainApi.getInstance().getUsersById(workSiteAndRequestAPI.staff)
+
+    let invoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequestAPI.id);
+    let incidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequestAPI.id);
 
     let updatedWorkSiteRequest: WorkSiteRequest = {
       concierge: concierge,
@@ -67,6 +74,8 @@ function WorkSiteManager({ route }: any) {
     }
 
     setWorkSiteAndRequest(updatedWorkSiteAndRequest);
+    setInvoices(invoices);
+    setIncidents(incidents);
     setIsLoading(false);
   }
 
@@ -76,10 +85,11 @@ function WorkSiteManager({ route }: any) {
         (<View style={styles.loading} >
           <ActivityIndicator size='large' />
         </View>) :
-        workSiteAndRequest && (workSiteAndRequest.status == WorkSiteStatus.InProgress ?
-          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest}/>
+        // TODO change back to workSiteAndRequest.status
+        workSiteAndRequest && (workSiteAndRequestAPI.status == WorkSiteStatus.InProgress ?
+          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
           :
-          <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} />
+          <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
         )
       }
     </View >

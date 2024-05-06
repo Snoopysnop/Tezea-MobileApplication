@@ -7,49 +7,33 @@ import { TitleHeader } from '../../components/Header';
 import { Button } from '@rneui/themed';
 import { DetailsButtons } from '../../components/WorkSiteInProgress/DetailsButtons';
 import { CreationModal } from '../../components/WorkSiteInProgress/CreationModal';
-import { BasicModal } from '../../components/BasicModal';
 import { InvoiceReviewModal } from '../../components/WorkSiteInProgress/InvoiceReviewModal';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { WorkSiteAndRequest } from '../../api/Model';
+import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
+import MainApi from '../../api/MainApi';
+import { IncidentReviewModal } from '../../components/WorkSiteInProgress/IncidentReviewModal';
 
-type InvoiceInfo = {
-  title: string,
-  description: string,
-  price: string,
-  invoice: Invoice,
-}
-
-type Invoice = {
-  uri: string,
-  name: string | null | undefined,
-  type: 'file' | 'image'
-}
-
-type IncidentInfo = {
-  title: string,
-  description: string,
-  level: 'Faible' | 'Majeur' | 'Bloquant',
-  evidences: string[],
-}
 
 type WorkSiteInProgressParams = {
   workSiteAndRequest: WorkSiteAndRequest;
+  invoices: Invoice[];
+  incidents: Incident[];
 }
 
-function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
+function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, incidents: retrievedIncidents }: WorkSiteInProgressParams) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
-  const [invoices, setInvoices] = useState<InvoiceInfo[]>([])
+  const [invoices, setInvoices] = useState<Invoice[]>(retrievedInvoices)
   const [invoiceModal, setInvoiceModal] = React.useState(false);
-  const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
 
-  const [incidents, setIncidents] = useState<IncidentInfo[]>([])
+  const [incidents, setIncidents] = useState<Incident[]>(retrievedIncidents)
   const [incidentModal, setIncidentModal] = React.useState(false);
-  const [reviewIncidentModal, setReviewIncidentModal] = React.useState(false);
 
   const [comment, setComment] = useState("");
 
-  const [selectedElement, setSelectedElement] = useState<InvoiceInfo | IncidentInfo>()
+  const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
+  const [invoiceReviewModal, setInvoiceReviewModal] = React.useState(false);
+  const [incidentReviewModal, setIncidentReviewModal] = React.useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -57,23 +41,85 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
     });
   }, [])
 
-  const addIncident = (incident: IncidentInfo) => {
-    let tmpInvoices = incidents
-    tmpInvoices.push(incident)
-    setIncidents(tmpInvoices)
-  }
+  const putInvoiceForWorksite = async (invoice: Invoice) => {
+    // create new invoice
+    // let response = await MainApi.getInstance().putInvoicesForWorksite(workSiteAndRequest.id, invoice)
 
-  const addInvoice = (invoice: InvoiceInfo) => {
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+
     let tmpInvoices = invoices
     tmpInvoices.push(invoice)
+    // setIncidents(newInvoices)
     setInvoices(tmpInvoices)
   }
 
-  const removeInvoice = (invoice: InvoiceInfo) => {
+  const addInvoice = (invoice: Invoice) => {
+    putInvoiceForWorksite(invoice)
+  }
+
+  const deleteInvoiceFromWorkSite = async (invoiceId: string) => {
+    // delete invoice
+    // let response = await MainApi.getInstance().deleteInvoice(invoiceId)
+
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+
+    // setIncidents(newInvoices)
+  }
+
+  const removeInvoice = (invoice: Invoice) => {
+    // deleteInvoiceFromWorkSite(invoice.id)
+
     let tmpInvoices = invoices
     let index = tmpInvoices.indexOf(invoice)
     tmpInvoices.splice(index, 1)
     setInvoices(tmpInvoices)
+  }
+
+  const putIncidentForWorksite = async (incident: Incident) => {
+    // create new incident
+    // let response = await MainApi.getInstance().putIncidentForWorksite(workSiteAndRequest.id, incident)
+
+    // add corresponding pictures
+    // for (let i = 0; i < incident.evidences.length; i++) {
+    //   await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
+    // }
+
+    // retrieve all incidents
+    // let newIncidents = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+
+    let tmpIncidents = incidents
+    tmpIncidents.push(incident)
+    // setIncidents(newIncidents)
+    setIncidents(tmpIncidents)
+  }
+
+  const addIncident = (incident: Incident) => {
+    putIncidentForWorksite(incident);
+  }
+
+  const deleteIncidentFromWorkSite = async (incidentId: string) => {
+    // delete invoice
+    // let response = await MainApi.getInstance().deleteIncident(incidentId)
+
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+
+    // setIncidents(newInvoices)
+  }
+
+  const removeIncident = (incident: Incident) => {
+    // deleteIncidentFromWorkSite(incident.id);
+
+    let tmpIncident = incidents
+    let index = tmpIncident.indexOf(incident)
+    tmpIncident.splice(index, 1)
+    setIncidents(tmpIncident)
+  }
+
+  const uploadComment = async () => {
+    await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)
   }
 
   return (
@@ -81,7 +127,7 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
         <View style={{ gap: 15 }}>
 
-          <DetailsButtons />
+          <DetailsButtons workSiteAndRequest={workSiteAndRequest} />
 
           {/* -------------------- INVOICE MANAGEMENT -------------------- */}
           <View>
@@ -104,16 +150,16 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
                     setSelectedElement(invoice);
-                    setReviewInvoiceModal(true);
+                    setInvoiceReviewModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
-                    {invoice.invoice.type == 'file' ?
+                    {invoice.type == 'file' ?
                       <Image
                         source={require('../../assets/file.png')}
                         style={{ width: 40, height: 40, backgroundColor: 'white', margin: 10 }}
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice.uri }}
+                        source={{ uri: invoice.invoice }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }
@@ -123,7 +169,7 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
                       <Text numberOfLines={1} style={{ ...styles.subtitle }}>{invoice.description}</Text>
                     </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.price}€</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.amount}€</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -151,10 +197,10 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
                     setSelectedElement(incident);
-                    setReviewInvoiceModal(true);
+                    setIncidentReviewModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
                     <Image
-                      source={{ uri: incident.evidences[0] }}
+                      source={{ uri: `data:image/png;base64,${incident.evidences[0]}` }}
                       style={{ width: 60, height: 60, backgroundColor: 'white' }}
                     />
 
@@ -163,7 +209,7 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
                       <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
                     </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}€</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -196,7 +242,11 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
 
         <Button
           title={'Terminer Le Chantier'}
-          onPress={() => navigation.navigate("ValidationScreen")}
+          onPress={() => {
+            // uploadComment();
+            navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id }
+            )
+          }}
           buttonStyle={{
             backgroundColor: '#E15656',
             borderRadius: 20,
@@ -212,7 +262,8 @@ function WorkSiteInProgress({ workSiteAndRequest }: WorkSiteInProgressParams) {
 
       <CreationModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} addElement={addInvoice} isInvoice={true} />
       <CreationModal isModalVisible={incidentModal} setIsModalVisible={setIncidentModal} addElement={addIncident} isInvoice={false} />
-      <InvoiceReviewModal isModalVisible={reviewInvoiceModal} removeInvoice={removeInvoice} setIsModalVisible={setReviewInvoiceModal} invoice={selectedElement} />
+      <InvoiceReviewModal isModalVisible={invoiceReviewModal} removeInvoice={removeInvoice} setIsModalVisible={setInvoiceReviewModal} invoice={selectedElement as Invoice} />
+      <IncidentReviewModal isModalVisible={incidentReviewModal} removeIncident={removeIncident} setIsModalVisible={setIncidentReviewModal} incident={selectedElement as Incident} />
 
     </View>
   );
@@ -229,4 +280,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { WorkSiteInProgress, Invoice, InvoiceInfo, IncidentInfo };
+export { WorkSiteInProgress };

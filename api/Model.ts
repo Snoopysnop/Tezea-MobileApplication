@@ -189,6 +189,7 @@ interface WorkSiteBase {
     status: WorkSiteStatus,
     signature: string | null,
     incident: boolean,
+    comment: string
 }
 
 export interface WorkSiteAPI extends WorkSiteBase {
@@ -264,5 +265,6 @@ export interface Invoice {
     description: string,
     id: string,
     amount: number,
-    invoice: string
+    invoice: string,
+    type: "file" | "image"
 }
