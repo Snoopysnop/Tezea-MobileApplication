@@ -1,21 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Modal } from 'react-native';
-
-const employees = [
-    {
-        firstName: 'Chaveron',
-        lastName: 'Bruno',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    // Ajoutez d'autres données d'employés si nécessaire
-];
+import { WorkSiteAndRequest } from '../../api/Model';
 
 interface EmployeesModalProps {
-  isVisible: boolean;
-  onClose: () => void;
+  workSiteInfo : WorkSiteAndRequest
 }
-const EmployeesModal: React.FC<EmployeesModalProps> = ({ isVisible, onClose }) => {
+const EmployeesModal: React.FC<EmployeesModalProps> = ({workSiteInfo }) => {
+    const employees = workSiteInfo.staff
     return (
         <View>
             {employees?.map((employee, index) => {
@@ -23,8 +14,7 @@ const EmployeesModal: React.FC<EmployeesModalProps> = ({ isVisible, onClose }) =
                    
                     <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: 20 }}>
                         <Image
-                            source={employee.picture}
-                            // source={{ uri: `data:image/png;base64,${employee.picture}` }}
+                            source={require('../../assets/duck.jpg')}
                             style={styles.avatar}
                         />
                         <View>

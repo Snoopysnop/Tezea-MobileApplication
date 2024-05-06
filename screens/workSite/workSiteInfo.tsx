@@ -23,9 +23,6 @@ type WorkSiteInfoParams = {
   invoices: Invoice[];
   incidents: Incident[];
 }
-//Gestion données dataset
-
-const premierConcierge = users[0];
 function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
 
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
@@ -54,16 +51,14 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
     await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
 }
-
-const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "image":
         return (
           <View style={styles.listeInfoTabView}>
             
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.siteChief.firstName}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.customer.firstName}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.siteChief.firstName} {workSiteAndRequest.workSiteRequest.siteChief.lastName} {workSiteAndRequest.workSiteRequest.siteChief.phoneNumber}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.customer.firstName} {workSiteAndRequest.workSiteRequest.customer.lastName} {workSiteAndRequest.workSiteRequest.customer.phoneNumber}</Text></Text>
             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.serviceType}</Text></Text>           
             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.category}</Text></Text>            
             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.creationDate.toDateString()}</Text></Text>
@@ -89,12 +84,12 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
         <Text style={styles.buttonText}>Voir Matériel</Text>
       </TouchableOpacity>
             </View>
-            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal isVisible={false} onClose={function (): void {
-              throw new Error("Function not implemented.");
-            } } />} />
-            <BasicModal isModalVisible={stuffModal} setIsModalVisible={setStuffModal} component={<StuffModal isVisible={false} onClose={function (): void {
-              throw new Error("Function not implemented.");
-            } } />} />
+            <BasicModal 
+              isModalVisible={employeesModal} 
+              setIsModalVisible={setEmployeeModal} 
+              component={<EmployeesModal 
+              workSiteInfo={workSiteAndRequest}/>} />
+            <BasicModal isModalVisible={stuffModal} setIsModalVisible={setStuffModal} component={<StuffModal workSiteInfo={workSiteAndRequest} />} />
         </View>
         
         );
@@ -179,12 +174,24 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
                 <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
               </View>
           </View>
-
           <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}>MIAM LE CACA DANS MA BOUCHE JAIME TROP CA CEST TROP BON PTN AVEC UN PETIT COULIS DE PIPI SUCREE AVEC DES FESSE DE PROUT CEST TROP BON </Text>
           </View>
 
+
+          <View style ={{paddingTop: 20}}>
+            <View style={{ justifyContent: 'center', height: 30 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: '#76C3F0', ...styles.title }}>Signature Client</Text>
+              </View>
+            </View>
+          </View>
+          <Image
+                        source={require('../../assets/file.png')}
+                        style={{ width: 80, height: 80, backgroundColor: 'white'}}
+                      />
+
           <View style={styles.container}>
-      <Text style={styles.ratingText}>Satisfaction client : {3}/5</Text>
+      <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
     </View>
           </ScrollView>
             </View>
@@ -272,7 +279,7 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
       <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.end.toDateString()}</Text></Text>
       <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{premierConcierge.firstName} {premierConcierge.lastName}</Text></Text>
+      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text></Text>
       <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
     </View>
 

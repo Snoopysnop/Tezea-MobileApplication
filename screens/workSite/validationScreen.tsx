@@ -103,7 +103,6 @@ const SignatureScreen = ({ route }: any) => {
         </Modal>
       ) : (
 
-
         <Svg ref={svgRef} width="100%" height="70%" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
           {paths.map((path, index) => (
             <Path key={index} d={path} fill="none" stroke="black" strokeWidth={2} />
