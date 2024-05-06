@@ -1,26 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Modal } from 'react-native';
+import { WorkSiteAndRequest } from '../../api/Model';
 
-const tools = [
-    {
-        name: 'Tournevis',
-        quantity: 2
-    },
-    {
-        name: 'Marteau',
-        quantity: 5
-    },
-    {
-        name: 'Un autre truc',
-        quantity: 1
-    }
-]
+
 
 interface StuffsModalProps {
-  isVisible: boolean;
-  onClose: () => void;
+  workSiteInfo: WorkSiteAndRequest;
 }
-const StuffsModal: React.FC<StuffsModalProps> = ({ isVisible, onClose }) => {
+const StuffsModal: React.FC<StuffsModalProps> = ({ workSiteInfo }) => {
+    const tools = workSiteInfo.equipments
     return (
         <View>
 
