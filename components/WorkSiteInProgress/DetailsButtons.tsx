@@ -126,6 +126,15 @@ const tools = [
     }
 ]
 
+const prettyHour = (date: Date) => {
+    let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+    var utcDate = new Date(utc);
+
+    let hours = ("0" + utcDate.getHours()).slice(-2)
+    let minutes = ("0" + utcDate.getMinutes()).slice(-2)
+    return hours + 'h' + minutes
+  }
+
 type ModalParams = {
     workSiteAndRequest: WorkSiteAndRequest;
 }
@@ -153,7 +162,7 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Adresse :</Text>
-                    <Text style={{ color: '#7D7D7D' }}>adresse</Text>
+                    <Text style={{ color: '#7D7D7D' }}>TODO adresse</Text>
                 </View>
 
                 <View>
@@ -163,7 +172,7 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Horaires :</Text>
-                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.begin.toLocaleDateString()} - {workSiteAndRequest.end.toLocaleDateString()}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{prettyHour(workSiteAndRequest.begin)} - {prettyHour(workSiteAndRequest.end)}</Text>
                 </View>
             </View>
         </View>

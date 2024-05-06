@@ -62,11 +62,11 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                                         />
                                         :
                                         <Image
-                                            source={{ uri: invoice.invoice }}
+                                            source={{ uri: invoice.invoiceFile }}
                                             style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                         />
                                     }
-                                    <Text numberOfLines={1} style={{ color: '#ccc' }}>{invoice.invoice?.split('/').pop()}</Text>
+                                    <Text numberOfLines={1} style={{ color: '#ccc' }}>{invoice.invoiceFile?.split('/').pop()}</Text>
                                 </View>
                             </View>
 

@@ -93,7 +93,7 @@ export enum WorkSiteRequestStatusListPage {
 export enum WorkSiteStatus {
     Standby = "En attente",
     InProgress = "En cours",
-    Canceled = "Archivé",
+    Archive  = "Archivé",
     Done = "Terminé"
 }
 
@@ -213,6 +213,7 @@ interface WorkSiteAndRequestBase {
     status: WorkSiteStatus,
     signature: string | null
     incident: boolean,
+    comment: string
 }
 
 export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {
@@ -265,6 +266,6 @@ export interface Invoice {
     description: string,
     id: string,
     amount: number,
-    invoice: string,
+    invoiceFile: string,
     type: "file" | "image"
 }

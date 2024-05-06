@@ -23,6 +23,7 @@ type WorkSiteInfoParams = {
   invoices: Invoice[];
   incidents: Incident[];
 }
+
 function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
 
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
@@ -38,10 +39,32 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   const [routes] = useState([
     { key: "image", icon: require("../../assets/information-545674-1.png") },
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
-    { key: "history", icon: require("../../assets/history.png") },
+    //{ key: "history", icon: require("../../assets/history.png") },
   ]);
-  
+  const [dynamicRoutes, setDynamicRoutes] = useState<{ key: string; icon: any; }[]>([]);
   useEffect(() => {
+    console.log(workSiteAndRequest.status.toString() === "Done")
+    if (workSiteAndRequest.status.toString() === "Done") {
+      console.log("Ahg oui ouii")
+      setDynamicRoutes([{ key: "history", icon: require("../../assets/history.png") }]);
+    } else {
+      setDynamicRoutes([]);
+    }
+  }, [workSiteAndRequest.status]);
+
+
+  const mergedRoutes = [...routes, ...dynamicRoutes];
+
+  type CustomNavigationState = {
+    index: number;
+    routes: { key: string; icon: any }[];
+  }
+  const navigationState: CustomNavigationState = {
+    index,
+    routes: mergedRoutes,
+  };
+  useEffect(() => {
+    //TODO ca partout
     navigation.setOptions({
       headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
     });
@@ -49,7 +72,14 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
 
   const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
-    await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
+    try {
+      console.log(workSiteAndRequest.id)
+      await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
+      console.log("Apres call")
+    } catch (error) {
+      console.log(error)
+    }
+    
 }
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
@@ -66,6 +96,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         </View>
         );
       case "text":
+        console.log(workSiteAndRequest.status.toString())
         return (
           <View style={styles.listeInfoTabView}>
 
@@ -95,6 +126,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         );
         case "history":
         return (
+          
           //Facture
           <View>
             <ScrollView >
@@ -121,7 +153,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice }}
+                        source={{ uri: invoice.invoiceFile }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }
@@ -145,7 +177,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
               </View>
             </View>
 
-            {incidentsExample?.map((incident, index) => {
+            {incidents?.map((incident, index) => {
               return (
                 <View key={index} style={{ paddingBottom:5}}>
                   <TouchableOpacity onPress={() => {
@@ -153,7 +185,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                     setReviewInvoiceModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
                     <Image
-                      source={{ uri: incident.evidences[0] }}
+                      source={{ uri: `data:image/png;base64,${incident.evidences}` }}
                       style={{ width: 60, height: 60, backgroundColor: 'white' }}
                     />
 
@@ -174,7 +206,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                 <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
               </View>
           </View>
-          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}>MIAM LE CACA DANS MA BOUCHE JAIME TROP CA CEST TROP BON PTN AVEC UN PETIT COULIS DE PIPI SUCREE AVEC DES FESSE DE PROUT CEST TROP BON </Text>
+          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}> {workSiteAndRequest.comment} </Text>
           </View>
 
 
@@ -186,16 +218,17 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
             </View>
           </View>
           <Image
-                        source={require('../../assets/file.png')}
-                        style={{ width: 80, height: 80, backgroundColor: 'white'}}
-                      />
-
+            source={{ uri: `data:image/png;base64,${workSiteAndRequest.signature}` }}
+            style={{ width: 80, height: 80, backgroundColor: 'white'}}
+          />
           <View style={styles.container}>
       <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
     </View>
           </ScrollView>
-            </View>
+          </View>
+
         );
+
       default:
         return null;
     }
@@ -229,7 +262,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
         onPress={() => 
           updateWorkSiteStatus(WorkSiteStatus.InProgress)
-          // navigation.navigate("WorkSiteInProgress")
+          //navigation.navigate("WorkSiteInProgress")
         }
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
@@ -285,7 +318,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
   </View>
       <TabView
-        navigationState={{ index, routes }}
+        navigationState={navigationState}
         renderScene={renderScene}
         onIndexChange={setIndex}
         renderTabBar={renderTabBar}

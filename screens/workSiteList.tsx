@@ -8,6 +8,7 @@ import { SearchBar } from '../components/SearchBar';
 import { User, WorkSite, WorkSiteAndRequestAPI } from '../api/Model';
 import { workSitesAndRequestsAPI } from '../dataset';
 import MainApi from '../api/MainApi';
+import { TitleHeader } from '../components/Header';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
@@ -21,11 +22,11 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
 
+
+
   useEffect(() => {
-    // fetchWorkSitesAndRequests()
-    setWorkSitesAndRequests(workSitesAndRequestsAPI)
-    setFilteredWorkSitesAndRequests(workSitesAndRequestsAPI)
-    setGroupedWorkSitesAndRequests(groupByDay(workSitesAndRequestsAPI))
+    fetchWorkSitesAndRequests()
+
   }, [])
 
   useEffect(() => {
@@ -33,10 +34,14 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   }, [filteredWorkSitesAndRequests])
 
   const fetchWorkSitesAndRequests = async () => {
-    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("TODO ADD USER ID")
+    //TODO utiliser le vrai user
+    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
     setWorkSitesAndRequests(response)
+    setFilteredWorkSitesAndRequests(response)
     setGroupedWorkSitesAndRequests(groupByDay(response))
   }
+
+
 
   const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
     const groupedWorkSites: Map<string, WorkSiteAndRequestAPI[]> = new Map();
@@ -44,7 +49,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
     workSiteAndRequestAPI.forEach(workSiteAndRequest => {
       dayKey = new Date(workSiteAndRequest.begin).toISOString().split('T')[0]
-
+      
       if (groupedWorkSites.has(dayKey)) {
               groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
             } else {

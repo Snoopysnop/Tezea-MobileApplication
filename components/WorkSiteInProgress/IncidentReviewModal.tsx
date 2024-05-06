@@ -53,7 +53,7 @@ function IncidentReviewModal({ isModalVisible, removeIncident, setIsModalVisible
                             </View>
 
                             <View>
-                                {(incident.evidences.length!=0) && <Text style={styles.name}>Photos ({incident.evidences.length})</Text>}
+                                {(incident.evidences?.length!=0) && <Text style={styles.name}>Photos ({incident.evidences?.length})</Text>}
                                 <View style={{
                                     flexDirection: 'row',
                                     gap: 7,

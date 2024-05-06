@@ -34,9 +34,9 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
 
     const { control, handleSubmit } = useForm({
         defaultValues: {
-            Titre: '',
-            Description: '',
-            Prix: '',
+            Titre: 'mon titre',
+            Description: 'ma description',
+            Prix: '12.99',
         },
         resolver: zodResolver(formSchema),
     });
@@ -48,7 +48,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
                 id: "",
                 amount: data.Prix,
                 description: data.Description,
-                invoice: selectedInvoice.uri,
+                invoiceFile: selectedInvoice.uri,
                 title: data.Titre,
                 type: selectedInvoice.type
             }

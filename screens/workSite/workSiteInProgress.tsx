@@ -41,17 +41,34 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
     });
   }, [])
 
+  async function uriToBase64(uri: string) {
+    const result = await fetch(uri)
+    const blob = await result.blob()
+
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+
+    return new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(String(reader?.result).split(",")[1])
+      }
+    })
+  }
+
   const putInvoiceForWorksite = async (invoice: Invoice) => {
-    // create new invoice
-    // let response = await MainApi.getInstance().putInvoicesForWorksite(workSiteAndRequest.id, invoice)
+    try {
+      // create new invoice
+      let b64 = await uriToBase64(invoice.invoiceFile) as string
+      await MainApi.getInstance().putInvoiceForWorkSite(workSiteAndRequest.id, invoice, b64)
 
-    // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+      // retrieve all invoices
+      let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
 
-    let tmpInvoices = invoices
-    tmpInvoices.push(invoice)
-    // setIncidents(newInvoices)
-    setInvoices(tmpInvoices)
+      setInvoices(newInvoices)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const addInvoice = (invoice: Invoice) => {
@@ -60,39 +77,37 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const deleteInvoiceFromWorkSite = async (invoiceId: string) => {
     // delete invoice
-    // let response = await MainApi.getInstance().deleteInvoice(invoiceId)
+    let response = await MainApi.getInstance().deleteInvoice(invoiceId)
 
     // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+    let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
 
-    // setIncidents(newInvoices)
+    setInvoices(newInvoices)
   }
 
   const removeInvoice = (invoice: Invoice) => {
-    // deleteInvoiceFromWorkSite(invoice.id)
+    deleteInvoiceFromWorkSite(invoice.id)
 
-    let tmpInvoices = invoices
-    let index = tmpInvoices.indexOf(invoice)
-    tmpInvoices.splice(index, 1)
-    setInvoices(tmpInvoices)
   }
 
   const putIncidentForWorksite = async (incident: Incident) => {
-    // create new incident
-    // let response = await MainApi.getInstance().putIncidentForWorksite(workSiteAndRequest.id, incident)
+    try {
+      // create new incident
+      let response = await MainApi.getInstance().putIncidentForWorkSite(workSiteAndRequest.id, incident)
 
-    // add corresponding pictures
-    // for (let i = 0; i < incident.evidences.length; i++) {
-    //   await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
-    // }
+      // add corresponding pictures
+      for (let i = 0; i < incident.evidences.length; i++) {
+        let b64 = await uriToBase64(incident.evidences[i]) as string
+        await MainApi.getInstance().putEvidenceForIncident(response.id, b64)
+      }
 
-    // retrieve all incidents
-    // let newIncidents = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+      // retrieve all incidents
+      let newIncidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
-    let tmpIncidents = incidents
-    tmpIncidents.push(incident)
-    // setIncidents(newIncidents)
-    setIncidents(tmpIncidents)
+      setIncidents(newIncidents)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const addIncident = (incident: Incident) => {
@@ -101,21 +116,16 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const deleteIncidentFromWorkSite = async (incidentId: string) => {
     // delete invoice
-    // let response = await MainApi.getInstance().deleteIncident(incidentId)
+    let response = await MainApi.getInstance().deleteIncident(incidentId)
 
     // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+    let newInvoices = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
-    // setIncidents(newInvoices)
+    setIncidents(newInvoices)
   }
 
   const removeIncident = (incident: Incident) => {
-    // deleteIncidentFromWorkSite(incident.id);
-
-    let tmpIncident = incidents
-    let index = tmpIncident.indexOf(incident)
-    tmpIncident.splice(index, 1)
-    setIncidents(tmpIncident)
+    deleteIncidentFromWorkSite(incident.id);
   }
 
   const uploadComment = async () => {
@@ -159,7 +169,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice }}
+                        source={{ uri: `data:image/png;base64,${invoice.invoiceFile}` }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }
