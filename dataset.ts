@@ -356,7 +356,7 @@ export const workSitesAndRequests: WorkSiteAndRequest[] = [
     }
 ]
 
-export const incidents: Incident[] = [
+export const incidentsExample: Incident[] = [
     {
         level: IncidentLevel.Minor,
         title: "Accident Travail",

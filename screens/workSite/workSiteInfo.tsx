@@ -8,12 +8,11 @@ import { useNavigation, ParamListBase } from "@react-navigation/native";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useEffect} from "react";
 import { TitleHeader } from "../../components/Header";
-import { WorkSiteAndRequest } from '../../api/Model';
+import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
 import MainApi from "../../api/MainApi";
-import { workSitesAndRequests, users, customer, incidents } from '../../dataset';
+import { workSitesAndRequests, users, customer, incidentsExample } from '../../dataset';
 import { DetailsButtons } from "../../components/WorkSiteInProgress/DetailsButtons";
 import { Ionicons } from '@expo/vector-icons';
-import { IncidentInfo, InvoiceInfo } from "./workSiteInProgress";
 import EmployeesModal from '../../components/WorkSiteInProgress/EmployeesModal';
 import StuffModal from '../../components/WorkSiteInProgress/StuffModal';
 import { BasicModal } from "../../components/BasicModal";
@@ -21,16 +20,18 @@ import { BasicModal } from "../../components/BasicModal";
 
 type WorkSiteInfoParams = {
   workSiteAndRequest: WorkSiteAndRequest;
+  invoices: Invoice[];
+  incidents: Incident[];
 }
 //Gestion données dataset
 
 const premierConcierge = users[0];
-function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
+function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
 
-  const [invoices, setInvoices] = useState<InvoiceInfo[]>([])
-  const [selectedElement, setSelectedElement] = useState<InvoiceInfo | IncidentInfo>()
+  const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
   const [invoiceModal, setInvoiceModal] = React.useState(false);
   const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
+
   const [employeesModal, setEmployeeModal] = React.useState(false);
   const [stuffModal, setStuffModal] = React.useState(false);
 
@@ -42,35 +43,9 @@ function WorkSiteInfo({ workSiteAndRequest }: WorkSiteInfoParams) {
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
     { key: "history", icon: require("../../assets/history.png") },
   ]);
-
-  const addInvoice = (invoice: InvoiceInfo) => {
-    let tmpInvoices = invoices
-    tmpInvoices.push(invoice)
-    setInvoices(tmpInvoices)
-  }
-
-  const createInvoiceManually = () => {
-    const newInvoice: InvoiceInfo = {
-      title: 'Facture 001CACA',
-      description: 'Réparation antenne',
-      price: '100',
-      invoice: {
-        uri: '', // Spécifiez l'URI de votre fichier ou image
-        name: 'facture001.pdf', // Nom de la facture
-        type: 'file', // Spécifiez le type de la facture (fichier ou image)
-      }
-    };
-    addInvoice(newInvoice); // Ajoutez la nouvelle facture à la liste des factures
-  };
-  useEffect(() => {
-    createInvoiceManually(); 
-  }, []); 
-
   
   useEffect(() => {
-    
     navigation.setOptions({
-      
       headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
     });
   }, [])
@@ -144,14 +119,14 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
                     setSelectedElement(invoice);
                     setReviewInvoiceModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
-                    {invoice.invoice.type == 'file' ?
+                    {invoice.type == 'file' ?
                       <Image
                         source={require('../../assets/file.png')}
                         style={{ width: 40, height: 40, backgroundColor: 'white', margin: 10 }}
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice.uri }}
+                        source={{ uri: invoice.invoice }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }
@@ -161,7 +136,7 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
                       <Text numberOfLines={1} style={{ ...styles.subtitle }}>{invoice.description}</Text>
                     </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.price}€</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.amount}€</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -175,7 +150,7 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
               </View>
             </View>
 
-            {incidents?.map((incident, index) => {
+            {incidentsExample?.map((incident, index) => {
               return (
                 <View key={index} style={{ paddingBottom:5}}>
                   <TouchableOpacity onPress={() => {

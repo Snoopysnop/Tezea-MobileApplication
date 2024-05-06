@@ -7,7 +7,7 @@ import FormInput from './FormInput';
 import { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
-import { Invoice } from '../../screens/workSite/workSiteInProgress';
+import { Invoice } from '../../api/Model';
 
 const formSchema = z.object({
     Titre: z.string().min(3, 'Le titre doit contenir au moins 3 charactères'),
@@ -18,6 +18,12 @@ const formSchema = z.object({
     }).positive("Le prix doit être supérieur à zéro"),
 });
 
+type SelectedInvoice = {
+    uri: string,
+    name: string | null | undefined,
+    type: 'file' | 'image'
+}
+
 type InvoiceFormParams = {
     addInvoice: Function,
     setIsModalVisible: Function,
@@ -25,7 +31,7 @@ type InvoiceFormParams = {
 
 function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
     const [isSecondModalVisible, setIsSecondModalVisible] = useState(false);
-    const [invoice, setInvoice] = useState<Invoice>();
+    const [selectedInvoice, setSelectedInvoice] = useState<SelectedInvoice>();
 
     const { control, handleSubmit } = useForm({
         defaultValues: {
@@ -37,14 +43,17 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
     });
 
     const onSubmit = (data: any) => {
-        if (!invoice) alert('La facture est obligatoire.')
+        if (!selectedInvoice) alert('La facture est obligatoire.')
         else {
-            addInvoice({
-                title: data.Titre,
+            let invoice: Invoice = {
+                id: undefined,
+                amount: data.Prix,
                 description: data.Description,
-                price: data.Prix,
-                invoice: invoice,
-            })
+                invoice: selectedInvoice.uri,
+                title: data.Titre,
+                type: selectedInvoice.type
+            }
+            addInvoice(invoice);
             setIsModalVisible(false);
         }
     }
@@ -52,7 +61,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
     const pickDocument = async () => {
         let result = await DocumentPicker.getDocumentAsync({});
         if (!result.canceled) {
-            setInvoice({
+            setSelectedInvoice({
                 uri: result.assets[0].uri,
                 name: result.assets[0].name,
                 type: 'file'
@@ -68,7 +77,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
         });
 
         if (!result.canceled) {
-            setInvoice({
+            setSelectedInvoice({
                 uri: result.assets[0].uri,
                 name: result.assets[0].fileName,
                 type: 'image'
@@ -101,20 +110,20 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
             <View>
                 <Text style={styles.name}>Facture</Text>
                 <TouchableOpacity onPress={() => setIsSecondModalVisible(true)}>
-                    {invoice ?
+                    {selectedInvoice ?
                         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', padding: 5 }}>
-                            {invoice.type == 'file' ?
+                            {selectedInvoice.type == 'file' ?
                                 <Image
                                     source={require('../../assets/file.png')}
                                     style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                 />
                                 :
                                 <Image
-                                    source={{ uri: invoice.uri }}
+                                    source={{ uri: selectedInvoice.uri }}
                                     style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                 />
                             }
-                            <Text numberOfLines={1} style={{ color: '#76C3F0' }}>{invoice.name}</Text>
+                            <Text numberOfLines={1} style={{ color: '#76C3F0' }}>{selectedInvoice.name}</Text>
                         </View>
                         :
                         <Text style={{ color: '#76C3F0' }}>Ajouter une facture.</Text>

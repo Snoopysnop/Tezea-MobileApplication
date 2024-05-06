@@ -8,14 +8,11 @@ import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import { Controller } from 'react-hook-form';
+import { Incident } from '../../api/Model';
 
 const formSchema = z.object({
     Titre: z.string().min(3, 'Le titre doit contenir au moins 3 charactères'),
     Description: z.string().optional(),
-    Prix: z.coerce.number({
-        required_error: "Champ obligatoire",
-        invalid_type_error: "Le prix doit être un nombre"
-    }).positive("Le prix doit être supérieur à zéro"),
 });
 
 type IncidentFormParams = {
@@ -38,12 +35,14 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
     });
 
     const onSubmit = (data: any) => {
-        addIncident({
-            title: data.Titre,
-            description: data.Description,
-            level: data.Niveau,
+        let incident: Incident = {
+            id: undefined,
+            description:data.Description,
             evidences: evidences,
-        })
+            level:data.Niveau,
+            title:data.Titre,
+        }
+        addIncident(incident)
         setIsModalVisible(false);
     }
 
@@ -113,7 +112,7 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
                 }}>
                     {evidences?.map((evidence, index) => {
                         return (
-                            <View>
+                            <View key={index}>
                                 <View style={{ borderRadius: 5 }}>
                                     <Image
                                         source={{ uri: evidence }}
