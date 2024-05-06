@@ -11,6 +11,7 @@ import { InvoiceReviewModal } from '../../components/WorkSiteInProgress/InvoiceR
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
 import MainApi from '../../api/MainApi';
+import { IncidentReviewModal } from '../../components/WorkSiteInProgress/IncidentReviewModal';
 
 
 type WorkSiteInProgressParams = {
@@ -24,14 +25,15 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const [invoices, setInvoices] = useState<Invoice[]>(retrievedInvoices)
   const [invoiceModal, setInvoiceModal] = React.useState(false);
-  
+
   const [incidents, setIncidents] = useState<Incident[]>(retrievedIncidents)
   const [incidentModal, setIncidentModal] = React.useState(false);
-  
+
   const [comment, setComment] = useState("");
 
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
-  const [reviewModal, setReviewModal] = React.useState(false);
+  const [invoiceReviewModal, setInvoiceReviewModal] = React.useState(false);
+  const [incidentReviewModal, setIncidentReviewModal] = React.useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -40,10 +42,15 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   }, [])
 
   const putInvoiceForWorksite = async (invoice: Invoice) => {
-    let response = await MainApi.getInstance().putInvoicesForWorksite(workSiteAndRequest.id, invoice)
+    // create new invoice
+    // let response = await MainApi.getInstance().putInvoicesForWorksite(workSiteAndRequest.id, invoice)
+
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
 
     let tmpInvoices = invoices
-    tmpInvoices.push(response)
+    tmpInvoices.push(invoice)
+    // setIncidents(newInvoices)
     setInvoices(tmpInvoices)
   }
 
@@ -51,15 +58,40 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
     putInvoiceForWorksite(invoice)
   }
 
-  const putIncidentForWorksite = async (incident: Incident) => {
-    let response = await MainApi.getInstance().putIncidentForWorksite(workSiteAndRequest.id, incident)
+  const deleteInvoiceFromWorkSite = async (invoiceId: string) => {
+    // delete invoice
+    // let response = await MainApi.getInstance().deleteInvoice(invoiceId)
 
-    for (let i = 0; i < incident.evidences.length; i++) {      
-      await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
-    }
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+
+    // setIncidents(newInvoices)
+  }
+
+  const removeInvoice = (invoice: Invoice) => {
+    // deleteInvoiceFromWorkSite(invoice.id)
+
+    let tmpInvoices = invoices
+    let index = tmpInvoices.indexOf(invoice)
+    tmpInvoices.splice(index, 1)
+    setInvoices(tmpInvoices)
+  }
+
+  const putIncidentForWorksite = async (incident: Incident) => {
+    // create new incident
+    // let response = await MainApi.getInstance().putIncidentForWorksite(workSiteAndRequest.id, incident)
+
+    // add corresponding pictures
+    // for (let i = 0; i < incident.evidences.length; i++) {
+    //   await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
+    // }
+
+    // retrieve all incidents
+    // let newIncidents = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
 
     let tmpIncidents = incidents
-    tmpIncidents.push(response)
+    tmpIncidents.push(incident)
+    // setIncidents(newIncidents)
     setIncidents(tmpIncidents)
   }
 
@@ -67,11 +99,27 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
     putIncidentForWorksite(incident);
   }
 
-  const removeInvoice = (invoice: Invoice) => {
-    let tmpInvoices = invoices
-    let index = tmpInvoices.indexOf(invoice)
-    tmpInvoices.splice(index, 1)
-    setInvoices(tmpInvoices)
+  const deleteIncidentFromWorkSite = async (incidentId: string) => {
+    // delete invoice
+    // let response = await MainApi.getInstance().deleteIncident(incidentId)
+
+    // retrieve all invoices
+    // let newInvoices = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+
+    // setIncidents(newInvoices)
+  }
+
+  const removeIncident = (incident: Incident) => {
+    // deleteIncidentFromWorkSite(incident.id);
+
+    let tmpIncident = incidents
+    let index = tmpIncident.indexOf(incident)
+    tmpIncident.splice(index, 1)
+    setIncidents(tmpIncident)
+  }
+
+  const uploadComment = async () => {
+    await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)
   }
 
   return (
@@ -102,7 +150,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
                     setSelectedElement(invoice);
-                    setReviewModal(true);
+                    setInvoiceReviewModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
                     {invoice.type == 'file' ?
                       <Image
@@ -149,10 +197,10 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
                     setSelectedElement(incident);
-                    setReviewModal(true);
+                    setIncidentReviewModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
                     <Image
-                      source={{ uri: incident.evidences[0] }}
+                      source={{ uri: `data:image/png;base64,${incident.evidences[0]}` }}
                       style={{ width: 60, height: 60, backgroundColor: 'white' }}
                     />
 
@@ -161,7 +209,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                       <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
                     </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}€</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -194,7 +242,11 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
         <Button
           title={'Terminer Le Chantier'}
-          onPress={() => navigation.navigate("ValidationScreen")}
+          onPress={() => {
+            // uploadComment();
+            navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id }
+            )
+          }}
           buttonStyle={{
             backgroundColor: '#E15656',
             borderRadius: 20,
@@ -210,7 +262,8 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
       <CreationModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} addElement={addInvoice} isInvoice={true} />
       <CreationModal isModalVisible={incidentModal} setIsModalVisible={setIncidentModal} addElement={addIncident} isInvoice={false} />
-      <InvoiceReviewModal isModalVisible={reviewModal} removeInvoice={removeInvoice} setIsModalVisible={setReviewModal} invoice={selectedElement} />
+      <InvoiceReviewModal isModalVisible={invoiceReviewModal} removeInvoice={removeInvoice} setIsModalVisible={setInvoiceReviewModal} invoice={selectedElement as Invoice} />
+      <IncidentReviewModal isModalVisible={incidentReviewModal} removeIncident={removeIncident} setIsModalVisible={setIncidentReviewModal} incident={selectedElement as Incident} />
 
     </View>
   );

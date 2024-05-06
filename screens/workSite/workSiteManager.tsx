@@ -32,8 +32,8 @@ function WorkSiteManager({ route }: any) {
     let customer = await MainApi.getInstance().getCustomerById(workSiteAndRequestAPI.workSiteRequest.customer)
     let staff = await MainApi.getInstance().getUsersById(workSiteAndRequestAPI.staff)
 
-    let invoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequestAPI.id);
-    let incidents = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequestAPI.id);
+    let invoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequestAPI.id);
+    let incidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequestAPI.id);
 
     let updatedWorkSiteRequest: WorkSiteRequest = {
       concierge: concierge,
@@ -85,7 +85,8 @@ function WorkSiteManager({ route }: any) {
         (<View style={styles.loading} >
           <ActivityIndicator size='large' />
         </View>) :
-        workSiteAndRequest && (workSiteAndRequest.status == WorkSiteStatus.InProgress ?
+        // TODO change back to workSiteAndRequest.status
+        workSiteAndRequest && (workSiteAndRequestAPI.status == WorkSiteStatus.InProgress ?
           <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
           :
           <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />

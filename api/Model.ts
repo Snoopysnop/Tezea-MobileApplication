@@ -256,14 +256,14 @@ export interface Incident {
     level: IncidentLevel,
     title: string,
     description: string,
-    id: string | undefined,
+    id: string,
     evidences: string[]
 }
 
 export interface Invoice {
     title: string,
     description: string,
-    id: string | undefined,
+    id: string,
     amount: number,
     invoice: string,
     type: "file" | "image"

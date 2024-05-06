@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
 import { Button } from '@rneui/themed';
-import { Invoice } from '../../api/Model';
+import { Incident } from '../../api/Model';
 
-type InvoiceReviewModalParams = {
+type IncidentReviewModalParams = {
     isModalVisible: boolean,
     setIsModalVisible: Function,
-    removeInvoice: Function,
-    invoice: Invoice | undefined,
+    removeIncident: Function,
+    incident: Incident | undefined,
 };
 
-function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, invoice }: InvoiceReviewModalParams) {
-    if (!invoice) {
-        if (isModalVisible) alert("Désolé, nous n'avons pas pu récupérer les informations liées à la facture demandée.")
+function IncidentReviewModal({ isModalVisible, removeIncident, setIsModalVisible, incident }: IncidentReviewModalParams) {
+    if (!incident) {
+        if (isModalVisible) alert("Désolé, nous n'avons pas pu récupérer les informations liées à l'incident demandé.")
         return;
     }
 
@@ -29,51 +29,54 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                     <View style={styles.modalView}>
 
                         <View style={styles.container}>
-                            <Text style={styles.heading}>Facture</Text>
+                            <Text style={styles.heading}>Incident</Text>
                             <View>
                                 <Text style={styles.name}>Titre</Text>
                                 <Text
                                     style={{ borderColor: '#ccc', ...styles.input }}
                                     numberOfLines={1}
-                                >{invoice.title}</Text>
+                                >{incident.title}</Text>
                             </View>
                             <View>
                                 <Text style={styles.name}>Description</Text>
                                 <Text
                                     style={{ borderColor: '#ccc', ...styles.input }}
                                     numberOfLines={5}
-                                >{invoice.description}</Text>
+                                >{incident.description}</Text>
                             </View>
                             <View>
-                                <Text style={styles.name}>Prix</Text>
+                                <Text style={styles.name}>Niveau d'Urgence</Text>
                                 <Text
                                     style={{ borderColor: '#ccc', ...styles.input }}
                                     numberOfLines={1}
-                                >{invoice.amount}</Text>
+                                >{incident.level}</Text>
                             </View>
 
                             <View>
-                                <Text style={styles.name}>Facture</Text>
-                                <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', padding: 5 }}>
-                                    {invoice.type == 'file' ?
-                                        <Image
-                                            source={require('../../assets/file.png')}
-                                            style={{ width: 40, height: 40, backgroundColor: 'white' }}
-                                        />
-                                        :
-                                        <Image
-                                            source={{ uri: invoice.invoice }}
-                                            style={{ width: 40, height: 40, backgroundColor: 'white' }}
-                                        />
-                                    }
-                                    <Text numberOfLines={1} style={{ color: '#ccc' }}>{invoice.invoice?.split('/').pop()}</Text>
+                                {(incident.evidences.length!=0) && <Text style={styles.name}>Photos ({incident.evidences.length})</Text>}
+                                <View style={{
+                                    flexDirection: 'row',
+                                    gap: 7,
+                                    flexWrap: 'wrap'
+                                }}>
+                                    {incident.evidences?.map((evidence, index) => {
+                                        return (
+                                            <View key={index}>
+                                                <View style={{ borderRadius: 5 }}>
+                                                    <Image
+                                                        source={{ uri: `data:image/png;base64,${evidence}` }}
+                                                        style={styles.image} />
+                                                </View>
+                                            </View>
+                                        )
+                                    })}
                                 </View>
                             </View>
 
                             <Button
                                 title={'Supprimer'}
                                 onPress={() => {
-                                    removeInvoice(invoice);
+                                    removeIncident(incident);
                                     setIsModalVisible(false);
                                 }}
                                 buttonStyle={{
@@ -82,6 +85,7 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                                 }}
                                 containerStyle={{
                                     minWidth: 200,
+                                    marginTop: 20,
                                     alignSelf: 'center',
                                 }}
                             />
@@ -131,6 +135,10 @@ const styles = StyleSheet.create({
         position: 'relative',
         bottom: 5,
         borderColor: '#fff',
+    },
+    image: {
+        width: 60,
+        height: 60,
     },
     textStyle: {
         color: 'white',
@@ -189,4 +197,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export { InvoiceReviewModal };
+export { IncidentReviewModal };

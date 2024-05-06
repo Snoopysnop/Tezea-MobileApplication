@@ -8,7 +8,7 @@ import { useNavigation, ParamListBase } from "@react-navigation/native";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useEffect} from "react";
 import { TitleHeader } from "../../components/Header";
-import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
+import { Incident, Invoice, WorkSiteAndRequest, WorkSiteStatus } from '../../api/Model';
 import MainApi from "../../api/MainApi";
 import { workSitesAndRequests, users, customer, incidentsExample } from '../../dataset';
 import { DetailsButtons } from "../../components/WorkSiteInProgress/DetailsButtons";
@@ -51,8 +51,8 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   }, [])
 
 
-  const fetchHeaderInfo = async() => {
-    //await MainApi.getInstance().getUsers();
+  const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
+    await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
 }
 
 const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
@@ -220,7 +220,10 @@ const [showEmployeesModal, setShowEmployeesModal] = React.useState(false);
 
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
-        onPress={() => navigation.navigate("WorkSiteInProgress")}
+        onPress={() => 
+          updateWorkSiteStatus(WorkSiteStatus.InProgress)
+          // navigation.navigate("WorkSiteInProgress")
+        }
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
           Démarrer le chantier

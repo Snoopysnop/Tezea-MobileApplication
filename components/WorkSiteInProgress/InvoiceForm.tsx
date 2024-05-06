@@ -20,7 +20,6 @@ const formSchema = z.object({
 
 type SelectedInvoice = {
     uri: string,
-    name: string | null | undefined,
     type: 'file' | 'image'
 }
 
@@ -46,7 +45,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
         if (!selectedInvoice) alert('La facture est obligatoire.')
         else {
             let invoice: Invoice = {
-                id: undefined,
+                id: "",
                 amount: data.Prix,
                 description: data.Description,
                 invoice: selectedInvoice.uri,
@@ -63,7 +62,6 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
         if (!result.canceled) {
             setSelectedInvoice({
                 uri: result.assets[0].uri,
-                name: result.assets[0].name,
                 type: 'file'
             });
         }
@@ -79,7 +77,6 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
         if (!result.canceled) {
             setSelectedInvoice({
                 uri: result.assets[0].uri,
-                name: result.assets[0].fileName,
                 type: 'image'
             });
         }
@@ -123,7 +120,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
                                     style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                 />
                             }
-                            <Text numberOfLines={1} style={{ color: '#76C3F0' }}>{selectedInvoice.name}</Text>
+                            <Text numberOfLines={1} style={{ color: '#76C3F0' }}>{selectedInvoice.uri.split('/').pop()}</Text>
                         </View>
                         :
                         <Text style={{ color: '#76C3F0' }}>Ajouter une facture.</Text>

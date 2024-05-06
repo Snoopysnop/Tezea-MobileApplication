@@ -13,6 +13,7 @@ import { Incident } from '../../api/Model';
 const formSchema = z.object({
     Titre: z.string().min(3, 'Le titre doit contenir au moins 3 charactères'),
     Description: z.string().optional(),
+    Niveau: z.string()
 });
 
 type IncidentFormParams = {
