@@ -266,6 +266,6 @@ export interface Invoice {
     description: string,
     id: string,
     amount: number,
-    invoice: string,
+    invoiceFile: string,
     type: "file" | "image"
 }

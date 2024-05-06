@@ -43,12 +43,12 @@ class MainApi extends AbstractApi {
     public async getUsersById(ids: string[]): Promise<User[]> {
         try {
             const config = {
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 }
             }
-            const response = await this.service.post(`/api/users/findSomeUsers` , JSON.stringify(ids),config)
-            
+            const response = await this.service.post(`/api/users/findSomeUsers`, JSON.stringify(ids), config)
+
             return response.data as User[]
         } catch (err) {
             console.log(err)
@@ -97,16 +97,16 @@ class MainApi extends AbstractApi {
             throw AbstractApi.handleError(err)
         }
     }
-//console.log(err)
+    //console.log(err)
     public async updateWorksiteStatus(workSiteId: string, status: WorkSiteStatus): Promise<number> {
         try {
             const config = {
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 }
             }
-            const response = await this.service.patch(`/api/worksites/${workSiteId}/update_status`, config , {
-                params:{status:"InProgress"},
+            const response = await this.service.patch(`/api/worksites/${workSiteId}/update_status`, config, {
+                params: { status: "InProgress" },
             })
 
             return response.status
@@ -145,15 +145,17 @@ class MainApi extends AbstractApi {
     public async putIncidentForWorkSite(id: string, incident: Incident): Promise<Incident> {
         try {
             const config = {
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 }
             }
             const response = await this.service.put(`/api/worksites/${id}/incident`, JSON.stringify(
-                {level: incident.level,
+                {
+                    level: "Minor",
                     title: incident.title,
-                    description: incident.description}
-            ),config)
+                    description: incident.description
+                }
+            ), config)
 
             return response.data as Incident
         } catch (err) {
@@ -165,27 +167,12 @@ class MainApi extends AbstractApi {
     public async putEvidenceForIncident(id: string, evidence: string): Promise<Incident> {
         try {
             const config = {
-                headers:{
-                    'Content-Type': 'multipart/form-data'
+                headers: {
+                    "Content-Type": "application/json"
                 }
             }
-            let filename = evidence.split('/').pop();
 
-            let type
-            if (filename) {
-                let match = /\.(\w+)$/.exec(filename);
-                type = match ? `image/${match[1]}` : `image`;
-            }
-            else {
-                type = `image`;
-            }
-
-            let formData = new FormData();
-            formData.append('image', { uri: evidence, name: filename, type });
-            const response = await this.service.put(`/api/worksites/incident/${id}/evidences`, JSON.stringify({
-                    evidence: evidence,
-                })
-            ,config )
+            const response = await this.service.put(`/api/worksites/incident/${id}/evidences`, evidence, config)
             return response.data as Incident
         } catch (err) {
             throw AbstractApi.handleError(err)
@@ -216,41 +203,44 @@ class MainApi extends AbstractApi {
         }
     }
 
-    public async putInvoicesForWorkSite(id: string, invoice: Invoice): Promise<Invoice> {
+    public async putInvoiceForWorkSite(id: string, invoice: Invoice, b64: string): Promise<Invoice> {
         try {
             const config = {
-                headers:{
-                    'Content-Type': 'multipart/form-data'
+                headers: {
+                    "Content-Type": "application/json"
                 }
             }
-            let localUri = invoice.invoice;
-            let filename = localUri.split('/').pop();
 
-            let type
-            if (filename) {
-                let match = /\.(\w+)$/.exec(filename);
-                type = match ? `image/${match[1]}` : `image`;
-            }
-            else {
-                type = `image`;
-            }
+            const response = await this.service.put(`/api/worksites/${id}/invoice`, JSON.stringify(
+                {
+                    amount: invoice.amount,
+                    title: invoice.title,
+                    description: invoice.description,
+                    invoiceFile: b64,
+                    fileExtension: invoice.type
+                }
+            ), config)
 
-            let formData = new FormData();
-            formData.append('image', { uri: localUri, name: filename, type });
-            console.log(formData)
-
-            const response = await this.service.put(`/api/worksites/${id}/invoice`, JSON.stringify({
-                    invoice: {
-                        title: invoice.title,
-                        description: invoice.description,
-                        amount: invoice.amount
-                    },
-                    file: formData
-                }),config
-            )
             return response.data as Invoice
         } catch (err) {
-            console.log(err)
+            throw AbstractApi.handleError(err)
+        }
+    }
+
+    public async putInvoiceImage(invoiceId: string, invoiceB64: string, fileType: string): Promise<Invoice> {
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+
+            console.log(invoiceB64.substring(0, 200))
+
+            const response = await this.service.put(`/api/worksites/v2/invoice/${invoiceId}/file?fileExtension=${fileType}`, invoiceB64 , config)
+
+            return response.data as Invoice
+        } catch (err) {
             throw AbstractApi.handleError(err)
         }
     }

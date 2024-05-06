@@ -128,7 +128,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice }}
+                        source={{ uri: invoice.invoiceFile }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }

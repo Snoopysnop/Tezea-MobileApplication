@@ -11,6 +11,36 @@ import { AirbnbRating } from 'react-native-ratings';
 const SignatureScreen = ({ route }: any) => {
   const { workSiteId } = route.params;
 
+  async function uriToBase64(uri: string) {
+    const result = await fetch(uri)
+    const blob = await result.blob()
+
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+
+    return new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(String(reader?.result).split(",")[1])
+      }
+    })
+  }
+
+  // const putClientInfo = async () => {
+  //   try {
+  //     // create new invoice
+  //     let b64 = await uriToBase64(invoice.invoiceFile) as string
+  //     await MainApi.getInstance().putInvoiceForWorkSite(workSiteAndRequest.id, invoice, b64)
+
+  //     // retrieve all invoices
+  //     let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
+
+  //     setInvoices(newInvoices)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
   const handleRating = (rating: number) => {
     alert(rating);
   };
@@ -87,7 +117,7 @@ const SignatureScreen = ({ route }: any) => {
             <View style={[styles.ratingContainer]}>
               <AirbnbRating
                 count={5}
-                reviews={["Terrible", "Mauvais", "Moyen", "Bon", "Excellent"]}
+                reviews={["Pas du Tout Satisfait", "Peu Satisfait", "Satisfait", "Très Satisfait", "Parfait"]}
                 defaultRating={0}
                 size={30}
                 showRating={true}

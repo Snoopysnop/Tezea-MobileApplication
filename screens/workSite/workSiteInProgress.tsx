@@ -41,22 +41,34 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
     });
   }, [])
 
+  async function uriToBase64(uri: string) {
+    const result = await fetch(uri)
+    const blob = await result.blob()
+
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+
+    return new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(String(reader?.result).split(",")[1])
+      }
+    })
+  }
+
   const putInvoiceForWorksite = async (invoice: Invoice) => {
     try {
-    // create new invoice
-    let response = await MainApi.getInstance().putInvoicesForWorkSite(workSiteAndRequest.id, invoice)
+      // create new invoice
+      let b64 = await uriToBase64(invoice.invoiceFile) as string
+      await MainApi.getInstance().putInvoiceForWorkSite(workSiteAndRequest.id, invoice, b64)
 
-    // retrieve all invoices
-    
+      // retrieve all invoices
       let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
+
       setInvoices(newInvoices)
     } catch (error) {
       console.log(error)
     }
-    
-
-    
-
   }
 
   const addInvoice = (invoice: Invoice) => {
@@ -65,7 +77,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const deleteInvoiceFromWorkSite = async (invoiceId: string) => {
     // delete invoice
-     let response = await MainApi.getInstance().deleteInvoice(invoiceId)
+    let response = await MainApi.getInstance().deleteInvoice(invoiceId)
 
     // retrieve all invoices
     let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
@@ -80,25 +92,22 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const putIncidentForWorksite = async (incident: Incident) => {
     try {
-      
-    
-    // create new incident
-     let response = await MainApi.getInstance().putIncidentForWorkSite(workSiteAndRequest.id, incident)
+      // create new incident
+      let response = await MainApi.getInstance().putIncidentForWorkSite(workSiteAndRequest.id, incident)
 
-    // add corresponding pictures
-    for (let i = 0; i < incident.evidences.length; i++) {
-      await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
-    }
+      // add corresponding pictures
+      for (let i = 0; i < incident.evidences.length; i++) {
+        let b64 = await uriToBase64(incident.evidences[i]) as string
+        await MainApi.getInstance().putEvidenceForIncident(response.id, b64)
+      }
 
-    // retrieve all incidents
-    let newIncidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
+      // retrieve all incidents
+      let newIncidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
-
-    setIncidents(newIncidents)
-  } catch (error) {
+      setIncidents(newIncidents)
+    } catch (error) {
       console.log(error)
-  }
-
+    }
   }
 
   const addIncident = (incident: Incident) => {
@@ -160,7 +169,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                       />
                       :
                       <Image
-                        source={{ uri: invoice.invoice }}
+                        source={{ uri: `data:image/png;base64,${invoice.invoiceFile}` }}
                         style={{ width: 60, height: 60, backgroundColor: 'white' }}
                       />
                     }

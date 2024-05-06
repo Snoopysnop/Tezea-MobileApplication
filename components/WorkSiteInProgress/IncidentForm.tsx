@@ -28,8 +28,8 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
 
     const { control, handleSubmit } = useForm({
         defaultValues: {
-            Titre: '',
-            Description: '',
+            Titre: 'mon incident',
+            Description: 'oulala il y a eu un incident',
             Niveau: '',
         },
         resolver: zodResolver(formSchema),
@@ -37,7 +37,7 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
 
     const onSubmit = (data: any) => {
         let incident: Incident = {
-            id: undefined,
+            id: "",
             description:data.Description,
             evidences: evidences,
             level:data.Niveau,

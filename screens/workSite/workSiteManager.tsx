@@ -100,7 +100,7 @@ function WorkSiteManager({ route }: any) {
           <ActivityIndicator size='large' />
         </View>) :
         // TODO change back to workSiteAndRequest.status
-        workSiteAndRequest && (workSiteAndRequestAPI.status.toString() == "InProgress" ?
+        workSiteAndRequest && (workSiteAndRequestAPI.status?.toString() == "InProgress" ?
           <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
           :
           <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
