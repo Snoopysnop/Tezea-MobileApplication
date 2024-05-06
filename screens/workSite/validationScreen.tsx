@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Button, Alert, Modal, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Button, Alert, Modal, Image, Dimensions,Text } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
@@ -7,6 +7,8 @@ import * as FileSystem from 'expo-file-system';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AirbnbRating } from 'react-native-ratings';
+import { fonts } from '@rneui/base';
+import { FontSize } from '../../GlobalStyles';
 
 const SignatureScreen = ({ route }: any) => {
   const { workSiteId } = route.params;
@@ -88,7 +90,7 @@ const SignatureScreen = ({ route }: any) => {
   };
 
   const handleReturnToWorkSiteInfo = () => {
-    navigation.navigate("WorkSiteInfo");
+    //TODO refresh le status du worksite
   };
 
 
@@ -114,7 +116,9 @@ const SignatureScreen = ({ route }: any) => {
             <View style={styles.blueRectangle}>
               <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
             </View>
+            
             <View style={[styles.ratingContainer]}>
+            <Text style={{fontSize:30}}>Satisfaction client</Text>
               <AirbnbRating
                 count={5}
                 reviews={["Pas du Tout Satisfait", "Peu Satisfait", "Satisfait", "Très Satisfait", "Parfait"]}

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import MainApi from '../api/MainApi';
 import { User } from '../api/Model';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type TitleHeaderParams = {
     title: string
@@ -20,9 +22,10 @@ function TitleHeader({ title, subtitle, isBlue }: TitleHeaderParams) {
 
 function ProfileButton() {
     const [users, setUsers] = useState<User[]>([])
+    const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     return (
         <View style={{ marginRight: 20 }}>
-            <TouchableOpacity onPress ={ () => alert("Profil")}>
+            <TouchableOpacity onPress ={ () => navigation.navigate('ProfileScreen')}>
                 <View style={styles.profilePictureContainer}>
                     <Image
                         source={require("../assets/user.png")}

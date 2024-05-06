@@ -14,6 +14,8 @@ import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import MainApi from './api/MainApi';
 import { WorkSiteManager } from './screens/workSite/workSiteManager';
+import  {LoginScreen}  from './screens/login';
+import  ProfileScreen  from './screens/profile';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +25,15 @@ const App = () => {
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='WorkSiteList'>
+        <Stack.Navigator initialRouteName='Login'>
+        <Stack.Screen name="Login" component={LoginScreen} />
+
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{
+            headerTintColor: 'white',
+            headerStyle: { backgroundColor: '#76C3F0' },
+            headerTitleAlign: 'center',
+            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
+          }} />
           <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
             headerTintColor: 'white',
             headerStyle: { backgroundColor: '#76C3F0' },

@@ -23,6 +23,7 @@ type WorkSiteInfoParams = {
   invoices: Invoice[];
   incidents: Incident[];
 }
+
 function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
 
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
@@ -38,10 +39,32 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   const [routes] = useState([
     { key: "image", icon: require("../../assets/information-545674-1.png") },
     { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
-    { key: "history", icon: require("../../assets/history.png") },
+    //{ key: "history", icon: require("../../assets/history.png") },
   ]);
-  
+  const [dynamicRoutes, setDynamicRoutes] = useState<{ key: string; icon: any; }[]>([]);
   useEffect(() => {
+    console.log(workSiteAndRequest.status.toString() === "Done")
+    if (workSiteAndRequest.status.toString() === "Done") {
+      console.log("Ahg oui ouii")
+      setDynamicRoutes([{ key: "history", icon: require("../../assets/history.png") }]);
+    } else {
+      setDynamicRoutes([]);
+    }
+  }, [workSiteAndRequest.status]);
+
+
+  const mergedRoutes = [...routes, ...dynamicRoutes];
+
+  type CustomNavigationState = {
+    index: number;
+    routes: { key: string; icon: any }[];
+  }
+  const navigationState: CustomNavigationState = {
+    index,
+    routes: mergedRoutes,
+  };
+  useEffect(() => {
+    //TODO ca partout
     navigation.setOptions({
       headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
     });
@@ -73,6 +96,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         </View>
         );
       case "text":
+        console.log(workSiteAndRequest.status.toString())
         return (
           <View style={styles.listeInfoTabView}>
 
@@ -102,6 +126,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         );
         case "history":
         return (
+          
           //Facture
           <View>
             <ScrollView >
@@ -200,8 +225,10 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
       <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
     </View>
           </ScrollView>
-            </View>
+          </View>
+
         );
+
       default:
         return null;
     }
@@ -235,7 +262,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
         onPress={() => 
           updateWorkSiteStatus(WorkSiteStatus.InProgress)
-          // navigation.navigate("WorkSiteInProgress")
+          //navigation.navigate("WorkSiteInProgress")
         }
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
@@ -291,7 +318,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
   </View>
       <TabView
-        navigationState={{ index, routes }}
+        navigationState={navigationState}
         renderScene={renderScene}
         onIndexChange={setIndex}
         renderTabBar={renderTabBar}

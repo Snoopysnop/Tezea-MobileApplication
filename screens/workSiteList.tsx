@@ -8,6 +8,7 @@ import { SearchBar } from '../components/SearchBar';
 import { User, WorkSite, WorkSiteAndRequestAPI } from '../api/Model';
 import { workSitesAndRequestsAPI } from '../dataset';
 import MainApi from '../api/MainApi';
+import { TitleHeader } from '../components/Header';
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
@@ -20,6 +21,8 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
+
+
 
   useEffect(() => {
     fetchWorkSitesAndRequests()
@@ -38,13 +41,15 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
     setGroupedWorkSitesAndRequests(groupByDay(response))
   }
 
+
+
   const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
     const groupedWorkSites: Map<string, WorkSiteAndRequestAPI[]> = new Map();
     let dayKey: string
 
     workSiteAndRequestAPI.forEach(workSiteAndRequest => {
       dayKey = new Date(workSiteAndRequest.begin).toISOString().split('T')[0]
-
+      
       if (groupedWorkSites.has(dayKey)) {
               groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
             } else {
