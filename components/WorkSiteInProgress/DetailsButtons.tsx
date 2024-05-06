@@ -1,10 +1,13 @@
-// TODO find a better filename?
-
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { BasicModal } from '../BasicModal';
+import { WorkSiteAndRequest } from '../../api/Model';
 
-function DetailsButtons() {
+type DetailsButtonsParams = {
+    workSiteAndRequest: WorkSiteAndRequest;
+}
+
+function DetailsButtons({ workSiteAndRequest }: DetailsButtonsParams) {
     const [workSiteInfoModal, setWorkSiteInfoModal] = React.useState(false);
     const [toolsModal, setToolsModal] = React.useState(false);
     const [employeesModal, setEmployeeModal] = React.useState(false);
@@ -15,7 +18,7 @@ function DetailsButtons() {
                 <TouchableOpacity onPress={() => setWorkSiteInfoModal(true)} style={{ flex: 11 }}>
                     <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center' }}>
                         <View>
-                            <Text numberOfLines={1} style={{ color: 'black', ...styles.title }}>Réparation Antenne</Text>
+                            <Text numberOfLines={1} style={{ color: 'black', ...styles.title }}>{workSiteAndRequest.workSiteRequest.title}</Text>
                             <Text numberOfLines={1} style={{ color: '#7D7D7D', ...styles.subtitle }}>Voir Récapitulatif</Text>
                         </View>
                     </View>
@@ -40,9 +43,9 @@ function DetailsButtons() {
                 </TouchableOpacity>
 
             </View>
-            <BasicModal isModalVisible={workSiteInfoModal} setIsModalVisible={setWorkSiteInfoModal} component={<WorkSiteModal />} />
-            <BasicModal isModalVisible={toolsModal} setIsModalVisible={setToolsModal} component={<ToolsModal />} />
-            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal />} />
+            <BasicModal isModalVisible={workSiteInfoModal} setIsModalVisible={setWorkSiteInfoModal} component={<WorkSiteModal workSiteAndRequest={workSiteAndRequest} />} />
+            <BasicModal isModalVisible={toolsModal} setIsModalVisible={setToolsModal} component={<ToolsModal workSiteAndRequest={workSiteAndRequest} />} />
+            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal workSiteAndRequest={workSiteAndRequest} />} />
         </View>
     );
 };
@@ -123,45 +126,51 @@ const tools = [
     }
 ]
 
-function WorkSiteModal() {
+type ModalParams = {
+    workSiteAndRequest: WorkSiteAndRequest;
+}
+
+function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
     return (
         <View>
             <View style={{ gap: 10, marginBottom: 10, marginHorizontal: 10 }}>
-            <View>
+                <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Description :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.description}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.description}</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.concierge}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.concierge.phoneNumber}</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de Site :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.siteManager}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.siteChief.firstName} {workSiteAndRequest.workSiteRequest.siteChief.lastName}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.siteChief.phoneNumber}</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Adresse :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.address}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>adresse</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Urgence :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.urgency}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.emergency}</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Horaires :</Text>
-                    <Text style={{ color: '#7D7D7D'}}>{workSiteInfo.begin} - {workSiteInfo.end}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.begin.toLocaleDateString()} - {workSiteAndRequest.end.toLocaleDateString()}</Text>
                 </View>
             </View>
         </View>
     )
 }
 
-function ToolsModal() {
+function ToolsModal({ workSiteAndRequest }: ModalParams) {
     return (
         <View>
             {tools?.map((tool, index) => {
@@ -176,7 +185,7 @@ function ToolsModal() {
     )
 }
 
-function EmployeesModal() {
+function EmployeesModal({ workSiteAndRequest }: ModalParams) {
     return (
         <View>
             {employees?.map((employee, index) => {

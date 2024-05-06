@@ -127,7 +127,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
         <View style={{ gap: 15 }}>
 
-          <DetailsButtons />
+          <DetailsButtons workSiteAndRequest={workSiteAndRequest} />
 
           {/* -------------------- INVOICE MANAGEMENT -------------------- */}
           <View>
