@@ -213,6 +213,7 @@ interface WorkSiteAndRequestBase {
     status: WorkSiteStatus,
     signature: string | null
     incident: boolean,
+    comment: string
 }
 
 export interface WorkSiteAndRequestAPI extends WorkSiteAndRequestBase {

@@ -61,6 +61,7 @@ const SignatureScreen = ({ route }: any) => {
     navigation.navigate("WorkSiteInfo");
   };
 
+
   const handleValidate = async () => {
     if (capturedImageUri) {
       try {

@@ -49,7 +49,14 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
 
   const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
-    await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
+    try {
+      console.log(workSiteAndRequest.id)
+      await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
+      console.log("Apres call")
+    } catch (error) {
+      console.log(error)
+    }
+    
 }
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
@@ -145,7 +152,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
               </View>
             </View>
 
-            {incidentsExample?.map((incident, index) => {
+            {incidents?.map((incident, index) => {
               return (
                 <View key={index} style={{ paddingBottom:5}}>
                   <TouchableOpacity onPress={() => {
@@ -153,7 +160,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                     setReviewInvoiceModal(true);
                   }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
                     <Image
-                      source={{ uri: incident.evidences[0] }}
+                      source={{ uri: `data:image/png;base64,${incident.evidences}` }}
                       style={{ width: 60, height: 60, backgroundColor: 'white' }}
                     />
 
@@ -174,7 +181,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
                 <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
               </View>
           </View>
-          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}>MIAM LE CACA DANS MA BOUCHE JAIME TROP CA CEST TROP BON PTN AVEC UN PETIT COULIS DE PIPI SUCREE AVEC DES FESSE DE PROUT CEST TROP BON </Text>
+          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}> {workSiteAndRequest.comment} </Text>
           </View>
 
 
@@ -186,10 +193,9 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
             </View>
           </View>
           <Image
-                        source={require('../../assets/file.png')}
-                        style={{ width: 80, height: 80, backgroundColor: 'white'}}
-                      />
-
+            source={{ uri: `data:image/png;base64,${workSiteAndRequest.signature}` }}
+            style={{ width: 80, height: 80, backgroundColor: 'white'}}
+          />
           <View style={styles.container}>
       <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
     </View>

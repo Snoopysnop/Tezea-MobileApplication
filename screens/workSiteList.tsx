@@ -22,10 +22,8 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
 
   useEffect(() => {
-    // fetchWorkSitesAndRequests()
-    setWorkSitesAndRequests(workSitesAndRequestsAPI)
-    setFilteredWorkSitesAndRequests(workSitesAndRequestsAPI)
-    setGroupedWorkSitesAndRequests(groupByDay(workSitesAndRequestsAPI))
+    fetchWorkSitesAndRequests()
+
   }, [])
 
   useEffect(() => {
@@ -33,8 +31,10 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   }, [filteredWorkSitesAndRequests])
 
   const fetchWorkSitesAndRequests = async () => {
-    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("TODO ADD USER ID")
+    //TODO utiliser le vrai user
+    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("40f117a6-46b9-4c2c-8b73-a1df2d31a33c")
     setWorkSitesAndRequests(response)
+    setFilteredWorkSitesAndRequests(response)
     setGroupedWorkSitesAndRequests(groupByDay(response))
   }
 

@@ -42,16 +42,21 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   }, [])
 
   const putInvoiceForWorksite = async (invoice: Invoice) => {
+    try {
     // create new invoice
-    // let response = await MainApi.getInstance().putInvoicesForWorksite(workSiteAndRequest.id, invoice)
+    let response = await MainApi.getInstance().putInvoicesForWorkSite(workSiteAndRequest.id, invoice)
 
     // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+    
+      let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
+      setInvoices(newInvoices)
+    } catch (error) {
+      console.log(error)
+    }
+    
 
-    let tmpInvoices = invoices
-    tmpInvoices.push(invoice)
-    // setIncidents(newInvoices)
-    setInvoices(tmpInvoices)
+    
+
   }
 
   const addInvoice = (invoice: Invoice) => {
@@ -60,39 +65,40 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const deleteInvoiceFromWorkSite = async (invoiceId: string) => {
     // delete invoice
-    // let response = await MainApi.getInstance().deleteInvoice(invoiceId)
+     let response = await MainApi.getInstance().deleteInvoice(invoiceId)
 
     // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getInvoicesForWorksite(workSiteAndRequest.id)
+    let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
 
-    // setIncidents(newInvoices)
+    setInvoices(newInvoices)
   }
 
   const removeInvoice = (invoice: Invoice) => {
-    // deleteInvoiceFromWorkSite(invoice.id)
+    deleteInvoiceFromWorkSite(invoice.id)
 
-    let tmpInvoices = invoices
-    let index = tmpInvoices.indexOf(invoice)
-    tmpInvoices.splice(index, 1)
-    setInvoices(tmpInvoices)
   }
 
   const putIncidentForWorksite = async (incident: Incident) => {
+    try {
+      
+    
     // create new incident
-    // let response = await MainApi.getInstance().putIncidentForWorksite(workSiteAndRequest.id, incident)
+     let response = await MainApi.getInstance().putIncidentForWorkSite(workSiteAndRequest.id, incident)
 
     // add corresponding pictures
-    // for (let i = 0; i < incident.evidences.length; i++) {
-    //   await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
-    // }
+    for (let i = 0; i < incident.evidences.length; i++) {
+      await MainApi.getInstance().putEvidenceForIncident(workSiteAndRequest.id, incident.evidences[i])
+    }
 
     // retrieve all incidents
-    // let newIncidents = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+    let newIncidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
-    let tmpIncidents = incidents
-    tmpIncidents.push(incident)
-    // setIncidents(newIncidents)
-    setIncidents(tmpIncidents)
+
+    setIncidents(newIncidents)
+  } catch (error) {
+      console.log(error)
+  }
+
   }
 
   const addIncident = (incident: Incident) => {
@@ -101,21 +107,16 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const deleteIncidentFromWorkSite = async (incidentId: string) => {
     // delete invoice
-    // let response = await MainApi.getInstance().deleteIncident(incidentId)
+    let response = await MainApi.getInstance().deleteIncident(incidentId)
 
     // retrieve all invoices
-    // let newInvoices = await MainApi.getInstance().getIncidentsForWorksite(workSiteAndRequest.id)
+    let newInvoices = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
-    // setIncidents(newInvoices)
+    setIncidents(newInvoices)
   }
 
   const removeIncident = (incident: Incident) => {
-    // deleteIncidentFromWorkSite(incident.id);
-
-    let tmpIncident = incidents
-    let index = tmpIncident.indexOf(incident)
-    tmpIncident.splice(index, 1)
-    setIncidents(tmpIncident)
+    deleteIncidentFromWorkSite(incident.id);
   }
 
   const uploadComment = async () => {
