@@ -24,7 +24,16 @@ export const users: User[] = [
         email: "Antoine.Mirreau@gmail.com",
         phoneNumber: "06.76.84.39",
         id: "ea3668fd-f9fd-476c-b860-07e06364a29c"
-    }
+    },
+    {
+        firstName: "Sara",
+        lastName: "Connor",
+        role: Role.WorkSiteChief,
+        email: "sara.connor@gmail.com",
+        phoneNumber: "0710101010",
+        id: "fd4fced1-cdd5-4343-9ce8-b1385a19eecc"
+      }
+
 ]
 
 export const customer: Customer = {

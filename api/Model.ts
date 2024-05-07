@@ -183,7 +183,6 @@ export interface WorkSiteRequest extends WorkSiteRequestBase {
 
 interface WorkSiteBase {
     workSiteRequest: number,
-    equipments: Tool[],
     id: string,
     satisfaction: SatisfactionLevel | null,
     status: WorkSiteStatus,
@@ -194,6 +193,7 @@ interface WorkSiteBase {
 
 export interface WorkSiteAPI extends WorkSiteBase {
     workSiteChief: string,
+    equipments: any,
     staff: string[],
     begin: string,
     end: string
@@ -203,7 +203,8 @@ export interface WorkSite extends WorkSiteBase {
     workSiteChief: User,
     staff: User[],
     begin: Date,
-    end: Date
+    end: Date,
+    equipments: any
 }
 
 interface WorkSiteAndRequestBase {

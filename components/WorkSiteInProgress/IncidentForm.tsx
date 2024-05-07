@@ -24,7 +24,9 @@ type IncidentFormParams = {
 function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
     const [evidences, setEvidences] = useState<string[]>([]);
 
-    const levels = ['Faible', 'Majeur', 'Bloquant']
+
+    //on veut envoyer minor
+    const levels = ['Minor', 'Severe', 'Blocking']
 
     const { control, handleSubmit } = useForm({
         defaultValues: {

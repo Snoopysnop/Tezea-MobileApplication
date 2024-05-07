@@ -14,14 +14,11 @@ const LoginScreen = () => {
 
   
   const handleLogin = () => {
-    // Votre logique de connexion ici
-    if (username === 'user' && password === 'password') {
-      // Connexion réussie, rediriger l'utilisateur vers la page suivante
+    if (username === '1' && password === '1') {
       console.log('Login successful');
       navigation.navigate("WorkSiteList")
       
     } else {
-      // Afficher un message d'erreur si les identifiants sont incorrects
       setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
     }
   };
