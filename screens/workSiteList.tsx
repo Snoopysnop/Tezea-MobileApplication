@@ -26,7 +26,6 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
   useEffect(() => {
     fetchWorkSitesAndRequests()
-
   }, [])
 
   useEffect(() => {
@@ -34,11 +33,15 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   }, [filteredWorkSitesAndRequests])
 
   const fetchWorkSitesAndRequests = async () => {
-    //TODO utiliser le vrai user
-    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
-    setWorkSitesAndRequests(response)
-    setFilteredWorkSitesAndRequests(response)
-    setGroupedWorkSitesAndRequests(groupByDay(response))
+    try {
+      //TODO utiliser le vrai user
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
+      setWorkSitesAndRequests(response)
+      setFilteredWorkSitesAndRequests(response)
+      setGroupedWorkSitesAndRequests(groupByDay(response))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 
@@ -49,12 +52,12 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
     workSiteAndRequestAPI.forEach(workSiteAndRequest => {
       dayKey = new Date(workSiteAndRequest.begin).toISOString().split('T')[0]
-      
+
       if (groupedWorkSites.has(dayKey)) {
-              groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
-            } else {
-              groupedWorkSites.set(dayKey, [workSiteAndRequest]);
-            }
+        groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
+      } else {
+        groupedWorkSites.set(dayKey, [workSiteAndRequest]);
+      }
     })
 
     return groupedWorkSites

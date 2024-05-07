@@ -4,9 +4,6 @@ import { Incident, Invoice, WorkSiteAndRequest, WorkSiteAndRequestAPI, WorkSiteR
 import MainApi from '../../api/MainApi';
 import { WorkSiteInfo } from './workSiteInfo';
 import { WorkSiteInProgress } from './workSiteInProgress';
-import { incidentsExample, workSitesAndRequests } from '../../dataset';
-import AbstractApi from '../../api/AbstractApi';
-import { useNavigationBuilder } from '@react-navigation/native';
 
 
 function WorkSiteManager({ route }: any) {
@@ -19,34 +16,26 @@ function WorkSiteManager({ route }: any) {
 
   useEffect(() => {
     fetchComplementaryData();
-
   }, [])
 
   const fetchComplementaryData = async () => {
-    
-    let concierge,siteChief,customer,staff,invoices,incidents;
-
-  
     setIsLoading(true);
-    console.log("Avant tout ")
-    try {
-    concierge = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.concierge)
-    console.log("1 ")
-    siteChief =  await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.siteChief)
-    console.log("2 ")
-    customer = await MainApi.getInstance().getCustomerById(workSiteAndRequestAPI.workSiteRequest.customer)
-    console.log("3 ")
-    staff = await MainApi.getInstance().getUsersById(workSiteAndRequestAPI.staff)
-    console.log("4 ")
 
-    invoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequestAPI.id);
-    console.log("5 ")
-    incidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequestAPI.id);
-    console.log("apres Call")
-    }catch(err){
+    let concierge, siteChief, customer, staff, invoices, incidents;
+    try {
+      concierge = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.concierge)
+      siteChief = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.siteChief)
+      customer = await MainApi.getInstance().getCustomerById(workSiteAndRequestAPI.workSiteRequest.customer)
+      staff = await MainApi.getInstance().getUsersById(workSiteAndRequestAPI.staff)
+
+      invoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequestAPI.id);
+      incidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequestAPI.id);
+
+    } catch (err) {
       console.log(err)
       return
     }
+
     let updatedWorkSiteRequest: WorkSiteRequest = {
       concierge: concierge,
       siteChief: siteChief,
@@ -90,7 +79,6 @@ function WorkSiteManager({ route }: any) {
     setInvoices(invoices);
     setIncidents(incidents);
     setIsLoading(false);
-
   }
 
   return (
@@ -99,9 +87,8 @@ function WorkSiteManager({ route }: any) {
         (<View style={styles.loading} >
           <ActivityIndicator size='large' />
         </View>) :
-        // TODO change back to workSiteAndRequest.status
-        workSiteAndRequest && (workSiteAndRequestAPI.status?.toString() == "InProgress" ?
-          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
+        workSiteAndRequest && (workSiteAndRequest.status?.toString() == "InProgress" ?
+          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents}/>
           :
           <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
         )

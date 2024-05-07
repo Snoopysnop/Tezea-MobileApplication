@@ -87,7 +87,6 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const removeInvoice = (invoice: Invoice) => {
     deleteInvoiceFromWorkSite(invoice.id)
-
   }
 
   const putIncidentForWorksite = async (incident: Incident) => {
@@ -253,7 +252,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
         <Button
           title={'Terminer Le Chantier'}
           onPress={() => {
-            // uploadComment();
+            uploadComment();
             navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id }
             )
           }}

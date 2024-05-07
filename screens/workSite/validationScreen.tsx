@@ -43,10 +43,11 @@ function SignatureScreen({ route }: any) {
     try {
       // upload signature and rating
       let b64 = await uriToBase64(signature) as string
-      await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
+      // await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
 
       // update workSite status
-      await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done") // TODO maybe change to workSiteStatus ?
+      // TODO maybe change "Done" to a workSiteStatus ?
+      await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done")
     } catch (error) {
       console.log(error)
     }
@@ -54,7 +55,7 @@ function SignatureScreen({ route }: any) {
 
   const handleRating = (rating: number) => {
     let ratingOptions = ["Dissatisfied", "Low", "Medium", "High", "Perfect"];
-    setRating(ratingOptions[rating-1])
+    setRating(ratingOptions[rating - 1])
   };
 
   const handleTouchStart = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
@@ -76,8 +77,8 @@ function SignatureScreen({ route }: any) {
   const handleCapture = async () => {
     if (svgRef.current) {
       try {
-        const uri = await captureRef(svgRef, { format: 'png', quality: 1 });
-        setCapturedImageUri(uri);
+        // const uri = await captureRef(svgRef, { format: 'png', quality: 1 });
+        setCapturedImageUri(await captureRef(svgRef, { format: 'png', quality: 1 }));
       } catch (error) {
         console.error('Error capturing image:', error);
         Alert.alert('Error', 'Failed to capture image.');
