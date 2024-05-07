@@ -47,7 +47,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title={users[3].firstName+ " " + users[3].lastName }  subtitle={""} isBlue={false} />,
+      headerTitle: () => <TitleHeader title={users[3].firstName+ " " + users[3].lastName }  subtitle={"Chef de chantier"} isBlue={false} />,
     });
   }, [])
 

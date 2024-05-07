@@ -10,9 +10,6 @@ import { useEffect } from "react";
 import { TitleHeader } from "../../components/Header";
 import { Incident, Invoice, WorkSiteAndRequest, WorkSiteStatus } from '../../api/Model';
 import MainApi from "../../api/MainApi";
-import { workSitesAndRequests, users, customer, incidentsExample } from '../../dataset';
-import { DetailsButtons } from "../../components/WorkSiteInProgress/DetailsButtons";
-import { Ionicons } from '@expo/vector-icons';
 import EmployeesModal from '../../components/WorkSiteInProgress/EmployeesModal';
 import StuffModal from '../../components/WorkSiteInProgress/StuffModal';
 import { BasicModal } from "../../components/BasicModal";
@@ -81,7 +78,7 @@ function WorkSiteInfo({ route, workSiteAndRequest, invoices, incidents, refresh,
           break;
 
         default:
-            subtitle = workSiteAndRequest.status; // Par défaut, utilisez la valeur existante
+            subtitle = workSiteAndRequest.status;
             break;
     }
 
@@ -292,15 +289,15 @@ function WorkSiteInfo({ route, workSiteAndRequest, invoices, incidents, refresh,
 
       <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
 
-        <View style={styles.desInfosSurContainer}>
-          <Text style={{ color: 'black', fontSize: 18, fontWeight: '500' }}>
-            {`Informations sur le chantier`}
-          </Text>
+    <View style={styles.desInfosSurContainer}>
+      <Text style={{ color: 'black', fontSize: 18, fontWeight: '500' }}>
+        {`Informations sur le chantier`}
+      </Text>
+    </View>
+    
+      
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
             <View style={styles.ellipseContainer}>
               <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
                 <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
@@ -325,14 +322,19 @@ function WorkSiteInfo({ route, workSiteAndRequest, invoices, incidents, refresh,
 
           </View>
 
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#8FBE40' : '#E15656' }]}>Delivery</Text>
         </View>
-
-        <View style={styles.listeInfoBase}>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.end.toDateString()}</Text></Text>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text></Text>
-          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
+      </View>
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#8FBE40' : '#E15656' }]}>Recycling</Text>
+      </View>
+      </View>
+      <View style={styles.ellipseContainer}>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#8FBE40' : '#E15656' }]}>Chrono</Text>
         </View>
 
       </View>
@@ -597,14 +599,15 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     borderWidth: 2,
-    borderColor: '#3FDCE0',
+    borderColor: Color.colorCornflowerblue,
     backgroundColor: 'white',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
   buttonText: {
-    color: '#3FDCE0',
+    
+    color: Color.colorCornflowerblue,
     textAlign: 'center',
   },
 });

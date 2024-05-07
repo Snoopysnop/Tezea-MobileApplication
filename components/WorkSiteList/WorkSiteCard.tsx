@@ -41,6 +41,7 @@ function WorkSiteCard({ workSiteAndRequest }: WorkSiteCardParams) {
     >
       <View style={[styles.centerElement, { width: 55 }]}>
         <Image
+
           source={(categorieIcons.find((icon) => icon.category == workSiteAndRequest.workSiteRequest.category))?.image}
           style={styles.icon}
         />
