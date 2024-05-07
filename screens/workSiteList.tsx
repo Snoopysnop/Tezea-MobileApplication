@@ -26,7 +26,6 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
   useEffect(() => {
     fetchWorkSitesAndRequests()
-
   }, [])
 
   useEffect(() => {
@@ -34,11 +33,15 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   }, [filteredWorkSitesAndRequests])
 
   const fetchWorkSitesAndRequests = async () => {
-    //TODO utiliser le vrai user
-    let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
-    setWorkSitesAndRequests(response)
-    setFilteredWorkSitesAndRequests(response)
-    setGroupedWorkSitesAndRequests(groupByDay(response))
+    try {
+      //TODO utiliser le vrai user
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
+      setWorkSitesAndRequests(response)
+      setFilteredWorkSitesAndRequests(response)
+      setGroupedWorkSitesAndRequests(groupByDay(response))
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 
@@ -49,12 +52,12 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
     workSiteAndRequestAPI.forEach(workSiteAndRequest => {
       dayKey = new Date(workSiteAndRequest.begin).toISOString().split('T')[0]
-      
+
       if (groupedWorkSites.has(dayKey)) {
-              groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
-            } else {
-              groupedWorkSites.set(dayKey, [workSiteAndRequest]);
-            }
+        groupedWorkSites.get(dayKey)?.push(workSiteAndRequest);
+      } else {
+        groupedWorkSites.set(dayKey, [workSiteAndRequest]);
+      }
     })
 
     return groupedWorkSites
@@ -68,8 +71,12 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-          {Array.from(groupedWorkSitesAndRequests.values()).map((workSitesAndRequests, index) => {
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 40 }}>
+          {Array.from(groupedWorkSitesAndRequests.values()).sort((wsar1, wsar2) => {
+            let date1 = new Date(wsar1[0].begin)
+            let date2 = new Date(wsar2[0].begin)
+            return date1 < date2 ? -1 : 1
+          }).map((workSitesAndRequests, index) => {
             return (
               <WorkSiteDay key={index} navigation={navigation} workSitesAndRequests={workSitesAndRequests} />
             );

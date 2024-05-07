@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { TitleHeader } from '../../components/Header';
@@ -12,15 +12,18 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
 import MainApi from '../../api/MainApi';
 import { IncidentReviewModal } from '../../components/WorkSiteInProgress/IncidentReviewModal';
+import { SignatureScreen } from './validationScreen';
 
 
 type WorkSiteInProgressParams = {
   workSiteAndRequest: WorkSiteAndRequest;
   invoices: Invoice[];
   incidents: Incident[];
+  refresh: boolean;
+  setRefresh: Function;
 }
 
-function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, incidents: retrievedIncidents }: WorkSiteInProgressParams) {
+function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, incidents: retrievedIncidents, refresh, setRefresh }: WorkSiteInProgressParams) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [invoices, setInvoices] = useState<Invoice[]>(retrievedInvoices)
@@ -34,6 +37,8 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
   const [invoiceReviewModal, setInvoiceReviewModal] = React.useState(false);
   const [incidentReviewModal, setIncidentReviewModal] = React.useState(false);
+
+  const [validationScreenModal, setValidationScreenModal] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -87,7 +92,6 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const removeInvoice = (invoice: Invoice) => {
     deleteInvoiceFromWorkSite(invoice.id)
-
   }
 
   const putIncidentForWorksite = async (incident: Incident) => {
@@ -253,9 +257,9 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
         <Button
           title={'Terminer Le Chantier'}
           onPress={() => {
-            // uploadComment();
-            navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id }
-            )
+            uploadComment();
+            // navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id } )
+            setValidationScreenModal(true);
           }}
           buttonStyle={{
             backgroundColor: '#E15656',
@@ -274,6 +278,16 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
       <CreationModal isModalVisible={incidentModal} setIsModalVisible={setIncidentModal} addElement={addIncident} isInvoice={false} />
       <InvoiceReviewModal isModalVisible={invoiceReviewModal} removeInvoice={removeInvoice} setIsModalVisible={setInvoiceReviewModal} invoice={selectedElement as Invoice} />
       <IncidentReviewModal isModalVisible={incidentReviewModal} removeIncident={removeIncident} setIsModalVisible={setIncidentReviewModal} incident={selectedElement as Incident} />
+
+      <Modal
+        animationType="none"
+        transparent={false}
+        visible={validationScreenModal}
+        onRequestClose={() => {
+          setValidationScreenModal(false);
+        }}>
+          <SignatureScreen workSiteId={workSiteAndRequest.id} refresh={refresh} setRefresh={setRefresh}/>
+      </Modal>
 
     </View>
   );

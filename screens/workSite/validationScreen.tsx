@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Button, Alert, Modal, Image, Dimensions,Text } from 'react-native';
+import { StyleSheet, View, Alert, Modal, Image, Dimensions, Text, ImageBackground } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
@@ -7,11 +7,25 @@ import * as FileSystem from 'expo-file-system';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AirbnbRating } from 'react-native-ratings';
-import { fonts } from '@rneui/base';
-import { FontSize } from '../../GlobalStyles';
+import { Button } from '@rneui/themed';
+import MainApi from '../../api/MainApi';
 
-const SignatureScreen = ({ route }: any) => {
-  const { workSiteId } = route.params;
+type SignatureScreenParams = {
+  workSiteId: string;
+  refresh: boolean;
+  setRefresh: Function;
+}
+
+function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenParams) {
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const [paths, setPaths] = useState<string[]>([]);
+  const [currentPath, setCurrentPath] = useState('');
+  const [capturedImageUri, setCapturedImageUri] = useState<string | null>(null);
+  const svgRef = useRef<Svg>(null);
+
+  const [rating, setRating] = useState("");
+  const [signature, setSignature] = useState("");
+
 
   async function uriToBase64(uri: string) {
     const result = await fetch(uri)
@@ -28,39 +42,36 @@ const SignatureScreen = ({ route }: any) => {
     })
   }
 
-  // const putClientInfo = async () => {
-  //   try {
-  //     // create new invoice
-  //     let b64 = await uriToBase64(invoice.invoiceFile) as string
-  //     await MainApi.getInstance().putInvoiceForWorkSite(workSiteAndRequest.id, invoice, b64)
+  const updateWorkSite = async () => {
+    try {
+      // upload signature and rating
+      let b64 = await uriToBase64(signature) as string
+      b64 = await uriToBase64(signature) as string
+      await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
 
-  //     // retrieve all invoices
-  //     let newInvoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequest.id)
+      // update workSite status
+      // TODO maybe change "Done" to a workSiteStatus ?
+      await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done")
 
-  //     setInvoices(newInvoices)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+      setRefresh(!refresh)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleRating = (rating: number) => {
-    alert(rating);
+    let ratingOptions = ["Dissatisfied", "Low", "Medium", "High", "Perfect"];
+    setRating(ratingOptions[rating - 1])
   };
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-
-  const [paths, setPaths] = useState<string[]>([]);
-  const [currentPath, setCurrentPath] = useState('');
-  const [capturedImageUri, setCapturedImageUri] = useState<string | null>(null);
-  const svgRef = useRef<Svg>(null);
 
   const handleTouchStart = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    setCurrentPath(`M${pageX},${pageY - 150}`);
+    setCurrentPath(`M${pageX},${pageY - 230}`);
   };
 
   const handleTouchMove = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    const newPosition = `L${pageX},${pageY - 150}`;
+    const newPosition = `L${pageX},${pageY - 230}`;
     setCurrentPath((prevPath) => prevPath + newPosition);
   };
 
@@ -72,8 +83,8 @@ const SignatureScreen = ({ route }: any) => {
   const handleCapture = async () => {
     if (svgRef.current) {
       try {
-        const uri = await captureRef(svgRef, { format: 'png', quality: 1 });
-        setCapturedImageUri(uri);
+        // const uri = await captureRef(svgRef, { format: 'png', quality: 1 });
+        setCapturedImageUri(await captureRef(svgRef, { format: 'png', quality: 1 }));
       } catch (error) {
         console.error('Error capturing image:', error);
         Alert.alert('Error', 'Failed to capture image.');
@@ -89,17 +100,12 @@ const SignatureScreen = ({ route }: any) => {
     setCapturedImageUri(null);
   };
 
-  const handleReturnToWorkSiteInfo = () => {
-    //TODO refresh le status du worksite
-  };
-
-
   const handleValidate = async () => {
     if (capturedImageUri) {
       try {
         const { uri } = await FileSystem.getInfoAsync(capturedImageUri);
-        Alert.alert('Success', `Image successfully stored at: ${uri}`);
-        handleReturnToWorkSiteInfo();
+        setSignature(uri);
+        updateWorkSite();
       } catch (error) {
         console.error('Error getting file info:', error);
         Alert.alert('Error', 'Failed to get file info.');
@@ -109,86 +115,124 @@ const SignatureScreen = ({ route }: any) => {
 
 
   return (
-    <View style={styles.container}>
-      {capturedImageUri ? (
-        <Modal visible={true} transparent={true} onRequestClose={handleModalClose}>
-          <View style={styles.modalContainer}>
+    <ImageBackground source={require('../../assets/mask-group.png')} resizeMode="cover" style={{ width: '100%', height: '100%' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View>
+          <Image source={require('../../assets/arrow.png')} style={styles.modalImage} resizeMode="contain" />
+        </View>
+
+        <Modal visible={capturedImageUri != undefined} transparent={true} onRequestClose={handleModalClose}>
+          <View style={{ paddingBottom: 50, ...styles.modalContainer }}>
             <View style={styles.blueRectangle}>
               <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
             </View>
-            
+
             <View style={[styles.ratingContainer]}>
-            <Text style={{fontSize:30}}>Satisfaction client</Text>
+              <Text style={{ fontSize: 20, color: 'white', fontWeight: '600', marginBottom: 10 }}>Satisfaction</Text>
               <AirbnbRating
                 count={5}
                 reviews={["Pas du Tout Satisfait", "Peu Satisfait", "Satisfait", "Très Satisfait", "Parfait"]}
                 defaultRating={0}
                 size={30}
-                showRating={true}
+                showRating={false}
                 onFinishRating={handleRating}
               />
             </View>
-            <View style={styles.modalButtonContainer}>
-              <Button title="Valider" onPress={handleValidate} />
-              <Button title="Close" onPress={handleModalClose} />
+            <View style={{ ...styles.modalButtonContainer }}>
+              <Button
+                title={'Valider'}
+                onPress={handleValidate}
+                buttonStyle={{
+                  backgroundColor: '#006EE3',
+                  borderRadius: 20,
+                }}
+                containerStyle={{
+                  width: 130,
+                  alignSelf: 'center'
+                }}
+              />
+              <Button
+                title={'Annuler'}
+                onPress={handleModalClose}
+                buttonStyle={{
+                  backgroundColor: '#006EE3',
+                  borderRadius: 20,
+                }}
+                containerStyle={{
+                  width: 130,
+                  alignSelf: 'center'
+                }}
+              />
             </View>
 
           </View>
-
         </Modal>
-      ) : (
 
-        <Svg ref={svgRef} width="100%" height="70%" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-          {paths.map((path, index) => (
-            <Path key={index} d={path} fill="none" stroke="black" strokeWidth={2} />
-          ))}
-          <Path d={currentPath} fill="none" stroke="black" strokeWidth={2} />
-        </Svg>
-      )}
-      {!capturedImageUri && (
 
-        <View style={styles.buttonContainer}>
-          <Button title="Capture" onPress={handleCapture} />
-          <Button title="Clear" onPress={handleClear} />
+        <Text style={{ fontSize: 17, color: 'white', fontWeight: '600', alignSelf: 'flex-start', marginBottom: 5, marginLeft: 55 }}>Signez ci-dessous</Text>
+
+        <View style={{ width: '90%', height: '35%', borderWidth: 2, borderColor: '#76C3F0' }}>
+          <Svg style={{ backgroundColor: 'white', borderWidth: 2 }} ref={svgRef} width="100%" height="100%" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+            {paths.map((path, index) => (
+              <Path key={index} d={path} fill="none" stroke="black" strokeWidth={2} />
+            ))}
+            <Path d={currentPath} fill="none" stroke="black" strokeWidth={2} />
+          </Svg>
         </View>
-      )}
-    </View>
+
+        <View style={{ flexDirection: 'row', marginTop: 15, gap: 20 }}>
+          <Button
+            title={'Valider'}
+            onPress={handleCapture}
+            buttonStyle={{
+              backgroundColor: '#008FE3',
+              borderRadius: 20,
+            }}
+            containerStyle={{
+              width: 130,
+              alignSelf: 'center'
+            }}
+          />
+          <Button
+            title={'Effacer'}
+            onPress={handleClear}
+            buttonStyle={{
+              backgroundColor: '#008FE3',
+              borderRadius: 20,
+            }}
+            containerStyle={{
+              width: 130,
+              alignSelf: 'center'
+            }}
+          />
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     paddingHorizontal: 20,
+    justifyContent: 'center'
   },
   blueRectangle: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
-    marginTop: 100,
   },
   modalImage: {
     width: Dimensions.get('window').width - 60, // Réduit la largeur de l'image
-    height: Dimensions.get('window').height - 400, // Réduit la hauteur de l'image
+    height: Dimensions.get('window').height - 450, // Réduit la hauteur de l'image
   },
   modalButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 20,
-    marginTop: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    marginTop: 30,
   },
   ratingContainer: {
     marginTop: 20,

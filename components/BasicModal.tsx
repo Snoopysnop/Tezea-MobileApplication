@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button } from '@rneui/themed';
 
 type ModalParams = {

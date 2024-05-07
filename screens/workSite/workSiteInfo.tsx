@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, ParamListBase } from "@react-navigation/native";
 import { TabView, TabBar } from "react-native-tab-view";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { TitleHeader } from "../../components/Header";
 import { Incident, Invoice, WorkSiteAndRequest, WorkSiteStatus } from '../../api/Model';
 import MainApi from "../../api/MainApi";
@@ -19,13 +19,15 @@ import { BasicModal } from "../../components/BasicModal";
 
 
 type WorkSiteInfoParams = {
+  route: any;
   workSiteAndRequest: WorkSiteAndRequest;
   invoices: Invoice[];
   incidents: Incident[];
+  refresh: boolean;
+  setRefresh: Function;
 }
 
-function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
-
+function WorkSiteInfo({ route, workSiteAndRequest, invoices, incidents, refresh, setRefresh }: WorkSiteInfoParams) {
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
   const [invoiceModal, setInvoiceModal] = React.useState(false);
   const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
@@ -45,7 +47,6 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   useEffect(() => {
     console.log(workSiteAndRequest.status.toString() === "Done")
     if (workSiteAndRequest.status.toString() === "Done") {
-      console.log("Ahg oui ouii")
       setDynamicRoutes([{ key: "history", icon: require("../../assets/history.png") }]);
     } else {
       setDynamicRoutes([]);
@@ -71,160 +72,157 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   }, [])
 
 
-  const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
+  const updateWorkSiteStatus = async (status: string) => {
     try {
-      console.log(workSiteAndRequest.id)
       await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
-      console.log("Apres call")
     } catch (error) {
       console.log(error)
     }
-    
-}
+
+  }
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "image":
         return (
           <View style={styles.listeInfoTabView}>
-            
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.siteChief.firstName} {workSiteAndRequest.workSiteRequest.siteChief.lastName} {workSiteAndRequest.workSiteRequest.siteChief.phoneNumber}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.customer.firstName} {workSiteAndRequest.workSiteRequest.customer.lastName} {workSiteAndRequest.workSiteRequest.customer.phoneNumber}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.serviceType}</Text></Text>           
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.category}</Text></Text>            
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.creationDate.toDateString()}</Text></Text>
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Affectation TEZEA : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.tezeaAffectation}</Text></Text>
-        </View>
+
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de site associé : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.siteChief.firstName} {workSiteAndRequest.workSiteRequest.siteChief.lastName} {workSiteAndRequest.workSiteRequest.siteChief.phoneNumber}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Client : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.customer.firstName} {workSiteAndRequest.workSiteRequest.customer.lastName} {workSiteAndRequest.workSiteRequest.customer.phoneNumber}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Type de service : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.serviceType}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Catégorie : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.category}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chantier crée le : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.creationDate.toDateString()}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Affectation TEZEA : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.tezeaAffectation}</Text></Text>
+          </View>
         );
       case "text":
-        console.log(workSiteAndRequest.status.toString())
         return (
           <View style={styles.listeInfoTabView}>
 
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Descritption du chantier : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.description}</Text></Text>
+            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Descritption du chantier : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.description}</Text></Text>
             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Données estimées :</Text>
-            <Text style={styles.tabed}>Date: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.estimatedDate.toDateString()}</Text></Text>
-            <Text style={styles.tabed}>Volume: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.volumeEstimate}</Text></Text>  
-            <Text style={styles.tabed}>Poids: <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.weightEstimate}</Text></Text>
+            <Text style={styles.tabed}>Date: <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.estimatedDate.toDateString()}</Text></Text>
+            <Text style={styles.tabed}>Volume: <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.volumeEstimate}</Text></Text>
+            <Text style={styles.tabed}>Poids: <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.weightEstimate}</Text></Text>
 
             <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => setEmployeeModal(true)}>
-        <Text style={styles.buttonText}>Voir Personnel</Text>
-      </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={() => setEmployeeModal(true)}>
+                <Text style={styles.buttonText}>Voir Personnel</Text>
+              </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => setStuffModal(true)}>
-        <Text style={styles.buttonText}>Voir Matériel</Text>
-      </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={() => setStuffModal(true)}>
+                <Text style={styles.buttonText}>Voir Matériel</Text>
+              </TouchableOpacity>
             </View>
-            <BasicModal 
-              isModalVisible={employeesModal} 
-              setIsModalVisible={setEmployeeModal} 
-              component={<EmployeesModal 
-              workSiteInfo={workSiteAndRequest}/>} />
+            <BasicModal
+              isModalVisible={employeesModal}
+              setIsModalVisible={setEmployeeModal}
+              component={<EmployeesModal
+                workSiteInfo={workSiteAndRequest} />} />
             <BasicModal isModalVisible={stuffModal} setIsModalVisible={setStuffModal} component={<StuffModal workSiteInfo={workSiteAndRequest} />} />
-        </View>
-        
+          </View>
+
         );
-        case "history":
+      case "history":
         return (
-          
+
           //Facture
           <View>
             <ScrollView >
 
 
-          <View style ={{paddingTop: 20}}>
-            <View style={{ justifyContent: 'center', height: 30 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#76C3F0', ...styles.title }}>Facture</Text>
-              </View>
-            </View>
-
-            {invoices?.map((invoice, index) => {
-              return (
-                <View key={index} style={{ paddingBottom:5}}  >
-                  <TouchableOpacity onPress={() => {
-                    setSelectedElement(invoice);
-                    setReviewInvoiceModal(true);
-                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
-                    {invoice.type == 'file' ?
-                      <Image
-                        source={require('../../assets/file.png')}
-                        style={{ width: 40, height: 40, backgroundColor: 'white', margin: 10 }}
-                      />
-                      :
-                      <Image
-                        source={{ uri: invoice.invoiceFile }}
-                        style={{ width: 60, height: 60, backgroundColor: 'white' }}
-                      />
-                    }
-
-                    <View style={{ flex: 2 }}>
-                      <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{invoice.title}</Text>
-                      <Text numberOfLines={1} style={{ ...styles.subtitle }}>{invoice.description}</Text>
-                    </View>
-
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.amount}€</Text>
-                  </TouchableOpacity>
+              <View style={{ paddingTop: 20 }}>
+                <View style={{ justifyContent: 'center', height: 30 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ color: '#76C3F0', ...styles.title }}>Facture</Text>
+                  </View>
                 </View>
-              );
-            })}
-          </View>
 
-          <View style ={{paddingTop: 20}}>
-            <View style={{ justifyContent: 'center', height: 30 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#76C3F0', ...styles.title }}>Incidents</Text>
-              </View>
-            </View>
+                {invoices?.map((invoice, index) => {
+                  return (
+                    <View key={index} style={{ paddingBottom: 5 }}  >
+                      <TouchableOpacity onPress={() => {
+                        setSelectedElement(invoice);
+                        setReviewInvoiceModal(true);
+                      }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white', borderRadius: 5 }}>
+                        {invoice.type == 'file' ?
+                          <Image
+                            source={require('../../assets/file.png')}
+                            style={{ width: 40, height: 40, backgroundColor: 'white', margin: 10 }}
+                          />
+                          :
+                          <Image
+                            source={{ uri: invoice.invoiceFile }}
+                            style={{ width: 60, height: 60, backgroundColor: 'white' }}
+                          />
+                        }
 
-            {incidents?.map((incident, index) => {
-              return (
-                <View key={index} style={{ paddingBottom:5}}>
-                  <TouchableOpacity onPress={() => {
-                    //setSelectedElement(incident);
-                    setReviewInvoiceModal(true);
-                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5}}>
-                    <Image
-                      source={{ uri: `data:image/png;base64,${incident.evidences}` }}
-                      style={{ width: 60, height: 60, backgroundColor: 'white' }}
-                    />
+                        <View style={{ flex: 2 }}>
+                          <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{invoice.title}</Text>
+                          <Text numberOfLines={1} style={{ ...styles.subtitle }}>{invoice.description}</Text>
+                        </View>
 
-                    <View style={{ flex: 2 }}>
-                      <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{incident.title}</Text>
-                      <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
+                        <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{invoice.amount}€</Text>
+                      </TouchableOpacity>
                     </View>
+                  );
+                })}
+              </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
-                  </TouchableOpacity>
+              <View style={{ paddingTop: 20 }}>
+                <View style={{ justifyContent: 'center', height: 30 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ color: '#76C3F0', ...styles.title }}>Incidents</Text>
+                  </View>
                 </View>
-              );
-            })}
-          </View>
-          <View style ={{paddingTop: 20}}>
-            <View style={{ justifyContent: 'center', height: 30 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
+
+                {incidents?.map((incident, index) => {
+                  return (
+                    <View key={index} style={{ paddingBottom: 5 }}>
+                      <TouchableOpacity onPress={() => {
+                        //setSelectedElement(incident);
+                        setReviewInvoiceModal(true);
+                      }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white', borderRadius: 5 }}>
+                        <Image
+                          source={{ uri: `data:image/png;base64,${incident.evidences}` }}
+                          style={{ width: 60, height: 60, backgroundColor: 'white' }}
+                        />
+
+                        <View style={{ flex: 2 }}>
+                          <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '500' }}>{incident.title}</Text>
+                          <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
+                        </View>
+
+                        <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
               </View>
-          </View>
-          <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white',borderRadius:5,paddingLeft:10}}> {workSiteAndRequest.comment} </Text>
-          </View>
+              <View style={{ paddingTop: 20 }}>
+                <View style={{ justifyContent: 'center', height: 30 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ color: '#76C3F0', ...styles.title }}>Commentaire</Text>
+                  </View>
+                </View>
+                <Text style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white', borderRadius: 5, paddingLeft: 10 }}> {workSiteAndRequest.comment} </Text>
+              </View>
 
 
-          <View style ={{paddingTop: 20}}>
-            <View style={{ justifyContent: 'center', height: 30 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#76C3F0', ...styles.title }}>Signature Client</Text>
+              <View style={{ paddingTop: 20 }}>
+                <View style={{ justifyContent: 'center', height: 30 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ color: '#76C3F0', ...styles.title }}>Signature Client</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-          <Image
-            source={{ uri: `data:image/png;base64,${workSiteAndRequest.signature}` }}
-            style={{ width: 80, height: 80, backgroundColor: 'white'}}
-          />
-          <View style={styles.container}>
-      <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
-    </View>
-          </ScrollView>
+              <Image
+                source={{ uri: `data:image/png;base64,${workSiteAndRequest.signature}` }}
+                style={{ width: 80, height: 80, backgroundColor: 'white' }}
+              />
+              <View style={styles.container}>
+                <Text style={styles.ratingText}>Satisfaction client : {workSiteAndRequest.satisfaction}/5</Text>
+              </View>
+            </ScrollView>
           </View>
 
         );
@@ -260,10 +258,12 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
-        onPress={() => 
-          updateWorkSiteStatus(WorkSiteStatus.InProgress)
-          //navigation.navigate("WorkSiteInProgress")
-        }
+        onPress={() => {
+          updateWorkSiteStatus("InProgress");
+          // navigation.navigate("WorkSiteInProgress")
+          console.log(workSiteAndRequest.status)
+          setRefresh(!refresh)
+        }}
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>
           Démarrer le chantier
@@ -271,52 +271,52 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
       </Pressable>
 
 
-    <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
+      <View style={[styles.dtailChantierInner, styles.dtailShadowBox]} >
 
-    <View style={styles.desInfosSurContainer}>
-      <Text style={{ color: 'black', fontSize: 18, fontWeight: '500' }}>
-        {`Informations sur le chantier`}
-      </Text>
-    </View>
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-    <View style={styles.ellipseContainer}>
-    <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
+        <View style={styles.desInfosSurContainer}>
+          <Text style={{ color: 'black', fontSize: 18, fontWeight: '500' }}>
+            {`Informations sur le chantier`}
+          </Text>
         </View>
-      </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-      <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+            <View style={styles.ellipseContainer}>
+              <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+                <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
+              </View>
+            </View>
+
+            <View style={styles.ellipseContainer}>
+              <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+                <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
+              </View>
+            </View>
+            <View style={styles.ellipseContainer}>
+              <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+                <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
+              </View>
+            </View>
+            <View style={styles.ellipseContainer}>
+              <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
+                <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
+              </View>
+            </View>
+
+          </View>
+
         </View>
-      </View>
-      <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
-      </View>
-      </View>
-      <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
+
+        <View style={styles.listeInfoBase}>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.end.toDateString()}</Text></Text>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text></Text>
+          <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D', fontSize: 14 }}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
         </View>
+
       </View>
-
-</View>
-
-</View>
-
-    <View style={styles.listeInfoBase}>
-    <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Commence le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.begin.toDateString()}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Prend fin le : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.end.toDateString()}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Lieux : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.city}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge associé : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text></Text>
-      <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Niveau d'urgence : <Text style={{ color: '#7D7D7D',fontSize: 14}}>{workSiteAndRequest.workSiteRequest.emergency}</Text></Text>
-    </View>
-
-  </View>
       <TabView
         navigationState={navigationState}
         renderScene={renderScene}
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   textContainer: {
-    marginTop:30,
+    marginTop: 30,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
   },
   tabView: {
     width: 336,
-    height:370,
+    height: 370,
     position: "absolute",
     bottom: 80,
   },
@@ -521,21 +521,21 @@ const styles = StyleSheet.create({
   },
 
   listeInfoBase: {
-    top:20,
+    top: 20,
   },
   listeInfoTabView: {
-    top:25,
+    top: 25,
   },
   tabed: {
-    color: 'black', fontSize: 16, fontWeight: '500' ,
-    marginLeft:20,
+    color: 'black', fontSize: 16, fontWeight: '500',
+    marginLeft: 20,
     marginTop: 3
   },
 
   ellipseContainer: {
     marginTop: 0,
     alignItems: 'center',
-    marginRight:10,
+    marginRight: 10,
   },
   ellipse: {
     width: 65,
@@ -568,15 +568,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-  }, 
-    buttonContainer: {
+  },
+  buttonContainer: {
     flexDirection: 'row',
-    gap:10,
+    gap: 10,
     marginTop: 20,
 
   },
   button: {
-    flex:1,
+    flex: 1,
     borderWidth: 2,
     borderColor: '#3FDCE0',
     backgroundColor: 'white',
