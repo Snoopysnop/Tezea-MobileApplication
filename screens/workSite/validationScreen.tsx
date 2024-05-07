@@ -10,10 +10,13 @@ import { AirbnbRating } from 'react-native-ratings';
 import { Button } from '@rneui/themed';
 import MainApi from '../../api/MainApi';
 
+type SignatureScreenParams = {
+  workSiteId: string;
+  refresh: boolean;
+  setRefresh: Function;
+}
 
-function SignatureScreen({ route }: any) {
-  const { workSiteId } = route.params;
-
+function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenParams) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState('');
@@ -43,11 +46,14 @@ function SignatureScreen({ route }: any) {
     try {
       // upload signature and rating
       let b64 = await uriToBase64(signature) as string
-      // await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
+      b64 = await uriToBase64(signature) as string
+      await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
 
       // update workSite status
       // TODO maybe change "Done" to a workSiteStatus ?
       await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done")
+
+      setRefresh(!refresh)
     } catch (error) {
       console.log(error)
     }
@@ -60,12 +66,12 @@ function SignatureScreen({ route }: any) {
 
   const handleTouchStart = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    setCurrentPath(`M${pageX},${pageY - 280}`);
+    setCurrentPath(`M${pageX},${pageY - 230}`);
   };
 
   const handleTouchMove = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
     const { pageX, pageY } = event.nativeEvent.touches[0];
-    const newPosition = `L${pageX},${pageY - 280}`;
+    const newPosition = `L${pageX},${pageY - 230}`;
     setCurrentPath((prevPath) => prevPath + newPosition);
   };
 
@@ -111,6 +117,9 @@ function SignatureScreen({ route }: any) {
   return (
     <ImageBackground source={require('../../assets/mask-group.png')} resizeMode="cover" style={{ width: '100%', height: '100%' }}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View>
+          <Image source={require('../../assets/arrow.png')} style={styles.modalImage} resizeMode="contain" />
+        </View>
 
         <Modal visible={capturedImageUri != undefined} transparent={true} onRequestClose={handleModalClose}>
           <View style={{ paddingBottom: 50, ...styles.modalContainer }}>
@@ -162,7 +171,7 @@ function SignatureScreen({ route }: any) {
 
         <Text style={{ fontSize: 17, color: 'white', fontWeight: '600', alignSelf: 'flex-start', marginBottom: 5, marginLeft: 55 }}>Signez ci-dessous</Text>
 
-        <View style={{ width: '90%', height: '40%', borderWidth: 2, borderColor: '#76C3F0' }}>
+        <View style={{ width: '90%', height: '35%', borderWidth: 2, borderColor: '#76C3F0' }}>
           <Svg style={{ backgroundColor: 'white', borderWidth: 2 }} ref={svgRef} width="100%" height="100%" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
             {paths.map((path, index) => (
               <Path key={index} d={path} fill="none" stroke="black" strokeWidth={2} />

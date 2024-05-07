@@ -19,13 +19,15 @@ import { BasicModal } from "../../components/BasicModal";
 
 
 type WorkSiteInfoParams = {
+  route: any;
   workSiteAndRequest: WorkSiteAndRequest;
   invoices: Invoice[];
   incidents: Incident[];
+  refresh: boolean;
+  setRefresh: Function;
 }
 
-function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoParams) {
-
+function WorkSiteInfo({ route, workSiteAndRequest, invoices, incidents, refresh, setRefresh }: WorkSiteInfoParams) {
   const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
   const [invoiceModal, setInvoiceModal] = React.useState(false);
   const [reviewInvoiceModal, setReviewInvoiceModal] = React.useState(false);
@@ -45,7 +47,6 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
   useEffect(() => {
     console.log(workSiteAndRequest.status.toString() === "Done")
     if (workSiteAndRequest.status.toString() === "Done") {
-      console.log("Ahg oui ouii")
       setDynamicRoutes([{ key: "history", icon: require("../../assets/history.png") }]);
     } else {
       setDynamicRoutes([]);
@@ -94,7 +95,6 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
           </View>
         );
       case "text":
-        console.log(workSiteAndRequest.status.toString())
         return (
           <View style={styles.listeInfoTabView}>
 
@@ -259,8 +259,10 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
       <Pressable
         style={[styles.dtailChantierItem, styles.dtailShadowBox, { top: 600, left: 72 }]}
         onPress={() => {
-          updateWorkSiteStatus("InProgress")
-          navigation.navigate("WorkSiteInProgress")
+          updateWorkSiteStatus("InProgress");
+          // navigation.navigate("WorkSiteInProgress")
+          console.log(workSiteAndRequest.status)
+          setRefresh(!refresh)
         }}
       >
         <Text style={[styles.dmarrerLeChantier, styles.dmarrerLeChantierFlexBox]}>

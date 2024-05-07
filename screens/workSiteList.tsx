@@ -71,7 +71,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 40 }}>
           {Array.from(groupedWorkSitesAndRequests.values()).sort((wsar1, wsar2) => {
             let date1 = new Date(wsar1[0].begin)
             let date2 = new Date(wsar2[0].begin)

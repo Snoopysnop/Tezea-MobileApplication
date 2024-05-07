@@ -14,9 +14,11 @@ function WorkSiteManager({ route }: any) {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [refresh, setRefresh] = useState(false);
+
   useEffect(() => {
     fetchComplementaryData();
-  }, [])
+  }, [refresh])
 
   const fetchComplementaryData = async () => {
     setIsLoading(true);
@@ -88,9 +90,9 @@ function WorkSiteManager({ route }: any) {
           <ActivityIndicator size='large' />
         </View>) :
         workSiteAndRequest && (workSiteAndRequest.status?.toString() == "InProgress" ?
-          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents}/>
+          <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} refresh={refresh} setRefresh={setRefresh}/>
           :
-          <WorkSiteInfo workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} />
+          <WorkSiteInfo route={route} workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents}  refresh={refresh} setRefresh={setRefresh}/>
         )
       }
     </View >
