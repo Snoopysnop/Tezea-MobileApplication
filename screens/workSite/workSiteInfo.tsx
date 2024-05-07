@@ -10,9 +10,6 @@ import { useEffect} from "react";
 import { TitleHeader } from "../../components/Header";
 import { Incident, Invoice, WorkSiteAndRequest, WorkSiteStatus } from '../../api/Model';
 import MainApi from "../../api/MainApi";
-import { workSitesAndRequests, users, customer, incidentsExample } from '../../dataset';
-import { DetailsButtons } from "../../components/WorkSiteInProgress/DetailsButtons";
-import { Ionicons } from '@expo/vector-icons';
 import EmployeesModal from '../../components/WorkSiteInProgress/EmployeesModal';
 import StuffModal from '../../components/WorkSiteInProgress/StuffModal';
 import { BasicModal } from "../../components/BasicModal";
@@ -80,7 +77,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
           break;
 
         default:
-            subtitle = workSiteAndRequest.status; // Par défaut, utilisez la valeur existante
+            subtitle = workSiteAndRequest.status;
             break;
     }
 
@@ -302,24 +299,24 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
     <View style={styles.ellipseContainer}>
-    <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#43C50B' : '#CF2602' }]}>Removal</Text>
+    <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removal ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removal ? '#8FBE40' : '#E15656' }]}>Removal</Text>
         </View>
       </View>
 
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#43C50B' : '#CF2602' }]}>Delivery</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.delivery ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+    <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.delivery ? '#8FBE40' : '#E15656' }]}>Delivery</Text>
         </View>
       </View>
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#43C50B' : '#CF2602' }]}>Recycling</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.removalRecycling ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.removalRecycling ? '#8FBE40' : '#E15656' }]}>Recycling</Text>
       </View>
       </View>
       <View style={styles.ellipseContainer}>
-      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602', borderWidth: 1 }]}>
-        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#43C50B' : '#CF2602' }]}>Chrono</Text>
+      <View style={[styles.ellipse, { borderColor: workSiteAndRequest.workSiteRequest.chronoQuote ? '#8FBE40' : '#E15656', borderWidth: 1 }]}>
+        <Text style={[styles.ellipseText, { color: workSiteAndRequest.workSiteRequest.chronoQuote ? '#8FBE40' : '#E15656' }]}>Chrono</Text>
         </View>
       </View>
 
@@ -597,14 +594,15 @@ const styles = StyleSheet.create({
   button: {
     flex:1,
     borderWidth: 2,
-    borderColor: '#3FDCE0',
+    borderColor: Color.colorCornflowerblue,
     backgroundColor: 'white',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
   },
   buttonText: {
-    color: '#3FDCE0',
+    
+    color: Color.colorCornflowerblue,
     textAlign: 'center',
   },
 });

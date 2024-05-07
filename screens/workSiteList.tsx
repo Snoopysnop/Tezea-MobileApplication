@@ -37,6 +37,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   const fetchWorkSitesAndRequests = async () => {
     //TODO utiliser le vrai user
     let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
+    console.log("La reponse" , response)
     setWorkSitesAndRequests(response)
     setFilteredWorkSitesAndRequests(response)
     setGroupedWorkSitesAndRequests(groupByDay(response))
@@ -44,7 +45,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title={users[3].firstName+ " " + users[3].lastName }  subtitle={""} isBlue={false} />,
+      headerTitle: () => <TitleHeader title={users[3].firstName+ " " + users[3].lastName }  subtitle={"Chef de chantier"} isBlue={false} />,
     });
   }, [])
 

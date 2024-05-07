@@ -64,21 +64,21 @@ const stateIcons = [
         image: require('../assets/state_icons/warning.png'),
     },
     {
-        state: 'En attente',
+        state: 'Standby',
         color: '#FFFFFF',
     },
     {
-        state: 'En cours',
+        state: 'InProgress',
         color: '#76C3F0',
         image: require('../assets/state_icons/stopwatch.png'),
     },
     {
-        state: 'Terminé',
+        state: 'Done',
         color: '#8FBE40',
         image: require('../assets/state_icons/check.png'),
     },
     {
-        state: 'Archivé',
+        state: 'Archive',
         color: '#8FBE40',
         image: require('../assets/state_icons/check.png'),
     },
