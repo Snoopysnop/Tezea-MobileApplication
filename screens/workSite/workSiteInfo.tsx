@@ -64,11 +64,30 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
     routes: mergedRoutes,
   };
   useEffect(() => {
-    //TODO ca partout
+    let subtitle;
+    switch (workSiteAndRequest.status.toString()) {
+        case "Standby":
+            subtitle = "En Attente";
+            break;
+        case "Done":
+          subtitle = "Finis";
+          break;
+        case "InProgress":
+          subtitle = "En cours";
+          break;
+        case "Canceled":
+          subtitle = "Annulé";
+          break;
+
+        default:
+            subtitle = workSiteAndRequest.status; // Par défaut, utilisez la valeur existante
+            break;
+    }
+
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={workSiteAndRequest.status} isBlue={false} />,
+        headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={subtitle} isBlue={false} />,
     });
-  }, [])
+}, [])
 
 
   const updateWorkSiteStatus = async(status: WorkSiteStatus) => {

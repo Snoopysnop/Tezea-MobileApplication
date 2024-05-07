@@ -35,11 +35,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   const [invoiceReviewModal, setInvoiceReviewModal] = React.useState(false);
   const [incidentReviewModal, setIncidentReviewModal] = React.useState(false);
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => <TitleHeader title='Réparation Antenne' subtitle='En Cours' isBlue={false} />,
-    });
-  }, [])
+
 
   async function uriToBase64(uri: string) {
     const result = await fetch(uri)
@@ -127,6 +123,32 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   const removeIncident = (incident: Incident) => {
     deleteIncidentFromWorkSite(incident.id);
   }
+
+  useEffect(() => {
+    let subtitle;
+    switch (workSiteAndRequest.status.toString()) {
+        case "Standby":
+            subtitle = "En Attente";
+            break;
+        case "Done":
+          subtitle = "Finis";
+          break;
+        case "InProgress":
+          subtitle = "En cours";
+          break;
+        case "Canceled":
+          subtitle = "Annulé";
+          break;
+
+        default:
+            subtitle = workSiteAndRequest.status; // Par défaut, utilisez la valeur existante
+            break;
+    }
+
+    navigation.setOptions({
+        headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={subtitle} isBlue={false} />,
+    });
+}, [])
 
   const uploadComment = async () => {
     await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)

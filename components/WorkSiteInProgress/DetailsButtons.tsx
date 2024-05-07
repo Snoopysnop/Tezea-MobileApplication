@@ -180,7 +180,10 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
 }
 
 function ToolsModal({ workSiteAndRequest }: ModalParams) {
+    
+    console.log(workSiteAndRequest.equipments[0])
     return (
+        
         <View>
             {tools?.map((tool, index) => {
                 return (

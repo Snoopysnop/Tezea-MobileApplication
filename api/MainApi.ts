@@ -143,6 +143,23 @@ class MainApi extends AbstractApi {
     }
 
     public async putIncidentForWorkSite(id: string, incident: Incident): Promise<Incident> {
+        let level = incident.level;
+        let levelMapped ;
+        switch (level.toString()) {
+            case "Majeur":
+                levelMapped = "Severe";
+                break;
+            case "Mineur":
+                levelMapped = "Minor";
+                break;
+                case "Bloquant":
+                    levelMapped = "Blocking";
+                    break;    
+            default:
+                levelMapped = "Minor"; 
+                break;
+        }
+        console.log(levelMapped)
         try {
             const config = {
                 headers: {
@@ -151,7 +168,7 @@ class MainApi extends AbstractApi {
             }
             const response = await this.service.put(`/api/worksites/${id}/incident`, JSON.stringify(
                 {
-                    level: "Minor",
+                    level: levelMapped,
                     title: incident.title,
                     description: incident.description
                 }

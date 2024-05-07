@@ -9,6 +9,7 @@ import { User, WorkSite, WorkSiteAndRequestAPI } from '../api/Model';
 import { workSitesAndRequestsAPI } from '../dataset';
 import MainApi from '../api/MainApi';
 import { TitleHeader } from '../components/Header';
+import {users} from "../dataset"
 
 type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 
@@ -41,7 +42,11 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
     setGroupedWorkSitesAndRequests(groupByDay(response))
   }
 
-
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => <TitleHeader title={users[3].firstName+ " " + users[3].lastName }  subtitle={""} isBlue={false} />,
+    });
+  }, [])
 
   const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
     const groupedWorkSites: Map<string, WorkSiteAndRequestAPI[]> = new Map();
