@@ -98,7 +98,7 @@ class MainApi extends AbstractApi {
         }
     }
     //console.log(err)
-    public async updateWorksiteStatus(workSiteId: string, status: WorkSiteStatus): Promise<number> {
+    public async updateWorksiteStatus(workSiteId: string, status: string): Promise<number> {
         try {
             const config = {
                 headers: {
@@ -106,7 +106,7 @@ class MainApi extends AbstractApi {
                 }
             }
             const response = await this.service.patch(`/api/worksites/${workSiteId}/update_status`, config, {
-                params: { status: "InProgress" },
+                params: { status: status },
             })
 
             return response.status
@@ -124,6 +124,29 @@ class MainApi extends AbstractApi {
             })
             return response.status
         } catch (err) {
+            throw AbstractApi.handleError(err)
+        }
+    }
+
+    public async uploadSignatureAndRating(workSiteId: string, signature: string, rating: string): Promise<number> {
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const response = await this.service.put(`/api/worksites/${workSiteId}/upload_signature_and_satisfaction?satisfaction:${rating}`, JSON.stringify(
+                {
+                    image: signature
+                }
+            ), config)
+
+            // ou cette version si attribut pas nommé
+            // const response = await this.service.put(`/api/worksites/${workSiteId}/upload_signature_and_satisfaction?satisfaction:${rating}`, signature, config)
+
+            return response.status
+        } catch (err) {
+            console.log(err)
             throw AbstractApi.handleError(err)
         }
     }
@@ -237,7 +260,7 @@ class MainApi extends AbstractApi {
 
             console.log(invoiceB64.substring(0, 200))
 
-            const response = await this.service.put(`/api/worksites/v2/invoice/${invoiceId}/file?fileExtension=${fileType}`, invoiceB64 , config)
+            const response = await this.service.put(`/api/worksites/v2/invoice/${invoiceId}/file?fileExtension=${fileType}`, invoiceB64, config)
 
             return response.data as Invoice
         } catch (err) {

@@ -69,7 +69,11 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-          {Array.from(groupedWorkSitesAndRequests.values()).map((workSitesAndRequests, index) => {
+          {Array.from(groupedWorkSitesAndRequests.values()).sort((wsar1, wsar2) => {
+            let date1 = new Date(wsar1[0].begin)
+            let date2 = new Date(wsar2[0].begin)
+            return date1 < date2 ? -1 : 1
+          }).map((workSitesAndRequests, index) => {
             return (
               <WorkSiteDay key={index} navigation={navigation} workSitesAndRequests={workSitesAndRequests} />
             );

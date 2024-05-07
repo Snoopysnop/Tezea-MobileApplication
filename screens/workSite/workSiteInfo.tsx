@@ -73,9 +73,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents }: WorkSiteInfoP
 
   const updateWorkSiteStatus = async(status: WorkSiteStatus) => {
     try {
-      console.log(workSiteAndRequest.id)
-      await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, status)
-      console.log("Apres call")
+      await MainApi.getInstance().updateWorksiteStatus(workSiteAndRequest.id, "InProgress")
     } catch (error) {
       console.log(error)
     }
