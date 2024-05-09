@@ -26,12 +26,12 @@ export const users: User[] = [
         id: "ea3668fd-f9fd-476c-b860-07e06364a29c"
     },
     {
-        firstName: "Sara",
-        lastName: "Connor",
+        firstName: "Helene",
+        lastName: "Blanc",
         role: Role.WorkSiteChief,
-        email: "sara.connor@gmail.com",
-        phoneNumber: "0710101010",
-        id: "fd4fced1-cdd5-4343-9ce8-b1385a19eecc"
+        email: "helene.blanc@gmail.com",
+        phoneNumber: "0645134767",
+        id: "0ce159fc-80e9-4752-8c85-4e9b6086f840"
       }
 
 ]

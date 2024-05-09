@@ -92,7 +92,7 @@ function WorkSiteManager({ route }: any) {
         workSiteAndRequest && (workSiteAndRequest.status?.toString() == "InProgress" ?
           <WorkSiteInProgress workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents} refresh={refresh} setRefresh={setRefresh}/>
           :
-          <WorkSiteInfo route={route} workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents}  refresh={refresh} setRefresh={setRefresh}/>
+          <WorkSiteInfo  workSiteAndRequest={workSiteAndRequest} invoices={invoices} incidents={incidents}  refresh={refresh} setRefresh={setRefresh}/>
         )
       }
     </View >

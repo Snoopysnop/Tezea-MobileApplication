@@ -307,7 +307,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
         onRequestClose={() => {
           setValidationScreenModal(false);
         }}>
-          <SignatureScreen workSiteId={workSiteAndRequest.id} refresh={refresh} setRefresh={setRefresh}/>
+          <SignatureScreen workSiteId={workSiteAndRequest.id} refresh={refresh} setRefresh={setRefresh} setValidationScreenModal={setValidationScreenModal}/>
       </Modal>
 
     </View>

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Alert, Modal, Image, Dimensions, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Alert, Modal, Image, Dimensions, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
@@ -14,9 +14,10 @@ type SignatureScreenParams = {
   workSiteId: string;
   refresh: boolean;
   setRefresh: Function;
+  setValidationScreenModal: Function;
 }
 
-function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenParams) {
+function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenModal }: SignatureScreenParams) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState('');
@@ -116,10 +117,10 @@ function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenPar
 
   return (
     <ImageBackground source={require('../../assets/mask-group.png')} resizeMode="cover" style={{ width: '100%', height: '100%' }}>
+      <TouchableOpacity onPress={() => setValidationScreenModal(false)}>
+        <Image source={require('../../assets/arrow.png')} style={{ position: 'absolute', top: 20, left: 20, height: 30, width: 30 }} resizeMode="contain" />
+      </TouchableOpacity>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View>
-          <Image source={require('../../assets/arrow.png')} style={styles.modalImage} resizeMode="contain" />
-        </View>
 
         <Modal visible={capturedImageUri != undefined} transparent={true} onRequestClose={handleModalClose}>
           <View style={{ paddingBottom: 50, ...styles.modalContainer }}>

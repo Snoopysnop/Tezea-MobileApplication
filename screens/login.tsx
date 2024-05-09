@@ -14,7 +14,7 @@ const LoginScreen = () => {
 
   
   const handleLogin = () => {
-    if (username === '1' && password === '1') {
+    if (username === 'helene' && password === 'password') {
       console.log('Login successful');
       navigation.navigate("WorkSiteList")
       

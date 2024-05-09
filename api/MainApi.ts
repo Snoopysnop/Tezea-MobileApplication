@@ -147,8 +147,8 @@ class MainApi extends AbstractApi {
                     "Content-Type": "application/json"
                 }
             }
-            
-            const response = await this.service.put(`/api/worksites/${workSiteId}/upload_signature_and_satisfaction?satisfaction:${rating}`, signature, config)
+            console.log("Le rating vaut: ",rating)
+            const response = await this.service.put(`/api/worksites/${workSiteId}/upload_signature_and_satisfaction?satisfaction=${rating}`, signature, config)
 
             return response.status
         } catch (err) {

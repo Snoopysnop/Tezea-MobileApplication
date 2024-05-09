@@ -44,7 +44,7 @@ const App = () => {
           <Stack.Screen name="WorkSiteManager" component={WorkSiteManager} options={{
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='Titre de la Missssssion' subtitle='Statut' isBlue={false} />,
+            headerTitle: () => <TitleHeader title='' subtitle='' isBlue={false} />,
             headerRight: () => <ProfileButton />
           }}
           />
