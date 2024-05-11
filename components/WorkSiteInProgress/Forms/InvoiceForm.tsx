@@ -7,7 +7,7 @@ import FormInput from './FormInput';
 import { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
-import { Invoice } from '../../api/Model';
+import { Invoice } from '../../../api/Model';
 
 const formSchema = z.object({
     Titre: z.string().min(3, 'Le titre doit contenir au moins 3 charactères'),
@@ -111,7 +111,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
                         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', padding: 5 }}>
                             {selectedInvoice.type == 'file' ?
                                 <Image
-                                    source={require('../../assets/file.png')}
+                                    source={require('../../../assets/file.png')}
                                     style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                 />
                                 :
@@ -157,7 +157,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
                             }} style={{ flex: 1 }}>
                                 <View style={{ backgroundColor: '#76C3F0', justifyContent: 'center', borderRadius: 15, height: '100%', alignItems: 'center', gap: 5 }}>
                                     <Image
-                                        source={require("../../assets/upload-picture.png")}
+                                        source={require("../../../assets/upload-picture.png")}
                                         style={{ aspectRatio: 1, height: 60 }}
                                     />
                                     <View style={{ alignItems: 'center' }}>
@@ -172,7 +172,7 @@ function InvoiceForm({ addInvoice, setIsModalVisible }: InvoiceFormParams) {
                             }} style={{ flex: 1 }}>
                                 <View style={{ backgroundColor: '#40B3B1', justifyContent: 'center', borderRadius: 15, height: '100%', alignItems: 'center', gap: 5 }}>
                                     <Image
-                                        source={require("../../assets/upload-file.png")}
+                                        source={require("../../../assets/upload-file.png")}
                                         style={{ aspectRatio: 1, height: 55 }}
                                     />
                                     <View style={{ alignItems: 'center' }}>

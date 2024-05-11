@@ -1,22 +1,22 @@
 const categorieIcons = [
     {
-        category: 'Don De Plasma Et De Sang',
+        category: 'DonDePlasmaEtDeSang',
         image: require('../assets/task_icons/blood.png'),
     },
     {
-        category: 'Crea Palette',
+        category: 'CreaPalette',
         image: require('../assets/task_icons/pallet.png'),
     },
     {
-        category: 'Bois De Chauffage',
+        category: 'BoisDeChauffage',
         image: require('../assets/task_icons/bonfire.png'),
     },
     {
-        category: 'Piquets En Bois',
+        category: 'PiquetsEnBois',
         image: require('../assets/task_icons/wood.png'),
     },
     {
-        category: 'Laverie Blanchisserie',
+        category: 'LaverieBlanchisserie',
         image: require('../assets/task_icons/washing-machine.png'),
     },
     {
@@ -24,27 +24,27 @@ const categorieIcons = [
         image: require('../assets/task_icons/hotel-bell.png'),
     },
     {
-        category: 'Location Velos Electriques',
+        category: 'LocationVelosElectriques',
         image: require('../assets/task_icons/bicycle.png'),
     },
     {
-        category: 'Nettoyage De Vehicule',
+        category: 'NettoyageDeVehicule',
         image: require('../assets/task_icons/cleaning.png'),
     },
     {
-        category: 'Relais Colis',
+        category: 'RelaisColis',
         image: require('../assets/task_icons/delivery.png'),
     },
     {
-        category: 'Le Bio A Votre Porte',
+        category: 'LeBioAVotrePorte',
         image: require('../assets/task_icons/epizea.png'),
     },
     {
-        category: 'Espaces Verts',
+        category: 'EspacesVerts',
         image: require('../assets/task_icons/greenerie.png'),
     },
     {
-        category: 'Commerce Ambulant',
+        category: 'CommerceAmbulant',
         image: require('../assets/task_icons/peddler.png'),
     },
     {
@@ -52,7 +52,7 @@ const categorieIcons = [
         image: require('../assets/task_icons/recycling.png'),
     },
     {
-        category: 'Petits Travaux',
+        category: 'PetitsTravaux',
         image: require('../assets/task_icons/tools.png'),
     }
 ]

@@ -8,7 +8,8 @@ import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import { Controller } from 'react-hook-form';
-import { Incident } from '../../api/Model';
+import { Incident } from '../../../api/Model';
+import { ILtoILAPI } from '../../../api/Mapping';
 
 const formSchema = z.object({
     Titre: z.string().min(3, 'Le titre doit contenir au moins 3 charactères'),
@@ -24,9 +25,7 @@ type IncidentFormParams = {
 function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
     const [evidences, setEvidences] = useState<string[]>([]);
 
-
-    //on veut envoyer minor
-    const levels = ['Minor', 'Severe', 'Blocking']
+    const levels = ['Mineur', 'Moyen', 'Majeur', 'Bloquant']
 
     const { control, handleSubmit } = useForm({
         defaultValues: {
@@ -40,10 +39,10 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
     const onSubmit = (data: any) => {
         let incident: Incident = {
             id: "",
-            description:data.Description,
+            description: data.Description,
             evidences: evidences,
-            level:data.Niveau,
-            title:data.Titre,
+            level: ILtoILAPI(data.Niveau),
+            title: data.Titre,
         }
         addIncident(incident)
         setIsModalVisible(false);
@@ -86,19 +85,24 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
                     render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
                         <Select
                             value={value}
+                            placeholder={'Selectionner une option'}
                             onSelect={(index) => { onChange(levels[index.row]); }}
                             onBlur={onBlur}
                         >
                             <SelectItem
-                                key={'Minor'}
-                                title={'Faible'}
+                                key={'Mineur'}
+                                title={'Mineur'}
                             />
                             <SelectItem
-                                key={'Severe'}
+                                key={'Medium'}
+                                title={'Moyen'}
+                            />
+                            <SelectItem
+                                key={'Majeur'}
                                 title={'Majeur'}
                             />
                             <SelectItem
-                                key={'Blocking'}
+                                key={'Bloquant'}
                                 title={'Bloquant'}
                             />
                         </Select>
@@ -126,7 +130,7 @@ function IncidentForm({ addIncident, setIsModalVisible }: IncidentFormParams) {
                     })}
                     <TouchableOpacity style={{ width: 60, height: 60, borderRadius: 5, alignItems: 'center', justifyContent: 'center', }} onPress={pickImage}>
                         <Image
-                            source={require('../../assets/more.png')}
+                            source={require('../../../assets/more.png')}
                             style={{ width: 35, height: 35 }}
                         />
                     </TouchableOpacity>

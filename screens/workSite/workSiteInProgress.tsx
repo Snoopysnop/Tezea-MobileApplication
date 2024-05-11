@@ -6,13 +6,15 @@ import { RootStackParamList } from '../types';
 import { TitleHeader } from '../../components/Header';
 import { Button } from '@rneui/themed';
 import { DetailsButtons } from '../../components/WorkSiteInProgress/DetailsButtons';
-import { CreationModal } from '../../components/WorkSiteInProgress/CreationModal';
-import { InvoiceReviewModal } from '../../components/WorkSiteInProgress/InvoiceReviewModal';
+import { CreationModal } from '../../components/WorkSiteInProgress/Modals/CreationModal';
+import { InvoiceReviewModal } from '../../components/WorkSiteInProgress/Modals/InvoiceReviewModal';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { Incident, Invoice, WorkSiteAndRequest } from '../../api/Model';
 import MainApi from '../../api/MainApi';
-import { IncidentReviewModal } from '../../components/WorkSiteInProgress/IncidentReviewModal';
+import { IncidentReviewModal } from '../../components/WorkSiteInProgress/Modals/IncidentReviewModal';
 import { SignatureScreen } from './validationScreen';
+import { ILAPItoIL } from '../../api/Mapping';
+import { Others } from '../../GlobalStyles';
 
 
 type WorkSiteInProgressParams = {
@@ -24,8 +26,6 @@ type WorkSiteInProgressParams = {
 }
 
 function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, incidents: retrievedIncidents, refresh, setRefresh }: WorkSiteInProgressParams) {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-
   const [invoices, setInvoices] = useState<Invoice[]>(retrievedInvoices)
   const [invoiceModal, setInvoiceModal] = React.useState(false);
 
@@ -34,8 +34,10 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
   const [comment, setComment] = useState("");
 
-  const [selectedElement, setSelectedElement] = useState<Invoice | Incident>()
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice>()
   const [invoiceReviewModal, setInvoiceReviewModal] = React.useState(false);
+
+  const [selectedIncident, setSelectedIncident] = useState<Incident>()
   const [incidentReviewModal, setIncidentReviewModal] = React.useState(false);
 
   const [validationScreenModal, setValidationScreenModal] = useState(false);
@@ -117,7 +119,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
     // delete invoice
     let response = await MainApi.getInstance().deleteIncident(incidentId)
 
-    // retrieve all invoices
+    // retrieve all invoices (refresh)
     let newInvoices = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequest.id)
 
     setIncidents(newInvoices)
@@ -126,32 +128,6 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   const removeIncident = (incident: Incident) => {
     deleteIncidentFromWorkSite(incident.id);
   }
-
-  useEffect(() => {
-    let subtitle;
-    switch (workSiteAndRequest.status.toString()) {
-        case "Standby":
-            subtitle = "En Attente";
-            break;
-        case "Done":
-          subtitle = "Finis";
-          break;
-        case "InProgress":
-          subtitle = "En cours";
-          break;
-        case "Canceled":
-          subtitle = "Annulé";
-          break;
-
-        default:
-            subtitle = workSiteAndRequest.status; // Par défaut, utilisez la valeur existante
-            break;
-    }
-
-    navigation.setOptions({
-        headerTitle: () => <TitleHeader title={workSiteAndRequest.workSiteRequest.title} subtitle={subtitle} isBlue={false} />,
-    });
-}, [])
 
   const uploadComment = async () => {
     await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)
@@ -184,9 +160,9 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
               return (
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
-                    setSelectedElement(invoice);
+                    setSelectedInvoice(invoice);
                     setInvoiceReviewModal(true);
-                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
+                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white', elevation: (index == (invoices.length - 1) ? 3 : 0), shadowColor: Others.shadow_color  }}>
                     {invoice.type == 'file' ?
                       <Image
                         source={require('../../assets/file.png')}
@@ -231,9 +207,9 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
               return (
                 <View key={index}>
                   <TouchableOpacity onPress={() => {
-                    setSelectedElement(incident);
+                    setSelectedIncident(incident);
                     setIncidentReviewModal(true);
-                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white' }}>
+                  }} style={{ flexDirection: 'row', gap: 10, alignItems: 'center', backgroundColor: 'white', elevation: (index == (incidents.length - 1) ? 3 : 0), shadowColor: Others.shadow_color }}>
                     <Image
                       source={{ uri: `data:image/png;base64,${incident.evidences[0]}` }}
                       style={{ width: 60, height: 60, backgroundColor: 'white' }}
@@ -244,7 +220,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
                       <Text numberOfLines={1} style={{ ...styles.subtitle }}>{incident.description}</Text>
                     </View>
 
-                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{incident.level}</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '600', paddingRight: 20 }}>{ILAPItoIL(incident.level)}</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -258,12 +234,12 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
             </View>
             <TextInput
               style={{
-                borderColor: '#ccc',
                 width: '100%',
-                borderWidth: 1,
                 backgroundColor: '#fff',
                 paddingHorizontal: 15,
-                paddingVertical: 5
+                paddingVertical: 5,
+                elevation: Others.elevation,
+                shadowColor: Others.shadow_color,
               }}
               value={comment}
               onChangeText={setComment}
@@ -285,20 +261,22 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
           buttonStyle={{
             backgroundColor: '#E15656',
             borderRadius: 20,
+            elevation: Others.elevation,
+            shadowColor: Others.shadow_color,
           }}
           containerStyle={{
             minWidth: 200,
             alignSelf: 'center',
             justifyContent: 'flex-end',
-            paddingVertical: 20
+            paddingVertical: 20,
           }}
         />
       </ScrollView>
 
       <CreationModal isModalVisible={invoiceModal} setIsModalVisible={setInvoiceModal} addElement={addInvoice} isInvoice={true} />
       <CreationModal isModalVisible={incidentModal} setIsModalVisible={setIncidentModal} addElement={addIncident} isInvoice={false} />
-      <InvoiceReviewModal isModalVisible={invoiceReviewModal} removeInvoice={removeInvoice} setIsModalVisible={setInvoiceReviewModal} invoice={selectedElement as Invoice} />
-      <IncidentReviewModal isModalVisible={incidentReviewModal} removeIncident={removeIncident} setIsModalVisible={setIncidentReviewModal} incident={selectedElement as Incident} />
+      <InvoiceReviewModal isModalVisible={invoiceReviewModal} removeInvoice={removeInvoice} setIsModalVisible={setInvoiceReviewModal} invoice={selectedInvoice} />
+      <IncidentReviewModal isModalVisible={incidentReviewModal} removeIncident={removeIncident} setIsModalVisible={setIncidentReviewModal} incident={selectedIncident} />
 
       <Modal
         animationType="none"
@@ -307,7 +285,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
         onRequestClose={() => {
           setValidationScreenModal(false);
         }}>
-          <SignatureScreen workSiteId={workSiteAndRequest.id} refresh={refresh} setRefresh={setRefresh} setValidationScreenModal={setValidationScreenModal}/>
+        <SignatureScreen workSiteId={workSiteAndRequest.id} refresh={refresh} setRefresh={setRefresh} setValidationScreenModal={setValidationScreenModal} />
       </Modal>
 
     </View>

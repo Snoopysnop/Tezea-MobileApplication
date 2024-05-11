@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
-import { InvoiceForm } from './InvoiceForm';
-import { IncidentForm } from './IncidentForm';
+import { InvoiceForm } from '../Forms/InvoiceForm';
+import { IncidentForm } from '../Forms/IncidentForm';
 
 type CreationModalParams = {
     isModalVisible: boolean,

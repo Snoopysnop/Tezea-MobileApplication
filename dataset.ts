@@ -1,4 +1,5 @@
-import { Category, Civility, Customer, CustomerStatus, Emergency, Incident, IncidentLevel, Role, Service, ToolName, User, WorkSiteAndRequest, WorkSiteRequest, WorkSiteAndRequestAPI, WorkSiteRequestAPI, WorkSiteRequestStatus, WorkSiteStatus } from "./api/Model"
+import { WorkSiteRequestStatus, CustomerStatus, EmergencyAPI, WorkSiteStatusAPI, WorkSiteStatus } from "./api/Enums"
+import { Category, Civility, Customer, Emergency, Incident, IncidentLevel, Role, Service, ToolName, User, WorkSiteAndRequest, WorkSiteRequest, WorkSiteAndRequestAPI, WorkSiteRequestAPI } from "./api/Model"
 
 export const users: User[] = [
     {
@@ -59,7 +60,7 @@ export const workSiteRequestAPI: WorkSiteRequestAPI[] = [
         city: "Rennes",
         serviceType: Service.Service,
         description: "Une super description d'une super demande de chantier. Il faut rajouter du texte pour que ce soit un peu plus long et que ça ressemble plus à une vraie description.",
-        emergency: Emergency.Low,
+        emergency: EmergencyAPI.Low,
         title: "Réparation Tuyauterie",
         category: Category.PetitsTravaux,
         removal: true,
@@ -82,7 +83,7 @@ export const workSiteRequestAPI: WorkSiteRequestAPI[] = [
         city: "Pipriac",
         serviceType: Service.Donation,
         description: "Une deuxième super description d'une super demande de chantier. Il faut rajouter du texte pour que ce soit un peu plus long et que ça ressemble plus à une vraie description.",
-        emergency: Emergency.High,
+        emergency: EmergencyAPI.High,
         title: "Aide Pour Démmenagement",
         category: Category.Conciergerie,
         removal: true,
@@ -172,7 +173,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
             },
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        status: WorkSiteStatus.Standby,
+        status: WorkSiteStatusAPI.Standby,
         incident: false,
 
         satisfaction: null,
@@ -202,7 +203,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
             },
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        status: WorkSiteStatus.InProgress,
+        status: WorkSiteStatusAPI.InProgress,
         incident: false,
 
         satisfaction: null,
@@ -229,7 +230,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
             }
         ],
         id: "3fb85f64-5717-4562-b3fc-2c963f66afa6",
-        status: WorkSiteStatus.Done,
+        status: WorkSiteStatusAPI.Done,
         incident: true,
 
         satisfaction: null,
@@ -252,7 +253,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
             },
         ],
         id: "3fb85f64-5717-4563-b3fc-2c963f66afa6",
-        status: WorkSiteStatus.InProgress,
+        status: WorkSiteStatusAPI.InProgress,
         incident: true,
 
         satisfaction: null,

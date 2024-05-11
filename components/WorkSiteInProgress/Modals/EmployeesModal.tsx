@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Modal } from 'react-native';
-import { WorkSiteAndRequest } from '../../api/Model';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { User } from '../../../api/Model';
+import { FormatPhoneNumber } from '../../../common/utils/Format';
 
 interface EmployeesModalProps {
-  workSiteInfo : WorkSiteAndRequest
+  employees : User[]
 }
-const EmployeesModal: React.FC<EmployeesModalProps> = ({workSiteInfo }) => {
-    const employees = workSiteInfo.staff
+function EmployeesModal ({employees }: EmployeesModalProps) {
     return (
         <View>
             {employees?.map((employee, index) => {
@@ -14,14 +14,14 @@ const EmployeesModal: React.FC<EmployeesModalProps> = ({workSiteInfo }) => {
                    
                     <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: 20 }}>
                         <Image
-                            source={require('../../assets/duck.jpg')}
+                            source={require('../../../assets/duck.jpg')}
                             style={styles.avatar}
                         />
                         <View>
                             <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>
                                 {employee.firstName} {employee.lastName}
                             </Text>
-                            <Text style={{ color: '#7D7D7D', ...styles.subtitle }}>{employee.phoneNumber}</Text>
+                            <Text style={{ color: '#7D7D7D', ...styles.subtitle }}>{FormatPhoneNumber(employee.phoneNumber)}</Text>
                         </View>
                     </View>
 

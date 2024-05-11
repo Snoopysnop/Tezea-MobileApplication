@@ -9,6 +9,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AirbnbRating } from 'react-native-ratings';
 import { Button } from '@rneui/themed';
 import MainApi from '../../api/MainApi';
+import { WorkSiteStatusAPI } from '../../api/Enums';
 
 type SignatureScreenParams = {
   workSiteId: string;
@@ -25,8 +26,6 @@ function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenM
   const svgRef = useRef<Svg>(null);
 
   const [rating, setRating] = useState("");
-  const [signature, setSignature] = useState("");
-
 
   async function uriToBase64(uri: string) {
     const result = await fetch(uri)
@@ -43,7 +42,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenM
     })
   }
 
-  const updateWorkSite = async () => {
+  const updateWorkSite = async (signature: string) => {
     try {
       // upload signature and rating
       let b64 = await uriToBase64(signature) as string
@@ -51,9 +50,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenM
       await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
 
       // update workSite status
-      // TODO maybe change "Done" to a workSiteStatus ?
-      await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done")
-
+      await MainApi.getInstance().updateWorksiteStatus(workSiteId, WorkSiteStatusAPI.Done)
       setRefresh(!refresh)
     } catch (error) {
       console.log(error)
@@ -104,9 +101,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenM
   const handleValidate = async () => {
     if (capturedImageUri) {
       try {
-        const { uri } = await FileSystem.getInfoAsync(capturedImageUri);
-        setSignature(uri);
-        updateWorkSite();
+        updateWorkSite(capturedImageUri);
       } catch (error) {
         console.error('Error getting file info:', error);
         Alert.alert('Error', 'Failed to get file info.');

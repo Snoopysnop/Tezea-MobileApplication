@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import axiosRetry from 'axios-retry'
 import AbstractApi from './AbstractApi'
-import { Customer, Incident, Invoice, User, WorkSiteAPI, WorkSiteAndRequestAPI, WorkSiteStatus } from './Model'
+import { Customer, Incident, Invoice, User, WorkSiteAPI, WorkSiteAndRequestAPI } from './Model'
 
 const standaloneInstance = axios.create({
     baseURL: "http://148.60.11.163",
@@ -128,7 +128,7 @@ class MainApi extends AbstractApi {
         try {
             const config = {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "text/plain"
                 }
             }
 
@@ -147,7 +147,6 @@ class MainApi extends AbstractApi {
                     "Content-Type": "application/json"
                 }
             }
-            console.log("Le rating vaut: ",rating)
             const response = await this.service.put(`/api/worksites/${workSiteId}/upload_signature_and_satisfaction?satisfaction=${rating}`, signature, config)
 
             return response.status
@@ -172,23 +171,6 @@ class MainApi extends AbstractApi {
     }
 
     public async putIncidentForWorkSite(id: string, incident: Incident): Promise<Incident> {
-        let level = incident.level;
-        let levelMapped ;
-        switch (level.toString()) {
-            case "Majeur":
-                levelMapped = "Severe";
-                break;
-            case "Mineur":
-                levelMapped = "Minor";
-                break;
-                case "Bloquant":
-                    levelMapped = "Blocking";
-                    break;    
-            default:
-                levelMapped = "Minor"; 
-                break;
-        }
-        console.log(levelMapped)
         try {
             const config = {
                 headers: {
@@ -197,7 +179,7 @@ class MainApi extends AbstractApi {
             }
             const response = await this.service.put(`/api/worksites/${id}/incident`, JSON.stringify(
                 {
-                    level: levelMapped,
+                    level: incident.level,
                     title: incident.title,
                     description: incident.description
                 }

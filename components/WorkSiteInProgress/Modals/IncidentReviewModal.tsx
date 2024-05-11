@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
 import { Button } from '@rneui/themed';
-import { Incident } from '../../api/Model';
+import { Incident } from '../../../api/Model';
+import { ILAPItoIL } from '../../../api/Mapping';
+import { Color } from '../../../GlobalStyles';
 
 type IncidentReviewModalParams = {
     isModalVisible: boolean,
     setIsModalVisible: Function,
-    removeIncident: Function,
+    removeIncident?: Function,
     incident: Incident | undefined,
 };
 
@@ -49,11 +51,11 @@ function IncidentReviewModal({ isModalVisible, removeIncident, setIsModalVisible
                                 <Text
                                     style={{ borderColor: '#ccc', ...styles.input }}
                                     numberOfLines={1}
-                                >{incident.level}</Text>
+                                >{ILAPItoIL(incident.level)}</Text>
                             </View>
 
                             <View>
-                                {(incident.evidences?.length!=0) && <Text style={styles.name}>Photos ({incident.evidences?.length})</Text>}
+                                {(incident.evidences?.length != 0) && <Text style={styles.name}>Photos ({incident.evidences?.length})</Text>}
                                 <View style={{
                                     flexDirection: 'row',
                                     gap: 7,
@@ -73,22 +75,38 @@ function IncidentReviewModal({ isModalVisible, removeIncident, setIsModalVisible
                                 </View>
                             </View>
 
-                            <Button
-                                title={'Supprimer'}
-                                onPress={() => {
-                                    removeIncident(incident);
-                                    setIsModalVisible(false);
-                                }}
-                                buttonStyle={{
-                                    backgroundColor: '#E15656',
-                                    borderRadius: 20,
-                                }}
-                                containerStyle={{
-                                    minWidth: 200,
-                                    marginTop: 20,
-                                    alignSelf: 'center',
-                                }}
-                            />
+                            {removeIncident ?
+                                <Button
+                                    title={'Supprimer'}
+                                    onPress={() => {
+                                        removeIncident(incident);
+                                        setIsModalVisible(false);
+                                    }}
+                                    buttonStyle={{
+                                        backgroundColor: '#E15656',
+                                        borderRadius: 20,
+                                    }}
+                                    containerStyle={{
+                                        minWidth: 200,
+                                        marginTop: 20,
+                                        alignSelf: 'center',
+                                    }}
+                                />
+                                :
+                                <Button
+                                    title={'Fermer'}
+                                    onPress={() => setIsModalVisible(!isModalVisible)}
+                                    buttonStyle={{
+                                        backgroundColor: Color.light_blue,
+                                        borderRadius: 20,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginTop: 10,
+                                        alignSelf: 'center'
+                                    }}
+                                />
+                            }
                         </View >
 
                     </View>
@@ -102,6 +120,7 @@ const styles = StyleSheet.create({
     centeredView: {
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute'
     },
     modalView: {
         backgroundColor: 'white',

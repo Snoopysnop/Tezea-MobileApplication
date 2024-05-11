@@ -2,6 +2,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import { Controller } from 'react-hook-form';
+import { Color } from '../../../GlobalStyles';
 
 interface FormInputParams {
     control: any,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         fontSize: 12,
-        color: '#E15656'
+        color: Color.red
     }
 });
 
