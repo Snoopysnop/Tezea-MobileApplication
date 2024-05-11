@@ -41,8 +41,8 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents, refresh, setRef
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "image", icon: require("../../assets/information-545674-1.png") },
-    { key: "text", icon: require("../../assets/userlist-9633874-1.png") },
+    { key: "image", icon: require("../../assets/info.png") },
+    { key: "text", icon: require("../../assets/user-list-expanded.png") },
   ]);
   const [dynamicRoutes, setDynamicRoutes] = useState<{ key: string; icon: any; }[]>([]);
   const mergedRoutes = [...routes, ...dynamicRoutes];

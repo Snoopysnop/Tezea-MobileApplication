@@ -24,7 +24,7 @@ function WorkSiteList({ }) {
       headerTitle: () => <TitleHeader title={users[3].firstName + " " + users[3].lastName} subtitle={"Chef de chantier"} isBlue={true} />,
     });
 
-    navigation.addListener('beforeRemove', (e) => {
+    navigation.addListener('beforeRemove', (e: any) => {
       // Prevent default behavior of leaving the screen
       e.preventDefault();
     })

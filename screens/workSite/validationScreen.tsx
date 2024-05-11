@@ -19,7 +19,6 @@ type SignatureScreenParams = {
 }
 
 function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenModal }: SignatureScreenParams) {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState('');
   const [capturedImageUri, setCapturedImageUri] = useState<string | null>(null);
@@ -120,7 +119,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenM
         <Modal visible={capturedImageUri != undefined} transparent={true} onRequestClose={handleModalClose}>
           <View style={{ paddingBottom: 50, ...styles.modalContainer }}>
             <View style={styles.blueRectangle}>
-              <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
+              <Image source={{ uri: capturedImageUri?capturedImageUri:undefined }} style={styles.modalImage} resizeMode="contain" />
             </View>
 
             <View style={[styles.ratingContainer]}>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { ParamListBase, StackActions, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TitleHeader } from '../components/Header';
 import { users } from '../dataset';
@@ -13,9 +13,8 @@ function ProfileScreen() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
-    navigation.navigate("LoginScreen");
-    console.log(navigation.getState())
-  };
+    navigation.replace("LoginScreen");
+   };
 
   useEffect(() => {
     navigation.setOptions({

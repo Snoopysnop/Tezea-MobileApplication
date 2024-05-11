@@ -12,18 +12,19 @@ function LoginScreen({ }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-
+  
   const handleLogin = () => {
     if (username === '' && password === '') {
       // Connexion réussie, rediriger l'utilisateur vers la page suivante
-      navigation.navigate("WorkSiteList")
+      setLoginError('');
+      navigation.push("WorkSiteList")
     } else {
       setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
     }
   };
 
   useEffect(() => {
-    navigation.addListener('beforeRemove', (e) => {
+    navigation.addListener('beforeRemove', (e: any) => {
       // Prevent default behavior of leaving the screen
       e.preventDefault();
     })

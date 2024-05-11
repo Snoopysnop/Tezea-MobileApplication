@@ -1,8 +1,8 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp, createStackNavigator } from '@react-navigation/stack';
 import { WorkSiteList } from './screens/workSiteList';
 import { ProfileButton, TitleHeader } from './components/Header';
 import { ApplicationProvider } from '@ui-kitten/components';
@@ -12,6 +12,7 @@ import { WorkSiteManager } from './screens/workSite/workSiteManager';
 import { LoginScreen } from './screens/loginScreen';
 import { ProfileScreen } from './screens/profile';
 import { Color } from './GlobalStyles';
+import { RootLoginScreen } from './screens/rootLoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,7 @@ const App = () => {
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='abc'>
+        <Stack.Navigator>
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
             headerShown: false,
           }} />
