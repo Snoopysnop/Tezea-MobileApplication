@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
 import { Button } from '@rneui/themed';
-import { Invoice } from '../../api/Model';
+import { Invoice } from '../../../api/Model';
+import { Color } from '../../../GlobalStyles';
 
 type InvoiceReviewModalParams = {
     isModalVisible: boolean,
     setIsModalVisible: Function,
-    removeInvoice: Function,
+    removeInvoice?: Function,
     invoice: Invoice | undefined,
 };
 
@@ -49,7 +50,7 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                                 <Text
                                     style={{ borderColor: '#ccc', ...styles.input }}
                                     numberOfLines={1}
-                                >{invoice.amount}</Text>
+                                >{invoice.amount}€</Text>
                             </View>
 
                             <View>
@@ -57,12 +58,12 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                                 <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', padding: 5 }}>
                                     {invoice.type == 'file' ?
                                         <Image
-                                            source={require('../../assets/file.png')}
+                                            source={require('../../../assets/file.png')}
                                             style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                         />
                                         :
                                         <Image
-                                            source={{ uri: invoice.invoiceFile }}
+                                            source={{ uri: `data:image/png;base64,${invoice.invoiceFile}` }}
                                             style={{ width: 40, height: 40, backgroundColor: 'white' }}
                                         />
                                     }
@@ -70,21 +71,37 @@ function InvoiceReviewModal({ isModalVisible, removeInvoice, setIsModalVisible, 
                                 </View>
                             </View>
 
-                            <Button
-                                title={'Supprimer'}
-                                onPress={() => {
-                                    removeInvoice(invoice);
-                                    setIsModalVisible(false);
-                                }}
-                                buttonStyle={{
-                                    backgroundColor: '#E15656',
-                                    borderRadius: 20,
-                                }}
-                                containerStyle={{
-                                    minWidth: 200,
-                                    alignSelf: 'center',
-                                }}
-                            />
+                            {removeInvoice ?
+                                <Button
+                                    title={'Supprimer'}
+                                    onPress={() => {
+                                        removeInvoice(invoice);
+                                        setIsModalVisible(false);
+                                    }}
+                                    buttonStyle={{
+                                        backgroundColor: '#E15656',
+                                        borderRadius: 20,
+                                    }}
+                                    containerStyle={{
+                                        minWidth: 200,
+                                        alignSelf: 'center',
+                                    }}
+                                />
+                                :
+                                <Button
+                                    title={'Fermer'}
+                                    onPress={() => setIsModalVisible(!isModalVisible)}
+                                    buttonStyle={{
+                                        backgroundColor: Color.light_blue,
+                                        borderRadius: 20,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginTop: 10,
+                                        alignSelf: 'center'
+                                    }}
+                                />
+                            }
                         </View >
 
                     </View>
@@ -98,6 +115,7 @@ const styles = StyleSheet.create({
     centeredView: {
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute'
     },
     modalView: {
         backgroundColor: 'white',

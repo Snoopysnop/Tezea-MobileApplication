@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { WorkSiteDay } from '../components/WorkSiteList/WorkSiteDay';
-import { Button } from '@rneui/themed';
 import { SearchBar } from '../components/SearchBar';
-import { User, WorkSite, WorkSiteAndRequestAPI } from '../api/Model';
-import { workSitesAndRequestsAPI } from '../dataset';
+import { WorkSiteAndRequestAPI } from '../api/Model';
 import MainApi from '../api/MainApi';
 import { TitleHeader } from '../components/Header';
-
-type Screen1NavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
-
-type WorkSiteListParams = {
-  navigation: Screen1NavigationProp;
-};
+import { users } from "../dataset"
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { Button } from '@rneui/themed';
 
 // Corrected the props definition and parameter
-function WorkSiteList({ navigation }: WorkSiteListParams) {
+function WorkSiteList({ }) {
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+
   const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
 
-
-
   useEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => <TitleHeader title={users[3].firstName + " " + users[3].lastName} subtitle={"Chef de chantier"} isBlue={true} />,
+    });
+
+    navigation.addListener('beforeRemove', (e: any) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+    })
+
     fetchWorkSitesAndRequests()
   }, [])
 
@@ -35,7 +39,7 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
   const fetchWorkSitesAndRequests = async () => {
     try {
       //TODO utiliser le vrai user
-      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("4defa229-69fb-4720-afbe-f35592a43e77")
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("0ce159fc-80e9-4752-8c85-4e9b6086f840")
       setWorkSitesAndRequests(response)
       setFilteredWorkSitesAndRequests(response)
       setGroupedWorkSitesAndRequests(groupByDay(response))
@@ -43,8 +47,6 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
       console.log(error)
     }
   }
-
-
 
   const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
     const groupedWorkSites: Map<string, WorkSiteAndRequestAPI[]> = new Map();
@@ -78,15 +80,14 @@ function WorkSiteList({ navigation }: WorkSiteListParams) {
             return date1 < date2 ? -1 : 1
           }).map((workSitesAndRequests, index) => {
             return (
-              <WorkSiteDay key={index} navigation={navigation} workSitesAndRequests={workSitesAndRequests} />
+              <WorkSiteDay key={index} workSitesAndRequests={workSitesAndRequests} />
             );
           })}
         </View>
 
-        {/* As long as API doesn't have pagination, this button is not needed
-          <Button
+        {/* As long as API doesn't have pagination, this button is not needed */}
+        {/* <Button
           title={'Voir Plus'}
-          onPress={() => alert("click")}
           buttonStyle={{
             backgroundColor: '#008FE3',
             borderRadius: 20,

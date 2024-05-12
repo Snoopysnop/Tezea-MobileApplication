@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Alert, Modal, Image, Dimensions, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Alert, Modal, Image, Dimensions, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
@@ -9,23 +9,22 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AirbnbRating } from 'react-native-ratings';
 import { Button } from '@rneui/themed';
 import MainApi from '../../api/MainApi';
+import { WorkSiteStatusAPI } from '../../api/Enums';
 
 type SignatureScreenParams = {
   workSiteId: string;
   refresh: boolean;
   setRefresh: Function;
+  setValidationScreenModal: Function;
 }
 
-function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenParams) {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+function SignatureScreen({ workSiteId, refresh, setRefresh, setValidationScreenModal }: SignatureScreenParams) {
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState('');
   const [capturedImageUri, setCapturedImageUri] = useState<string | null>(null);
   const svgRef = useRef<Svg>(null);
 
   const [rating, setRating] = useState("");
-  const [signature, setSignature] = useState("");
-
 
   async function uriToBase64(uri: string) {
     const result = await fetch(uri)
@@ -42,7 +41,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenPar
     })
   }
 
-  const updateWorkSite = async () => {
+  const updateWorkSite = async (signature: string) => {
     try {
       // upload signature and rating
       let b64 = await uriToBase64(signature) as string
@@ -50,9 +49,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenPar
       await MainApi.getInstance().uploadSignatureAndRating(workSiteId, b64, rating)
 
       // update workSite status
-      // TODO maybe change "Done" to a workSiteStatus ?
-      await MainApi.getInstance().updateWorksiteStatus(workSiteId, "Done")
-
+      await MainApi.getInstance().updateWorksiteStatus(workSiteId, WorkSiteStatusAPI.Done)
       setRefresh(!refresh)
     } catch (error) {
       console.log(error)
@@ -103,9 +100,7 @@ function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenPar
   const handleValidate = async () => {
     if (capturedImageUri) {
       try {
-        const { uri } = await FileSystem.getInfoAsync(capturedImageUri);
-        setSignature(uri);
-        updateWorkSite();
+        updateWorkSite(capturedImageUri);
       } catch (error) {
         console.error('Error getting file info:', error);
         Alert.alert('Error', 'Failed to get file info.');
@@ -116,15 +111,15 @@ function SignatureScreen({ workSiteId, refresh, setRefresh }: SignatureScreenPar
 
   return (
     <ImageBackground source={require('../../assets/mask-group.png')} resizeMode="cover" style={{ width: '100%', height: '100%' }}>
+      <TouchableOpacity onPress={() => setValidationScreenModal(false)}>
+        <Image source={require('../../assets/arrow.png')} style={{ position: 'absolute', top: 20, left: 20, height: 30, width: 30 }} resizeMode="contain" />
+      </TouchableOpacity>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <View>
-          <Image source={require('../../assets/arrow.png')} style={styles.modalImage} resizeMode="contain" />
-        </View>
 
         <Modal visible={capturedImageUri != undefined} transparent={true} onRequestClose={handleModalClose}>
           <View style={{ paddingBottom: 50, ...styles.modalContainer }}>
             <View style={styles.blueRectangle}>
-              <Image source={{ uri: capturedImageUri }} style={styles.modalImage} resizeMode="contain" />
+              <Image source={{ uri: capturedImageUri?capturedImageUri:undefined }} style={styles.modalImage} resizeMode="contain" />
             </View>
 
             <View style={[styles.ratingContainer]}>

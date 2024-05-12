@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button } from '@rneui/themed';
+import { Color } from '../GlobalStyles';
 
 type ModalParams = {
     isModalVisible: boolean
@@ -18,7 +19,7 @@ function BasicModal({ isModalVisible, setIsModalVisible, component }: ModalParam
                 onRequestClose={() => {
                     setIsModalVisible(!isModalVisible);
                 }}>
-                <View style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', ...styles.centeredView }}>
+                <Pressable onPress={() => { setIsModalVisible(!isModalVisible); }} style={{ width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', ...styles.centeredView }}>
                     <View style={styles.modalView}>
                         {component}
 
@@ -26,7 +27,7 @@ function BasicModal({ isModalVisible, setIsModalVisible, component }: ModalParam
                             title={'Fermer'}
                             onPress={() => setIsModalVisible(!isModalVisible)}
                             buttonStyle={{
-                                backgroundColor: '#76C3F0',
+                                backgroundColor: Color.light_blue,
                                 borderRadius: 20,
                             }}
                             containerStyle={{
@@ -36,7 +37,7 @@ function BasicModal({ isModalVisible, setIsModalVisible, component }: ModalParam
                             }}
                         />
                     </View>
-                </View>
+                </Pressable>
             </Modal>
         </View>
     );
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute'
     },
     modalView: {
         backgroundColor: 'white',

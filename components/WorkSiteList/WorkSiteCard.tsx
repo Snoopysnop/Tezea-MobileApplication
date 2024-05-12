@@ -3,8 +3,10 @@ import { View, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-n
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../screens/types';
 import { categorieIcons, stateIcons } from '../IconList';
-import { WorkSiteAndRequestAPI, WorkSiteStatus } from '../../api/Model';
+import { WorkSiteAndRequestAPI } from '../../api/Model';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { WorkSiteStatus, WorkSiteStatusAPI } from '../../api/Enums';
+import { FormatHour } from '../../common/utils/Format';
 
 type WorkSiteCardParams = {
   workSiteAndRequest: WorkSiteAndRequestAPI;
@@ -14,33 +16,32 @@ function WorkSiteCard({ workSiteAndRequest }: WorkSiteCardParams) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const computeInternalStatus = () => {
-    let status: string = workSiteAndRequest.status
+    let status: string = workSiteAndRequest.status.toString()
 
-    if (status == WorkSiteStatus.InProgress && workSiteAndRequest.incident)
+    if (status == WorkSiteStatusAPI.InProgress && workSiteAndRequest.hasIncidents)
       status = "Incident"
 
     return status
   }
 
-  const prettyHour = (dateString: string) => {
-    let date = new Date(dateString)
-    let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-    var utcDate = new Date(utc);
-
-    let hours = ("0" + utcDate.getHours()).slice(-2)
-    let minutes = ("0" + utcDate.getMinutes()).slice(-2)
-    return hours + 'h' + minutes
-  }
-
   return (
     <TouchableOpacity
-      style={{ flexDirection: 'row', backgroundColor: '#fff', minWidth: '100%', marginBottom: 2, height: 80, borderRadius: 5 }}
+      style={{
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        minWidth: '100%',
+        marginBottom: 2,
+        height: 80,
+        borderRadius: 5,
+        elevation: 3,
+      }}
       onPress={() => navigation.navigate('WorkSiteManager', {
         workSiteAndRequestAPI: workSiteAndRequest
       })}
     >
       <View style={[styles.centerElement, { width: 55 }]}>
         <Image
+
           source={(categorieIcons.find((icon) => icon.category == workSiteAndRequest.workSiteRequest.category))?.image}
           style={styles.icon}
         />
@@ -54,8 +55,8 @@ function WorkSiteCard({ workSiteAndRequest }: WorkSiteCardParams) {
       <View style={styles.verticleLine} />
 
       <View style={[styles.centerElement, { marginRight: 10, alignItems: 'flex-end' }]}>
-        <Text>{prettyHour(workSiteAndRequest.begin)}</Text>
-        <Text>{prettyHour(workSiteAndRequest.end)}</Text>
+        <Text>{FormatHour(new Date(workSiteAndRequest.begin))}</Text>
+        <Text>{FormatHour(new Date(workSiteAndRequest.end))}</Text>
       </View>
 
       <View style={[styles.centerElement, { backgroundColor: (stateIcons.find((icon) => icon.state == computeInternalStatus()))?.color, width: 20, borderTopRightRadius: 5, borderBottomRightRadius: 5 }]}>

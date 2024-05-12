@@ -3,15 +3,17 @@ import { WorkSiteAndRequestAPI } from '../api/Model';
 
 export type RootStackParamList = {
   WorkSiteList: undefined;
-  WorkSiteInfo: { workSiteRequestAPI: WorkSiteAndRequestAPI };
-  WorkSiteInProgress: undefined
-  ValidationScreen: undefined
+  WorkSiteInfo: undefined;
+  WorkSiteInProgress: undefined;
+  ValidationScreen: undefined;
+  LoginScreen: undefined;
 };
 
 export type WorkSiteListNavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteList'>;
 export type WorkSiteInfoNavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteInfo'>;
 export type WorkSiteWorkInProgressNavigationProp = StackNavigationProp<RootStackParamList, 'WorkSiteInProgress'>;
 export type ValidationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ValidationScreen'>;
+export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LoginScreen'>;
 
 
 

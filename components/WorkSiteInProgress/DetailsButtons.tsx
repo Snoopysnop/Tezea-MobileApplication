@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { BasicModal } from '../BasicModal';
-import { WorkSiteAndRequest } from '../../api/Model';
+import { Tool, ToolName, WorkSiteAndRequest } from '../../api/Model';
+import StuffsModal from './Modals/StuffModal';
+import EmployeesModal from './Modals/EmployeesModal';
+import { FormatHour, FormatPhoneNumber } from '../../common/utils/Format';
+import { Border, Others } from '../../GlobalStyles';
 
 type DetailsButtonsParams = {
     workSiteAndRequest: WorkSiteAndRequest;
@@ -16,7 +20,7 @@ function DetailsButtons({ workSiteAndRequest }: DetailsButtonsParams) {
         <View>
             <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, gap: 10 }}>
                 <TouchableOpacity onPress={() => setWorkSiteInfoModal(true)} style={{ flex: 11 }}>
-                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center' }}>
+                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: Border.default_radius, height: 60, alignItems: 'center', paddingHorizontal:5, elevation:Others.elevation }}>
                         <View>
                             <Text numberOfLines={1} style={{ color: 'black', ...styles.title }}>{workSiteAndRequest.workSiteRequest.title}</Text>
                             <Text numberOfLines={1} style={{ color: '#7D7D7D', ...styles.subtitle }}>Voir Récapitulatif</Text>
@@ -25,7 +29,7 @@ function DetailsButtons({ workSiteAndRequest }: DetailsButtonsParams) {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setToolsModal(true)} style={{ flex: 4 }}>
-                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center' }}>
+                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center', elevation:Others.elevation }}>
                         <Image
                             source={require("../../assets/tools.png")}
                             style={{ width: 30, height: 30 }}
@@ -34,106 +38,22 @@ function DetailsButtons({ workSiteAndRequest }: DetailsButtonsParams) {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setEmployeeModal(true)} onLongPress={() => setEmployeeModal(true)} style={{ flex: 5 }}>
-                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center' }}>
+                    <View style={{ backgroundColor: 'white', justifyContent: 'center', borderRadius: 5, height: 60, alignItems: 'center', elevation:Others.elevation }}>
                         <Image
                             source={require("../../assets/user-list.png")}
                             style={{ aspectRatio: '16/9', height: 30 }}
                         />
                     </View>
                 </TouchableOpacity>
-
             </View>
+
             <BasicModal isModalVisible={workSiteInfoModal} setIsModalVisible={setWorkSiteInfoModal} component={<WorkSiteModal workSiteAndRequest={workSiteAndRequest} />} />
-            <BasicModal isModalVisible={toolsModal} setIsModalVisible={setToolsModal} component={<ToolsModal workSiteAndRequest={workSiteAndRequest} />} />
-            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal workSiteAndRequest={workSiteAndRequest} />} />
+            <BasicModal isModalVisible={toolsModal} setIsModalVisible={setToolsModal} component={<StuffsModal equipments={workSiteAndRequest.equipments} />} />
+            <BasicModal isModalVisible={employeesModal} setIsModalVisible={setEmployeeModal} component={<EmployeesModal employees={workSiteAndRequest.staff} />} />
         </View>
     );
 };
 
-const workSiteInfo = {
-    description: 'Changement câble + antenne téléphonique et télévision. Blah blah je m\'y connais pas. Insérer d\'autre truc de réparation d\'antenne.',
-    concierge: 'Collongues Stéphane',
-    siteManager: 'Monneau Gabriel',
-    address: '123 Rue de Rennes, 35330 PIPRIAC',
-    urgency: 'Faible',
-    begin: '9h00',
-    end: '11h00'
-}
-
-const employees = [
-    {
-        firstName: 'Chaveron',
-        lastName: 'Bruno',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Desmontier',
-        lastName: 'Josée',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Dersoir',
-        lastName: 'Régine',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Ollivier',
-        lastName: 'Delphine',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Lascaux',
-        lastName: 'Christelle',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Marhic',
-        lastName: 'Serge',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Breteaux',
-        lastName: 'Damien',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    },
-    {
-        firstName: 'Morel',
-        lastName: 'Nathalie',
-        phoneNumber: '01.23.45.67.89',
-        picture: require('../../assets/duck.jpg')
-    }
-]
-
-const tools = [
-    {
-        name: 'Tournevis',
-        quantity: 2
-    },
-    {
-        name: 'Marteau',
-        quantity: 5
-    },
-    {
-        name: 'Un autre truc',
-        quantity: 1
-    }
-]
-
-const prettyHour = (date: Date) => {
-    let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-    var utcDate = new Date(utc);
-
-    let hours = ("0" + utcDate.getHours()).slice(-2)
-    let minutes = ("0" + utcDate.getMinutes()).slice(-2)
-    return hours + 'h' + minutes
-  }
 
 type ModalParams = {
     workSiteAndRequest: WorkSiteAndRequest;
@@ -142,7 +62,7 @@ type ModalParams = {
 function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
     return (
         <View>
-            <View style={{ gap: 10, marginBottom: 10, marginHorizontal: 10 }}>
+            <View style={{ gap: 10, marginBottom: 10, marginHorizontal: 10, minWidth: 220 }}>
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Description :</Text>
                     <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.description}</Text>
@@ -151,13 +71,13 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Concierge :</Text>
                     <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.concierge.firstName} {workSiteAndRequest.workSiteRequest.concierge.lastName}</Text>
-                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.concierge.phoneNumber}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{FormatPhoneNumber(workSiteAndRequest.workSiteRequest.concierge.phoneNumber)}</Text>
                 </View>
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Chef de Site :</Text>
                     <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.siteChief.firstName} {workSiteAndRequest.workSiteRequest.siteChief.lastName}</Text>
-                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.siteChief.phoneNumber}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{FormatPhoneNumber(workSiteAndRequest.workSiteRequest.siteChief.phoneNumber)}</Text>
                 </View>
 
                 <View>
@@ -172,48 +92,9 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Horaires :</Text>
-                    <Text style={{ color: '#7D7D7D' }}>{prettyHour(workSiteAndRequest.begin)} - {prettyHour(workSiteAndRequest.end)}</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{FormatHour(workSiteAndRequest.begin)} - {FormatHour(workSiteAndRequest.end)}</Text>
                 </View>
             </View>
-        </View>
-    )
-}
-
-function ToolsModal({ workSiteAndRequest }: ModalParams) {
-    return (
-        <View>
-            {tools?.map((tool, index) => {
-                return (
-                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: 20 }}>
-                        <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>{tool.name}</Text>
-                        <Text style={{ color: '#7D7D7D' }}>x {tool.quantity}</Text>
-                    </View>
-                );
-            })}
-        </View>
-    )
-}
-
-function EmployeesModal({ workSiteAndRequest }: ModalParams) {
-    return (
-        <View>
-            {employees?.map((employee, index) => {
-                return (
-                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: 20 }}>
-                        <Image
-                            source={employee.picture}
-                            // source={{ uri: `data:image/png;base64,${employee.picture}` }}
-                            style={styles.avatar}
-                        />
-                        <View>
-                            <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>
-                                {employee.firstName} {employee.lastName}
-                            </Text>
-                            <Text style={{ color: '#7D7D7D', ...styles.subtitle }}>{employee.phoneNumber}</Text>
-                        </View>
-                    </View>
-                );
-            })}
         </View>
     )
 }

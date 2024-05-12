@@ -1,21 +1,18 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import { NavigationContainer, ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp, createStackNavigator } from '@react-navigation/stack';
 import { WorkSiteList } from './screens/workSiteList';
-import { WorkSiteInfo } from './screens/workSite/workSiteInfo';
-import { WorkSiteInProgress } from './screens/workSite/workSiteInProgress';
-import { SignatureScreen } from './screens/workSite/validationScreen';
 import { ProfileButton, TitleHeader } from './components/Header';
 import { ApplicationProvider } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import MainApi from './api/MainApi';
 import { WorkSiteManager } from './screens/workSite/workSiteManager';
-import  {LoginScreen}  from './screens/login';
-import  ProfileScreen  from './screens/profile';
+import { LoginScreen } from './screens/loginScreen';
+import { ProfileScreen } from './screens/profile';
+import { Color } from './GlobalStyles';
+import { RootLoginScreen } from './screens/rootLoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,43 +22,33 @@ const App = () => {
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Login" component={LoginScreen} />
-
-        <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: '#76C3F0' },
-            headerTitleAlign: 'center',
-            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
+        <Stack.Navigator>
+          <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
+            headerShown: false,
           }} />
+
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{
+            headerStyle: { backgroundColor: '#F2F2F2' },
+            headerTitleAlign: 'center',
+            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={false} />,
+          }} />
+
           <Stack.Screen name="WorkSiteList" component={WorkSiteList} options={{
             headerTintColor: 'white',
-            headerStyle: { backgroundColor: '#76C3F0' },
+            headerStyle: { backgroundColor: Color.light_blue },
             headerTitleAlign: 'center',
             headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
-            headerRight: () => <ProfileButton />
+            headerRight: () => <ProfileButton />,
+            headerLeft: () => null,
           }} />
+
           <Stack.Screen name="WorkSiteManager" component={WorkSiteManager} options={{
             headerTitleAlign: 'center',
             headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='Titre de la Missssssion' subtitle='Statut' isBlue={false} />,
+            headerTitle: () => <TitleHeader title='' subtitle='' isBlue={false} />,
             headerRight: () => <ProfileButton />
           }}
           />
-          
-          <Stack.Screen name="WorkSiteInfo" component={WorkSiteInfo} options={{
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />,
-            headerRight: () => <ProfileButton />
-          }}
-          />
-          <Stack.Screen name="WorkSiteInProgress" component={WorkSiteInProgress} options={{
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='Titre de la Mission' subtitle='Statut' isBlue={false} />
-          }} />
-          <Stack.Screen name="ValidationScreen" component={SignatureScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style="auto" />
