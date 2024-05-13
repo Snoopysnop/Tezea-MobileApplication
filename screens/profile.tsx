@@ -87,6 +87,7 @@ function ProfileScreen() {
           alignSelf: 'center',
           justifyContent: 'flex-end',
           paddingVertical: 20,
+          borderRadius: 100,
         }}
       />
     </View>

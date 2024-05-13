@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import { WorkSiteDay } from '../components/WorkSiteList/WorkSiteDay';
@@ -19,6 +19,8 @@ function WorkSiteList({ }) {
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => <TitleHeader title={users[3].firstName + " " + users[3].lastName} subtitle={"Chef de chantier"} isBlue={true} />,
@@ -29,7 +31,7 @@ function WorkSiteList({ }) {
       e.preventDefault();
     })
 
-    fetchWorkSitesAndRequests()
+    fetchWorkSitesAndRequests();
   }, [])
 
   useEffect(() => {
@@ -43,9 +45,15 @@ function WorkSiteList({ }) {
       setWorkSitesAndRequests(response)
       setFilteredWorkSitesAndRequests(response)
       setGroupedWorkSitesAndRequests(groupByDay(response))
+      setRefreshing(false);
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchWorkSitesAndRequests();
   }
 
   const groupByDay = (workSiteAndRequestAPI: WorkSiteAndRequestAPI[]) => {
@@ -69,10 +77,11 @@ function WorkSiteList({ }) {
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#76C3F0', width: '100%', paddingTop: 5, paddingBottom: 15 }}>
         <SearchBar data={workSitesAndRequests} setData={setFilteredWorkSitesAndRequests} />
-        {/* // TODO filters // */}
-
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} enabled={true} />}
+      >
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 40 }}>
           {Array.from(groupedWorkSitesAndRequests.values()).sort((wsar1, wsar2) => {
             let date1 = new Date(wsar1[0].begin)

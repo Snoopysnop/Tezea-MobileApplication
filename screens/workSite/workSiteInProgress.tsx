@@ -142,7 +142,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
           {/* -------------------- INVOICE MANAGEMENT -------------------- */}
           <View>
-            <View style={{ justifyContent: 'center', backgroundColor: '#76C3F0', height: 60, paddingHorizontal: 20, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
+            <View style={{ justifyContent: 'center', backgroundColor: '#76C3F0', height: 60, paddingHorizontal: 20, borderTopLeftRadius: 5, borderTopRightRadius: 5, elevation: (invoices.length != 0 ? 0 : 3), shadowColor: Others.shadow_color }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={{ color: 'white', ...styles.title }}>Facture</Text>
                 <View style={{}}>
@@ -189,7 +189,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
 
           {/* -------------------- INCIDENT MANAGEMENT -------------------- */}
           <View>
-            <View style={{ justifyContent: 'center', backgroundColor: '#76C3F0', height: 60, paddingHorizontal: 20, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
+            <View style={{ justifyContent: 'center', backgroundColor: '#76C3F0', height: 60, paddingHorizontal: 20, borderTopLeftRadius: 5, borderTopRightRadius: 5, elevation: (invoices.length != 0 ? 0 : 3), shadowColor: Others.shadow_color }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={{ color: 'white', ...styles.title }}>Incidents</Text>
                 <View style={{}}>
@@ -269,6 +269,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
             alignSelf: 'center',
             justifyContent: 'flex-end',
             paddingVertical: 20,
+            borderRadius: 100,
           }}
         />
       </ScrollView>

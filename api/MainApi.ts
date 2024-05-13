@@ -128,6 +128,7 @@ class MainApi extends AbstractApi {
         try {
             const config = {
                 headers: {
+                    // "Content-Type": "application/json"
                     "Content-Type": "text/plain"
                 }
             }
