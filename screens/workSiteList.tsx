@@ -12,18 +12,18 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
 
 // Corrected the props definition and parameter
-function WorkSiteList({ }) {
+function WorkSiteList({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
-
+  const {user}=route.params;
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title={users[3].firstName + " " + users[3].lastName} subtitle={"Chef de chantier"} isBlue={true} />,
+      headerTitle: () => <TitleHeader title={user?.firstName + " " + user?.lastName} subtitle={"Chef de chantier"} isBlue={true} />,
     });
 
     navigation.addListener('beforeRemove', (e: any) => {
@@ -32,7 +32,7 @@ function WorkSiteList({ }) {
     })
 
     fetchWorkSitesAndRequests();
-  }, [])
+  }, [user])
 
   useEffect(() => {
     setGroupedWorkSitesAndRequests(groupByDay(filteredWorkSitesAndRequests))
@@ -41,7 +41,7 @@ function WorkSiteList({ }) {
   const fetchWorkSitesAndRequests = async () => {
     try {
       //TODO utiliser le vrai user
-      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("0903f68d-4db1-4203-beee-095581b29d9a")
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser(user?.id)
       setWorkSitesAndRequests(response)
       setFilteredWorkSitesAndRequests(response)
       setGroupedWorkSitesAndRequests(groupByDay(response))

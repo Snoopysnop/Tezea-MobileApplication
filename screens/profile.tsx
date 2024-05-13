@@ -59,7 +59,7 @@ function ProfileScreen({route}:any) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title='Compte Tezea' subtitle={users[3].role} isBlue={false} />,
+      headerTitle: () => <TitleHeader title='Compte Tezea' subtitle={"Chef de Chantier"} isBlue={false} />,
     });
   }, [])
 
@@ -88,7 +88,7 @@ function ProfileScreen({route}:any) {
       {/* -------------------- SECTION 1 -------------------- */}
       <View style={{ gap: 5, ...styles.container }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Nom", users[3].firstName + ' ' + users[3].lastName)}
+          {Info("Nom", user?.firstName + ' ' + user?.lastName)}
         </View>
         <Text style={{ color: '#A4A4A4', fontSize: 13 }}>Pour mettre à jour ces données, veuillez vous rapprochez de la <Text style={{ textDecorationLine: 'underline' }}>conciergerie</Text> de Tezea.</Text>
       </View>
@@ -96,12 +96,12 @@ function ProfileScreen({route}:any) {
       {/* -------------------- SECTION 2 -------------------- */}
       <View style={{ gap: 15, ...styles.container }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Email", users[3].email)}
+          {Info("Email", user?.email)}
           <Image style={{ width: 15, height: 15, position: 'relative' }} source={require('../assets/simple-edit.png')} />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Téléphone", FormatPhoneNumber(users[3].phoneNumber))}
+          {Info("Téléphone", FormatPhoneNumber(user?.phoneNumber))}
           <Image style={{ width: 15, height: 15, position: 'relative' }} source={require('../assets/simple-edit.png')} />
         </View>
       </View>

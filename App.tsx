@@ -21,10 +21,10 @@ LogBox.ignoreLogs([
 ]);
 
 const App = () => {
-  
+  MainApi.initInstance();
   const [user, setUser] = useState<User>();
 
-  MainApi.initInstance();
+  
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}

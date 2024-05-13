@@ -5,36 +5,32 @@ import { View, TextInput, StyleSheet, Text, Image, ImageBackground } from 'react
 import { Border, Color, Others } from '../GlobalStyles';
 import { Button } from '@rneui/themed';
 import { Role } from '../api/Model';
+import MainApi from '../api/MainApi';
 
 
 function LoginScreen({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  const { user } = route.params;
   const { setUser } = route.params;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  const handleLogin = () => {
-    setUser({
-      email: 'sarah.connor@gmail.com',
-      firstName: 'Sarah',
-      lastName: 'Connor',
-      id: '0903f68d-4db1-4203-beee-095581b29d9a',
-      phoneNumber: '0676199527',
-      role: Role.WorkSiteChief
-    })
-    if (password != '') {
-      // Connexion réussie, rediriger l'utilisateur vers la page suivante
+  const handleLogin = async () => {
+
+    try {
+      let response = await MainApi.getInstance().getuserByEmail(username)
       setLoginError('');
-      navigation.push("WorkSiteList")
-    } else {
+      await setUser(response);
+      navigation.push("WorkSiteList",{user:response})
+    } catch (error) {
+      console.log(error)
       setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
     }
   };
 
   useEffect(() => {
+    
     navigation.addListener('beforeRemove', (e: any) => {
       // Prevent default behavior of leaving the screen
       e.preventDefault();
