@@ -13,9 +13,9 @@ class AbstractApi {
         this.service = axios.create({
             baseURL: url,
             timeout: 60000,
-            // headers: {
-            //     'Authorization': 'Bearer ' + token
-            // }
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
         })
 
         axiosRetry(this.service, {
