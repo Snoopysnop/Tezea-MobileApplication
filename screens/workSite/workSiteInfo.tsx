@@ -149,7 +149,7 @@ function WorkSiteInfo({ workSiteAndRequest, invoices, incidents, refresh, setRef
       case "history":
         return (
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ gap: 20, backgroundColor: Color.white, padding: 15, borderBottomLeftRadius: Border.default_radius, borderBottomRightRadius: Border.default_radius }}>
+            <View style={{ gap: 20, backgroundColor: Color.white, padding: 15, borderBottomLeftRadius: Border.default_radius, borderBottomRightRadius: Border.default_radius, minHeight: 370 }}>
 
               {/* -------------------------   INVOICES   ------------------------- */}
               <View style={{ gap: 5 }}>
