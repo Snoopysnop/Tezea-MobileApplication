@@ -103,7 +103,7 @@ enum IncidentLevelAPI {
 enum IncidentLevel {
     Minor = "Mineur",
     Medium = "Moyen",
-    Severe = "Grave",
+    Severe = "Majeur",
     Blocking = "Bloquant"
 }
 

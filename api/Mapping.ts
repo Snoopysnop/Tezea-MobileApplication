@@ -99,20 +99,20 @@ function ILAPItoIL(incidentLevelAPI: IncidentLevelAPI) {
     return incidentLevel;
 }
 
-function ILtoILAPI(incidentLevel: IncidentLevel) {
+function ILtoILAPI(incidentLevel: string) {
     let incidentLevelAPI: IncidentLevelAPI;
 
     switch (incidentLevel) {
-        case IncidentLevel.Minor:
+        case "Mineur":
             incidentLevelAPI = IncidentLevelAPI.Minor
             break;
-        case IncidentLevel.Medium:
+        case "Moyen":
             incidentLevelAPI = IncidentLevelAPI.Medium
             break;
-        case IncidentLevel.Severe:
+        case "Majeur":
             incidentLevelAPI = IncidentLevelAPI.Severe
             break;
-        case IncidentLevel.Blocking:
+        case "Bloquant":
             incidentLevelAPI = IncidentLevelAPI.Blocking
             break;
         default:

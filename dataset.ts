@@ -1,4 +1,4 @@
-import { WorkSiteRequestStatus, CustomerStatus, EmergencyAPI, WorkSiteStatusAPI, WorkSiteStatus } from "./api/Enums"
+import { WorkSiteRequestStatus, CustomerStatus, EmergencyAPI, WorkSiteStatusAPI, WorkSiteStatus, IncidentLevelAPI } from "./api/Enums"
 import { Category, Civility, Customer, Emergency, Incident, IncidentLevel, Role, Service, ToolName, User, WorkSiteAndRequest, WorkSiteRequest, WorkSiteAndRequestAPI, WorkSiteRequestAPI } from "./api/Model"
 
 export const users: User[] = [
@@ -27,14 +27,13 @@ export const users: User[] = [
         id: "ea3668fd-f9fd-476c-b860-07e06364a29c"
     },
     {
-        firstName: "Helene",
-        lastName: "Blanc",
-        role: Role.WorkSiteChief,
-        email: "helene.blanc@gmail.com",
-        phoneNumber: "0645134767",
-        id: "0ce159fc-80e9-4752-8c85-4e9b6086f840"
-      }
-
+    firstName: "Sarah",
+    lastName: "Connor",
+    role: Role.WorkSiteChief,
+    email: "sarah.connor@gmail.com",
+    phoneNumber: "0690291836",
+    id: "0903f68d-4db1-4203-beee-095581b29d9a"
+    }
 ]
 
 export const customer: Customer = {
@@ -174,7 +173,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatusAPI.Standby,
-        incident: false,
+        hasIncidents: false,
 
         satisfaction: null,
         signature: "iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAADMElEQVR4nOzVwQnAIBQFQYXff81RUkQCOyDj1YOPnbXWPmeTRef+/3O/OyBjzh3CD95BfqICMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMO0TAAD//2Anhf4QtqobAAAAAElFTkSuQmCC",
@@ -204,7 +203,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatusAPI.InProgress,
-        incident: false,
+        hasIncidents: false,
 
         satisfaction: null,
         signature: null,
@@ -231,7 +230,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fb85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatusAPI.Done,
-        incident: true,
+        hasIncidents: true,
 
         satisfaction: null,
         signature: null,
@@ -254,7 +253,7 @@ export const workSitesAndRequestsAPI: WorkSiteAndRequestAPI[] = [
         ],
         id: "3fb85f64-5717-4563-b3fc-2c963f66afa6",
         status: WorkSiteStatusAPI.InProgress,
-        incident: true,
+        hasIncidents: true,
 
         satisfaction: null,
         signature: null,
@@ -288,7 +287,7 @@ export const workSitesAndRequests: WorkSiteAndRequest[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatus.Standby,
-        incident: false,
+        hasIncidents: false,
 
         satisfaction: null,
         signature: "iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAADMElEQVR4nOzVwQnAIBQFQYXff81RUkQCOyDj1YOPnbXWPmeTRef+/3O/OyBjzh3CD95BfqICMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMO0TAAD//2Anhf4QtqobAAAAAElFTkSuQmCC",
@@ -317,11 +316,11 @@ export const workSitesAndRequests: WorkSiteAndRequest[] = [
         ],
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatus.InProgress,
-        incident: false,
+        hasIncidents: false,
 
         satisfaction: null,
         signature: null,
-        comment:"comment"
+        comment: "comment"
     },
     {
         workSiteChief: users[2],
@@ -344,11 +343,11 @@ export const workSitesAndRequests: WorkSiteAndRequest[] = [
         ],
         id: "3fb85f64-5717-4562-b3fc-2c963f66afa6",
         status: WorkSiteStatus.Done,
-        incident: true,
+        hasIncidents: true,
 
         satisfaction: null,
         signature: null,
-        comment : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam, enim sed consequat ullamcorper, tellus lectus finibus nunc, nec rhoncus massa ante eu risus. Ut in tempus nunc. Donec sit amet rhoncus erat. Donec dictum dolor in ex dictum, quis tempor quam vestibulum. Etiam mi nisi, dictum et lorem nec, imperdiet placerat tortor. Cras sagittis laoreet risus, sit amet hendrerit tortor. Vivamus sit amet congue lorem. Curabitur condimentum odio at molestie interdum. Vestibulum faucibus vehicula felis, vel faucibus purus fermentum eu. Praesent viverra ipsum nulla, et porttitor diam mattis ut. Nunc eu dignissim odio. Nunc ac vestibulum velit, vitae vehicula massa. Donec ut quam maximus, tincidunt leo a, lobortis neque. Suspendisse nibh nisi, sagittis et finibus in, placerat quis est. Donec non leo iaculis, iaculis justo eu, mollis sapien."
+        comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam, enim sed consequat ullamcorper, tellus lectus finibus nunc, nec rhoncus massa ante eu risus. Ut in tempus nunc. Donec sit amet rhoncus erat. Donec dictum dolor in ex dictum, quis tempor quam vestibulum. Etiam mi nisi, dictum et lorem nec, imperdiet placerat tortor. Cras sagittis laoreet risus, sit amet hendrerit tortor. Vivamus sit amet congue lorem. Curabitur condimentum odio at molestie interdum. Vestibulum faucibus vehicula felis, vel faucibus purus fermentum eu. Praesent viverra ipsum nulla, et porttitor diam mattis ut. Nunc eu dignissim odio. Nunc ac vestibulum velit, vitae vehicula massa. Donec ut quam maximus, tincidunt leo a, lobortis neque. Suspendisse nibh nisi, sagittis et finibus in, placerat quis est. Donec non leo iaculis, iaculis justo eu, mollis sapien."
     },
     {
         workSiteChief: users[2],
@@ -367,17 +366,17 @@ export const workSitesAndRequests: WorkSiteAndRequest[] = [
         ],
         id: "3fb85f64-5717-4563-b3fc-2c963f66afa6",
         status: WorkSiteStatus.InProgress,
-        incident: true,
+        hasIncidents: true,
 
         satisfaction: null,
         signature: null,
-        comment:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam, enim sed consequat ullamcorper, tellus lectus finibus nunc, nec rhoncus massa ante eu risus. Ut in tempus nunc. Donec sit amet rhoncus erat. Donec dictum dolor in ex dictum, quis tempor quam vestibulum. Etiam mi nisi, dictum et lorem nec, imperdiet placerat tortor. Cras sagittis laoreet risus, sit amet hendrerit tortor. Vivamus sit amet congue lorem. Curabitur condimentum odio at molestie interdum. Vestibulum faucibus vehicula felis, vel faucibus purus fermentum eu. Praesent viverra ipsum nulla, et porttitor diam mattis ut. Nunc eu dignissim odio. Nunc ac vestibulum velit, vitae vehicula massa. Donec ut quam maximus, tincidunt leo a, lobortis neque. Suspendisse nibh nisi, sagittis et finibus in, placerat quis est. Donec non leo iaculis, iaculis justo eu, mollis sapien."
+        comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam, enim sed consequat ullamcorper, tellus lectus finibus nunc, nec rhoncus massa ante eu risus. Ut in tempus nunc. Donec sit amet rhoncus erat. Donec dictum dolor in ex dictum, quis tempor quam vestibulum. Etiam mi nisi, dictum et lorem nec, imperdiet placerat tortor. Cras sagittis laoreet risus, sit amet hendrerit tortor. Vivamus sit amet congue lorem. Curabitur condimentum odio at molestie interdum. Vestibulum faucibus vehicula felis, vel faucibus purus fermentum eu. Praesent viverra ipsum nulla, et porttitor diam mattis ut. Nunc eu dignissim odio. Nunc ac vestibulum velit, vitae vehicula massa. Donec ut quam maximus, tincidunt leo a, lobortis neque. Suspendisse nibh nisi, sagittis et finibus in, placerat quis est. Donec non leo iaculis, iaculis justo eu, mollis sapien."
     }
 ]
 
 export const incidentsExample: Incident[] = [
     {
-        level: IncidentLevel.Minor,
+        level: IncidentLevelAPI.Minor,
         title: "Accident Travail",
         description: "Jean-Pierre s'est cassé le pied.",
         id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -387,7 +386,7 @@ export const incidentsExample: Incident[] = [
         ]
     },
     {
-        level: IncidentLevel.Blocking,
+        level: IncidentLevelAPI.Blocking,
         title: "Manque de matériel",
         description: "Pas assez de ciment pour finir la chappe, impossibilité d'en acheter aux alentours. Report du chantier.",
         id: "4fa85f64-5717-4562-b3fc-2c963f66afa6",

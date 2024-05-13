@@ -69,6 +69,24 @@ class MainApi extends AbstractApi {
         }
     }
 
+    public async updateProfilePicture(userId: string, profilePicture: string): Promise<User> {
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+
+            const response = await this.service.post(`/api/users/${userId}/profilePicture`, profilePicture, config)
+            return response.data as User
+        } catch (err) {
+            console.log(err)
+            throw AbstractApi.handleError(err)
+        }
+    }
+
+    
+
 
     // ----------------------------------------   CUSTOMER ENDPOINTS   ---------------------------------------- //
 
@@ -95,6 +113,7 @@ class MainApi extends AbstractApi {
 
     public async getWorksiteById(workSiteId: string): Promise<WorkSiteAPI> {
         try {
+            
             const response = await this.service.get(`/api/worksites/${workSiteId}`)
             return response.data as WorkSiteAPI
         } catch (err) {

@@ -14,7 +14,7 @@ class AbstractApi {
             baseURL: url,
             timeout: 60000,
             headers: {
-                'Authorization': 'Bearer ' + token
+                //'Authorization': 'Bearer ' + token
             }
         })
 

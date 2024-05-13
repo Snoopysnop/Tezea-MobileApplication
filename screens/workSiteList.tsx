@@ -41,7 +41,7 @@ function WorkSiteList({ }) {
   const fetchWorkSitesAndRequests = async () => {
     try {
       //TODO utiliser le vrai user
-      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("0ce159fc-80e9-4752-8c85-4e9b6086f840")
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("0903f68d-4db1-4203-beee-095581b29d9a")
       setWorkSitesAndRequests(response)
       setFilteredWorkSitesAndRequests(response)
       setGroupedWorkSitesAndRequests(groupByDay(response))

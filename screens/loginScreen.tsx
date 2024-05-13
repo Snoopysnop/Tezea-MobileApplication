@@ -4,17 +4,28 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import { Border, Color, Others } from '../GlobalStyles';
 import { Button } from '@rneui/themed';
+import { Role } from '../api/Model';
 
 
-function LoginScreen({ }) {
+function LoginScreen({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  
+  const { user } = route.params;
+  const { setUser } = route.params;
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-  
+
   const handleLogin = () => {
-    if (username === '' && password === '') {
+    setUser({
+      email: 'sarah.connor@gmail.com',
+      firstName: 'Sarah',
+      lastName: 'Connor',
+      id: '0903f68d-4db1-4203-beee-095581b29d9a',
+      phoneNumber: '0676199527',
+      role: Role.WorkSiteChief
+    })
+    if (password != '') {
       // Connexion réussie, rediriger l'utilisateur vers la page suivante
       setLoginError('');
       navigation.push("WorkSiteList")

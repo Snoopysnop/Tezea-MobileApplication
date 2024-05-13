@@ -38,15 +38,28 @@ function WorkSiteManager({ route }: any) {
 
     let workSite, concierge, siteChief, customer, staff, invoices, incidents;
     try {
+      console.log("caca1")
       workSite = await MainApi.getInstance().getWorksiteById(workSiteAndRequestAPI.id)
+      console.log("caca2")
 
       concierge = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.concierge)
+      console.log("caca3")
+
       siteChief = await MainApi.getInstance().getUserById(workSiteAndRequestAPI.workSiteRequest.siteChief)
+      console.log("caca4")
+
       customer = await MainApi.getInstance().getCustomerById(workSiteAndRequestAPI.workSiteRequest.customer)
+      console.log("caca5")
+
       staff = await MainApi.getInstance().getUsersById(workSiteAndRequestAPI.staff)
+      console.log("caca6")
 
       invoices = await MainApi.getInstance().getInvoicesForWorkSite(workSiteAndRequestAPI.id);
+      console.log("caca7")
+
       incidents = await MainApi.getInstance().getIncidentsForWorkSite(workSiteAndRequestAPI.id);
+      console.log("caca8")
+
 
     } catch (error) {
       console.log(error)

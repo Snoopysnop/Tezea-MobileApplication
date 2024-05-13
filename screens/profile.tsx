@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import { ParamListBase, StackActions, useNavigation } from '@react-navigation/native';
@@ -8,9 +8,50 @@ import { users } from '../dataset';
 import { Button } from '@rneui/themed';
 import { Border, Color, Others } from '../GlobalStyles';
 import { FormatPhoneNumber } from '../common/utils/Format';
+import * as ImagePicker from 'expo-image-picker';
+import MainApi from '../api/MainApi';
 
-function ProfileScreen() {
+
+function ProfileScreen({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const {user} = route.params;
+  const{setUser} = route.params;
+
+  const [profilePicture, setProfilePicture] = useState<string>(user.profilePicture);
+
+  async function uriToBase64(uri: string) {
+    const result = await fetch(uri)
+    const blob = await result.blob()
+
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+
+    return new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(String(reader?.result).split(",")[1])
+      }
+    })
+  }
+
+
+  const pickImage = async () => {
+
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        quality: 1,
+    });
+    if (!result.canceled) {
+
+      let b64 = await uriToBase64(result.assets[0].uri) as string
+      setProfilePicture(b64);
+      await MainApi.getInstance().updateProfilePicture(user.id,b64);
+      let userFetched = await MainApi.getInstance().getUserById(user.id);
+      setUser(userFetched);
+    }
+};
 
   const handleLogout = () => {
     navigation.replace("LoginScreen");
@@ -31,10 +72,10 @@ function ProfileScreen() {
       gap: 10
     }}>
       {/* -------------------- PROFILE PICTURE -------------------- */}
-      <TouchableOpacity onPress={() => console.log("photo de profil")}>
+      <TouchableOpacity onPress={ () => pickImage() }>
         <View style={styles.profilePictureContainer}>
           <Image
-            source={require("../assets/duck.jpg")}
+            source={{uri:`data:image/png;base64,${profilePicture}`}}
             style={styles.profilePicture}
           />
           <Image

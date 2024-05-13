@@ -82,7 +82,7 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
 
                 <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Adresse :</Text>
-                    <Text style={{ color: '#7D7D7D' }}>TODO adresse</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.city}</Text>
                 </View>
 
                 <View>
