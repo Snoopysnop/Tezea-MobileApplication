@@ -64,6 +64,11 @@ function WorkSiteModal({ workSiteAndRequest }: ModalParams) {
         <View>
             <View style={{ gap: 10, marginBottom: 10, marginHorizontal: 10, minWidth: 220 }}>
                 <View>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Titre :</Text>
+                    <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.title}</Text>
+                </View>
+
+                <View>
                     <Text style={{ color: 'black', fontSize: 16, fontWeight: '500' }}>Description :</Text>
                     <Text style={{ color: '#7D7D7D' }}>{workSiteAndRequest.workSiteRequest.description}</Text>
                 </View>

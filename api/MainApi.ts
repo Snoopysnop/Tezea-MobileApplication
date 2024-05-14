@@ -86,6 +86,16 @@ class MainApi extends AbstractApi {
         }
     }
 
+    public async getuserByEmail(userEmail: string): Promise<User> {
+        try {
+            const response = await this.service.get(`/api/users/email?email=${userEmail}`)
+
+            return response.data as User
+        } catch (err) {
+            console.log(err)
+            throw AbstractApi.handleError(err)
+        }
+    }
     
 
 

@@ -54,6 +54,14 @@ const LoginScreen: React.FC<{ route: any }> = ({ route }) => {
   }, [])
 
   useEffect(() => {
+    const removeToken = async() =>{
+      await AsyncStorage.removeItem("access-token")
+    } 
+    removeToken()
+  }, [])
+
+  useEffect(() => {
+    
     navigation.addListener('beforeRemove', (e: any) => {
       // Prevent default behavior of leaving the screen
       e.preventDefault();

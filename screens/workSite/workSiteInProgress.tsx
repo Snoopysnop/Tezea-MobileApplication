@@ -130,7 +130,9 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
   }
 
   const uploadComment = async () => {
-    await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)
+    if(comment!=""){
+      await MainApi.getInstance().uploadComment(workSiteAndRequest.id, comment)
+    }
   }
 
   return (
@@ -254,6 +256,7 @@ function WorkSiteInProgress({ workSiteAndRequest, invoices: retrievedInvoices, i
         <Button
           title={'Terminer Le Chantier'}
           onPress={() => {
+            
             uploadComment();
             // navigation.navigate("ValidationScreen", { workSiteId: workSiteAndRequest.id } )
             setValidationScreenModal(true);

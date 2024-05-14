@@ -11,19 +11,19 @@ import { users } from "../dataset"
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 
 // Corrected the props definition and parameter
-function WorkSiteList({ route}: any) {
+function WorkSiteList({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const {user} = route.params;
 
   const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [groupedWorkSitesAndRequests, setGroupedWorkSitesAndRequests] = useState<Map<string, WorkSiteAndRequestAPI[]>>(new Map())
-
+  const {user}=route.params;
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title={users[3].firstName + " " + users[3].lastName} subtitle={"Chef de chantier"} isBlue={true} />,
+      headerTitle: () => <TitleHeader title={user?.firstName + " " + user?.lastName} subtitle={"Chef de chantier"} isBlue={true} />,
     });
 
     navigation.addListener('beforeRemove', (e: any) => {
@@ -32,7 +32,7 @@ function WorkSiteList({ route}: any) {
     })
 
     fetchWorkSitesAndRequests();
-  }, [])
+  }, [user])
 
   useEffect(() => {
     setGroupedWorkSitesAndRequests(groupByDay(filteredWorkSitesAndRequests))
