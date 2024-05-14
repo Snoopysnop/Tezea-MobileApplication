@@ -4,35 +4,54 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Text, Image, ImageBackground } from 'react-native';
 import { Border, Color, Others } from '../GlobalStyles';
 import { Button } from '@rneui/themed';
-import { Role } from '../api/Model';
+import { Role, User } from '../api/Model';
+import KeycloakApi from '../api/KeycloakApi';
+import MainApi from '../api/MainApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { decodeToken } from 'react-jwt';
 
 
-function LoginScreen({route}:any) {
+const LoginScreen: React.FC<{ route: any }> = ({ route }) => {
+
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  const { user } = route.params;
-  const { setUser } = route.params;
-
-  const [username, setUsername] = useState('');
+  const { user, setUser, setIsLoggedIn } = route.params;
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [loginError, setLoginError] = useState<string | undefined>('');
 
-  const handleLogin = () => {
-    setUser({
-      email: 'sarah.connor@gmail.com',
-      firstName: 'Sarah',
-      lastName: 'Connor',
-      id: '0903f68d-4db1-4203-beee-095581b29d9a',
-      phoneNumber: '0676199527',
-      role: Role.WorkSiteChief
-    })
-    if (password != '') {
-      // Connexion réussie, rediriger l'utilisateur vers la page suivante
-      setLoginError('');
+  const fetchUser = async () => {
+    const item = await AsyncStorage.getItem("access-token")
+    if(item){
+      const decodedItem = decodeToken(item) as { [key: string]: any };
+      const email = decodedItem["preferred_username"] as string;
+      const userFetched = await MainApi.getInstance().getUserbyEmail(email) as User;
+      if (userFetched) setUser(userFetched)
+
+    }
+  }
+
+
+  const handleLogin = async () => {
+    try {
+      
+      setLoginError(undefined)
+      await KeycloakApi.getInstance().login(email, password)
+      await fetchUser()
+      setIsLoggedIn(true)
       navigation.push("WorkSiteList")
-    } else {
-      setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
+
+    } catch (err) {
+      console.log(err)
+      setLoginError("Invalid credentials")
     }
   };
+
+  useEffect(() => {
+    const removeToken = async() =>{
+      await AsyncStorage.removeItem("access-token")
+    } 
+    removeToken()
+  }, [])
 
   useEffect(() => {
     navigation.addListener('beforeRemove', (e: any) => {
@@ -58,8 +77,8 @@ function LoginScreen({route}:any) {
             <TextInput
               style={{ marginBottom: 10, ...styles.input }}
               placeholder="Nom d'utilisateur"
-              onChangeText={setUsername}
-              value={username}
+              onChangeText={setEmail}
+              value={email}
               autoCapitalize="none"
             />
 

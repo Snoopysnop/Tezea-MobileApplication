@@ -13,9 +13,9 @@ class AbstractApi {
         this.service = axios.create({
             baseURL: url,
             timeout: 60000,
-            headers: {
-                //'Authorization': 'Bearer ' + token
-            }
+            headers: token ? {
+                'Authorization': 'Bearer ' + token
+            } : undefined
         })
 
         axiosRetry(this.service, {
@@ -28,12 +28,11 @@ class AbstractApi {
         if (axios.isAxiosError(err)) {
             if (err.response) {
                 if (err.response.data && err.response.data.error) {
-                    const error = err.response.data.error
-                    return new ApiError(err.response.status, error.type, error.message, error.errors)
+                    const error = err.response.data
+                    return new ApiError(err.response.status, error.error, error.error_description)
                 } 
             } else if (err.request) {
                 console.log(err.toJSON())
-
                 return new Error('Network error')
             }
         }
@@ -49,7 +48,7 @@ class AbstractApi {
                 }
                 if (data && data.error) {
                     const error = data.error
-                    return new ApiError(err.response.status, error.type, error.message, error.errors)
+                    return new ApiError(err.response.status, error.error, error.error_description)
                 } 
             } else if (err.request) {
                 console.log('A')

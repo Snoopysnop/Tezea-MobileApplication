@@ -22,11 +22,13 @@ function TitleHeader({ title, subtitle, isBlue }: TitleHeaderParams) {
 }
 
 function ProfileButton() {
-    const [users, setUsers] = useState<User[]>([])
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     return (
         <View style={{ marginRight: 20 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+            <TouchableOpacity onPress={() => {
+                console.log('uygigbibi')
+                navigation.push('ProfileScreen')
+            }}>
                 <View style={styles.profilePictureContainer}>
                     <Image
                         source={require("../assets/user.png")}

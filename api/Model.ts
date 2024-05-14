@@ -9,6 +9,7 @@ export interface User {
     role: Role;
     email: string;
     phoneNumber: string;
+    profilePicture: string
 }
 
 export interface Customer {

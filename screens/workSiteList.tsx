@@ -9,11 +9,11 @@ import MainApi from '../api/MainApi';
 import { TitleHeader } from '../components/Header';
 import { users } from "../dataset"
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { Button } from '@rneui/themed';
 
 // Corrected the props definition and parameter
-function WorkSiteList({ }) {
+function WorkSiteList({ route}: any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const {user} = route.params;
 
   const [workSitesAndRequests, setWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
   const [filteredWorkSitesAndRequests, setFilteredWorkSitesAndRequests] = useState<WorkSiteAndRequestAPI[]>([])
@@ -40,8 +40,7 @@ function WorkSiteList({ }) {
 
   const fetchWorkSitesAndRequests = async () => {
     try {
-      //TODO utiliser le vrai user
-      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser("0903f68d-4db1-4203-beee-095581b29d9a")
+      let response = await MainApi.getInstance().getWorksitesAndRequestsForUser(user.id)
       setWorkSitesAndRequests(response)
       setFilteredWorkSitesAndRequests(response)
       setGroupedWorkSitesAndRequests(groupByDay(response))

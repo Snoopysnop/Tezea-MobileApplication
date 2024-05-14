@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LogBox, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +13,7 @@ import { LoginScreen } from './screens/loginScreen';
 import { ProfileScreen } from './screens/profile';
 import { Color } from './GlobalStyles';
 import { User } from './api/Model';
+import KeycloakApi from './api/KeycloakApi';
 
 const Stack = createStackNavigator();
 
@@ -21,41 +22,65 @@ LogBox.ignoreLogs([
 ]);
 
 const App = () => {
-  
-  const [user, setUser] = useState<User>();
 
-  MainApi.initInstance();
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
+
+useEffect(() => {
+  const getToken = async() => {
+    const tokenValid = await KeycloakApi.isTokenValid()
+    if(tokenValid) {
+      setIsLoggedIn(true)
+    }
+  }
+  getToken()
+}, [])
+
+useEffect(() => {
+  MainApi.initInstance()
+  KeycloakApi.initInstance()
+}, [])
+
+
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       {/* <Provider store={store}> */}
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="LoginScreen" initialParams={{ user: user, setUser: setUser }} component={LoginScreen} options={{
-            headerShown: false,
-          }} />
+          {!isLoggedIn ? (
+            <Stack.Screen name="LoginScreen" initialParams={{ user: user, setUser: setUser, setIsLoggedIn: setIsLoggedIn }} component={LoginScreen} options={{
+              headerShown: false,
+            }} />
+          ) : (
+            <>
+              <Stack.Screen name="ProfileScreen" initialParams={{ user: user, setUser: setUser, setIsLoggedIn: setIsLoggedIn }} component={ProfileScreen} options={{
+                headerStyle: { backgroundColor: '#F2F2F2' },
+                headerTitleAlign: 'center',
+                headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={false} />,
+              }} />
 
-          <Stack.Screen name="ProfileScreen" initialParams={{ user: user, setUser: setUser }} component={ProfileScreen} options={{
-            headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitleAlign: 'center',
-            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={false} />,
-          }} />
+              <Stack.Screen name="WorkSiteList" initialParams={{ user: user }} component={WorkSiteList} options={{
+                headerTintColor: 'white',
+                headerStyle: { backgroundColor: Color.light_blue },
+                headerTitleAlign: 'center',
+                headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
+                headerRight: () => <ProfileButton />,
+                headerLeft: () => null,
+              }} />
 
-          <Stack.Screen name="WorkSiteList" initialParams={{ user: user, setUser: setUser }} component={WorkSiteList} options={{
-            headerTintColor: 'white',
-            headerStyle: { backgroundColor: Color.light_blue },
-            headerTitleAlign: 'center',
-            headerTitle: () => <TitleHeader title='Monsieur Dupont' subtitle='Chef de Chantier' isBlue={true} />,
-            headerRight: () => <ProfileButton />,
-            headerLeft: () => null,
-          }} />
-
-          <Stack.Screen name="WorkSiteManager" initialParams={{ user: user, setUser: setUser }} component={WorkSiteManager} options={{
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: '#F2F2F2' },
-            headerTitle: () => <TitleHeader title='' subtitle='' isBlue={false} />,
-            headerRight: () => <ProfileButton />
-          }}
-          />
+              <Stack.Screen name="WorkSiteManager" initialParams={{ user: user, setUser: setUser }} component={WorkSiteManager} options={{
+                headerTitleAlign: 'center',
+                headerStyle: { backgroundColor: '#F2F2F2' },
+                headerTitle: () => <TitleHeader title='' subtitle='' isBlue={false} />,
+                headerRight: () => <ProfileButton />
+              }}
+              />
+            </>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style="auto" />

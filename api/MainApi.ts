@@ -4,7 +4,7 @@ import AbstractApi from './AbstractApi'
 import { Customer, Incident, Invoice, User, WorkSiteAPI, WorkSiteAndRequestAPI } from './Model'
 
 const standaloneInstance = axios.create({
-    baseURL: "http://148.60.11.163",
+    baseURL: process.env.REACT_APP_URL,
     timeout: 60000
 })
 
@@ -25,7 +25,7 @@ class MainApi extends AbstractApi {
     }
 
     public static initInstance(token?: string): void {
-        MainApi.instance = new MainApi("http://148.60.11.163" as any)
+        MainApi.instance = new MainApi(process.env.REACT_APP_URL as any, token)
     }
 
 
@@ -34,6 +34,7 @@ class MainApi extends AbstractApi {
     public async getUserById(id: string): Promise<User> {
         try {
             const response = await this.service.get(`/api/users/${id}`)
+            console.log(response)
             return response.data as User
         } catch (err) {
             throw AbstractApi.handleError(err)
@@ -56,13 +57,13 @@ class MainApi extends AbstractApi {
         }
     }
 
-    public async createUser(user: User): Promise<User> {
+    public async getUserbyEmail(email: string): Promise<User> {
         try {
-            const response = await this.service.post(`/api/users/create`, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+            const response = await this.service.get(`/api/users/email`, {
+                params: {
+                    email: email,
                 }
-            })
+            });
             return response.data as User
         } catch (err) {
             throw AbstractApi.handleError(err)

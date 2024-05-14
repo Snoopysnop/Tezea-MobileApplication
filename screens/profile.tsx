@@ -10,14 +10,14 @@ import { Border, Color, Others } from '../GlobalStyles';
 import { FormatPhoneNumber } from '../common/utils/Format';
 import * as ImagePicker from 'expo-image-picker';
 import MainApi from '../api/MainApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function ProfileScreen({route}:any) {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-  const {user} = route.params;
-  const{setUser} = route.params;
+  const {user, setUser, setIsLoggedIn} = route.params;
 
-  const [profilePicture, setProfilePicture] = useState<string>(user.profilePicture);
+  const [profilePicture, setProfilePicture] = useState<string>(user ? user.profilePicture : "");
 
   async function uriToBase64(uri: string) {
     const result = await fetch(uri)
@@ -49,17 +49,20 @@ function ProfileScreen({route}:any) {
       setProfilePicture(b64);
       await MainApi.getInstance().updateProfilePicture(user.id,b64);
       let userFetched = await MainApi.getInstance().getUserById(user.id);
+      console.log(userFetched)
       setUser(userFetched);
     }
 };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    await AsyncStorage.removeItem("access-token")
+    setIsLoggedIn(false)
     navigation.replace("LoginScreen");
    };
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <TitleHeader title='Compte Tezea' subtitle={users[3].role} isBlue={false} />,
+      headerTitle: () => <TitleHeader title='Compte Tezea' subtitle={user.role} isBlue={false} />,
     });
   }, [])
 
@@ -71,8 +74,9 @@ function ProfileScreen({route}:any) {
       padding: 20,
       gap: 10
     }}>
+
       {/* -------------------- PROFILE PICTURE -------------------- */}
-      <TouchableOpacity onPress={ () => pickImage() }>
+      <TouchableOpacity onPress={ async() => await pickImage() }>
         <View style={styles.profilePictureContainer}>
           <Image
             source={{uri:`data:image/png;base64,${profilePicture}`}}
@@ -88,7 +92,7 @@ function ProfileScreen({route}:any) {
       {/* -------------------- SECTION 1 -------------------- */}
       <View style={{ gap: 5, ...styles.container }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Nom", users[3].firstName + ' ' + users[3].lastName)}
+          {Info("Nom", user.firstName + ' ' + user.lastName)}
         </View>
         <Text style={{ color: '#A4A4A4', fontSize: 13 }}>Pour mettre à jour ces données, veuillez vous rapprochez de la <Text style={{ textDecorationLine: 'underline' }}>conciergerie</Text> de Tezea.</Text>
       </View>
@@ -96,12 +100,12 @@ function ProfileScreen({route}:any) {
       {/* -------------------- SECTION 2 -------------------- */}
       <View style={{ gap: 15, ...styles.container }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Email", users[3].email)}
+          {Info("Email", user.email)}
           <Image style={{ width: 15, height: 15, position: 'relative' }} source={require('../assets/simple-edit.png')} />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {Info("Téléphone", FormatPhoneNumber(users[3].phoneNumber))}
+          {Info("Téléphone", FormatPhoneNumber(user.phoneNumber))}
           <Image style={{ width: 15, height: 15, position: 'relative' }} source={require('../assets/simple-edit.png')} />
         </View>
       </View>
@@ -115,7 +119,7 @@ function ProfileScreen({route}:any) {
 
       {/* -------------------- DISCONNECT -------------------- */}
       <Button
-        onPress={handleLogout}
+        onPress={async() => await handleLogout()}
         title={'Se Déconnecter'}
         buttonStyle={{
           backgroundColor: Color.red,
